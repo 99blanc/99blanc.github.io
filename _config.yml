@@ -4,7 +4,6 @@ email: t990421@naver.com
 description: > # this means to ignore newlines until "show_exerpts:"
   99blanc's Programming Blog
 show_excerpts: true # set to true to show excerpts on the homepage
-baseurl: "/blog"
 
 # Minima date format
 # refer to http://shopify.github.io/liquid/filters/date/ if you want to customize this
@@ -53,10 +52,8 @@ plainwhite:
     #   instance: example.com
 
   navigation:
-    - title: Project
-      url: "/project"
-    - title: Certification
-      url: "/certification"
+    - title: Profile
+      url: "/github/profile/2025/10/26/README.md.html"
 
 # If you want to link only specific pages in your header, uncomment
 # this and add the path to the pages in order as they should show up
