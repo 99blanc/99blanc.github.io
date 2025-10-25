@@ -52,11 +52,11 @@ plainwhite:
 #header_pages:
 # - about.md
 
+remote_theme: 99blanc/99blanc.github.io
+
 # Build settings
 theme: plainwhite
 
 plugins:
   - jekyll-seo-tag
 #  - jekyll-feed
-
-remote_theme: samarsault/plainwhite-jekyll
