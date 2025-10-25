@@ -2,7 +2,7 @@ title: 99blanc's Blog
 author: 99blanc
 email: t990421@naver.com
 description: > # this means to ignore newlines until "show_exerpts:"
-  99blanc's Developer Blog
+  99blanc's Programming Blog
 show_excerpts: true # set to true to show excerpts on the homepage
 
 # Minima date format
@@ -10,8 +10,8 @@ show_excerpts: true # set to true to show excerpts on the homepage
 sass:
   sass_dir: _sass
 plainwhite:
-  name: Sehyun Kim (김세현)
-  tagline: Java/Spring & Unity Visualization Developer
+  name: Sehyun Kim. 99blanc
+  tagline: Java/Spring, Unity Programmer
   date_format: "%b %-d, %Y"
   sitemap: true # set to true to generate sitemap.xml content
   search: true # set to true to enable searchbar
