@@ -21,29 +21,32 @@ permalink: /archives/
     <div class="post-content">
       {% assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse %}
       {% for year in years %}
-        <div class="archive-year" style="margin-bottom: 30px;">
-          <h2 style="font-size: 1.5em; margin-top: 20px; border-bottom: 2px solid #eee; padding-bottom: 5px; font-weight: bold;">{{ year.name }}</h2>
-          {% assign months = year.items | group_by_exp: "post", "post.date | date: '%B'" | sort: "name" | reverse %}
-          <ul style="list-style: none; padding-left: 0;">
-          {% for month in months reversed %} <li style="margin-bottom: 10px;">
-              <h3 style="font-size: 1.1em; color: #555; margin-bottom: 5px; font-weight: bold;">
-                {{ month.name }} <span style="font-size: 0.8em; color: #888; font-weight: normal;">({{ month.items | size }} Posts)</span>
+        <div class="archive-year">
+          <h2 class="archive-year-heading">{{ year.name }}</h2>
+          {% assign months = year.items | group_by_exp: "post", "post.date | date: '%m'" | sort: "name" | reverse %}
+          <ul class="archive-month-list">
+          {% for month_group in months %}
+            {% assign month_name = month_group.items.first.date | date: '%B' %}
+            <li class="archive-month-item">
+              <h3 class="archive-month-heading">
+                {{ month_name }} <span class="archive-month-count">({{ month_group.items | size }} Posts)</span>
               </h3>
-              <ul style="list-style: none; padding-left: 20px; border-left: 2px solid #ccc; margin-top: 5px;">
-              {% assign sorted_posts = month.items | sort: 'date' %} 
+              <ul class="archive-post-detail-list">
+              {% assign sorted_posts = month_group.items | sort: 'date' %} 
               {% assign last_day = "" %}
               {% for post in sorted_posts %}
-                {% assign current_day = post.date | date: "%d %b" %}
-                <li style="margin-bottom: 5px; position: relative;">
-                  <span style="display: inline-block; width: 45px; color: #999; font-size: 0.9em;">
+                {% assign date_format = site.plainwhite.date_format | default: "%d %b" %}
+                {% assign current_day = post.date | date: date_format %}
+                <li class="archive-post-item">
+                  <span class="archive-post-date">
                     {% if current_day != last_day %}
                       {{ current_day }}
                     {% else %}
                       &nbsp; 
                     {% endif %}
                   </span>
-                  <span style="margin-right: 10px; color: #bbb;">•</span> 
-                  <a href="{{ post.url | relative_url }}" style="font-size: 1em; text-decoration: none; color: #333;">
+                  <span class="archive-post-separator">•</span> 
+                  <a href="{{ post.url | relative_url }}" class="archive-post-link">
                     {{ post.title }}
                   </a>
                 </li>

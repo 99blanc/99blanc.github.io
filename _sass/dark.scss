@@ -115,3 +115,33 @@
 		background-color: #0d0d0d;
 	}
 }
+.dark {
+    .archive-year-heading {
+        color: #ddd;
+        border-bottom: 2px solid #555;
+    }
+
+    .archive-month-heading {
+        color: #aaa;
+    }
+
+    .archive-month-count {
+        color: #888;
+    }
+
+    .archive-post-detail-list {
+        border-left: 2px solid #333;
+    }
+
+    .archive-post-date {
+        color: #999;
+    }
+
+    .archive-post-separator {
+        color: #555;
+    }
+    
+    .archive-post-link {
+        color: #ddd;
+    }
+}
