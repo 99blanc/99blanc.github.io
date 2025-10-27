@@ -2,5 +2,7 @@
 
 source "https://rubygems.org"
 gemspec
-gem 'bigdecimal'
-gem 'logger'
+gem 'sassc'
+gem 'tzinfo-data'
+gem 'jekyll-archives'
+gem 'github-pages'

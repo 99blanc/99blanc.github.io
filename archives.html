@@ -1,0 +1,64 @@
+---
+layout: default
+title: Archives
+permalink: /archives/
+---
+
+{%- if page.title -%}
+  <h1 class="page-heading">{{ page.title }}</h1>
+{%- endif -%}
+
+{%- if site.posts.size > 0 -%}
+  <ul class="posts">
+    <li class="posts-labelgroup" id="posts-labelgroup">
+      <h1 id="posts-label">posts</h1>
+      {% if site.plainwhite.search %}
+      <div class="search-container">
+        <div class="search-section">
+          <i class="icon-search"></i>
+          <input type="text" name="search" id="searchbar" autocomplete="off" aria-label="search in posts">
+        </div>
+        <div class="search-results" id="search-results" data-placeholder="No Results" style="display: none;"></div>
+      </div>
+      {% endif %}
+    </li>
+    <div class="post-content">
+      {% assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse %}
+      {% for year in years %}
+        <div class="archive-year" style="margin-bottom: 30px;">
+          <h2 style="font-size: 1.5em; margin-top: 20px; border-bottom: 2px solid #eee; padding-bottom: 5px; font-weight: bold;">{{ year.name }}</h2>
+          {% assign months = year.items | group_by_exp: "post", "post.date | date: '%B'" | sort: "name" | reverse %}
+          <ul style="list-style: none; padding-left: 0;">
+          {% for month in months reversed %} <li style="margin-bottom: 10px;">
+              <h3 style="font-size: 1.1em; color: #555; margin-bottom: 5px; font-weight: bold;">
+                {{ month.name }} <span style="font-size: 0.8em; color: #888; font-weight: normal;">({{ month.items | size }} Posts)</span>
+              </h3>
+              <ul style="list-style: none; padding-left: 20px; border-left: 2px solid #ccc; margin-top: 5px;">
+              {% assign sorted_posts = month.items | sort: 'date' %} 
+              {% assign last_day = "" %}
+              {% for post in sorted_posts %}
+                {% assign current_day = post.date | date: "%d %b" %}
+                <li style="margin-bottom: 5px; position: relative;">
+                  <span style="display: inline-block; width: 45px; color: #999; font-size: 0.9em;">
+                    {% if current_day != last_day %}
+                      {{ current_day }}
+                    {% else %}
+                      &nbsp; 
+                    {% endif %}
+                  </span>
+                  <span style="margin-right: 10px; color: #bbb;">•</span> 
+                  <a href="{{ post.url | relative_url }}" style="font-size: 1em; text-decoration: none; color: #333;">
+                    {{ post.title }}
+                  </a>
+                </li>
+                {% assign last_day = current_day %}
+              {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+  </ul>
+{%- endif -%}
