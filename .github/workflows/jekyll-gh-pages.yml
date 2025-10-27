@@ -1,5 +1,5 @@
 # .github/workflows/jekyll-gh-pages.yml
-name: Deploy Jekyll site to Pages
+name: '[Feat] Jekyll, Github Pages 배포'
 
 on:
   push:
