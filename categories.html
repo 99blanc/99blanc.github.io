@@ -25,7 +25,7 @@ permalink: /categories/
         {% assign category_name = category | first %}
         {% assign category_posts = category | last %}
         <li style="margin-bottom: 15px;">
-          <a href="{{ '/categories/' | append: category_name | relative_url }}" style="font-size: 1.3em;">
+          <a href="{{ '/categories/' | append: category_name | downcase | uri_escape | append: '/' | relative_url }}" style="font-size: 1.3em;">
             {{ category_name }} 
           </a>
           <span style="font-size: 1em; color: #888; margin-left: 10px;">({{ category_posts | size }} Posts)</span>
