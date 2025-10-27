@@ -1,8 +1,7 @@
 ---
-layout: post
-title: "README.md"
-date: 2025-10-26 03:38:00 +0900
-categories: Github Profile
+layout: page
+title: About
+permalink: /about/
 ---
 
 # 🧑‍💻 Programmer | Sehyun Kim (김세현)
@@ -53,4 +52,3 @@ categories: Github Profile
 # 📄 Portfoilo
 [![Blog](https://img.shields.io/badge/Blog-FF7F33?style=for-the-badge&logo=github&logoColor=white)](https://99blanc.github.io)
 [![YouTube](https://img.shields.io/badge/Youtube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtube.com/@99blanc)
-

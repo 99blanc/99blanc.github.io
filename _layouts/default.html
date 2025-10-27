@@ -2,6 +2,15 @@
 <html lang="{{ site.plainwhite.html_lang }}">
 
 <head>
+  <title>
+    {% if page.title and site.title %}
+      {{ page.title | escape }} | {{ site.title | escape }}
+    {% elsif page.title %}
+      {{ page.title | escape }}
+    {% elsif site.title %}
+      {{ site.title | escape }}
+    {% endif %}
+  </title>
   {%- include head.html -%}
 </head>
 
