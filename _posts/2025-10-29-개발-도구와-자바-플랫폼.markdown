@@ -1,0 +1,38 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: 개발 도구와 자바 플랫폼"
+date: 2025-10-29 02:22:00 +0900
+categories: Java Study
+---
+
+# JRE와 JDK
+---
+ JDK(Java Development Kit)는 자바 개발자를 위한 소프트웨어로, 자바 컴파일러 등의 개발 도구와 JRE(Java Runtime Environment)로 구성된다. JRE는 자바 응용 프로그램이 실행될 때 개발자가 활용할 수 있는 [API][1]와 자바 가상 머신을 포함한다. 개발자의 경우 JDK와 JRE가 필요하며, 일반 사용자의 경우 JRE가 필요하다.
+
+![Java SE의 JDK 구조](https://drive.google.com/thumbnail?id=10pcQv6vN7EfOLJY7uyoxb70wr28gL6Cs&sz=w1000)
+
+# bin
+---
+ bin 디렉토리에 들어 있는 주요 개발 소프트웨어들은 다음과 같다.
+
+ * javac: 자바 컴파일러로 자바 소스를 바이트 코드로 변환한다.
+ * java: 자바 프로그램 실행기, 자바 가상 머신을 작동시켜 자바 프로그램을 실행한다.
+ * javadoc: 자바 소스로부터 Html 형식의 API 문서를 생성한다.
+ * jar: 자바 클래스 파일을 압축한 자바 아카이브 파일(.jar)을 생성하고 관리한다.
+ * jmod: 자바의 모듈 파일(.jmod)을 만들거나 모듈 파일의 내용을 출력한다.
+ * jlink: 응용 프로그램에 맞춘 JRE를 생성한다.
+ * Jdb: 자바 응용 프로그램의 실행 중 오류를 찾는데 사용하는 디버거다.
+ * javap: 클래스 파일의 바이트 코드를 소스와 함께 보여주는 디어셈블러다.
+
+# 자바의 배포판
+---
+ 오라클은 응용에 따라 크고 작은 여러 종류의 JDK를 제공한다. 대표적인 배포판은 다음과 같다.
+ * Java SE(Standard Edition): 자바 표준 배포판으로, 데스크탑 프로그램과 서버 프로그램을 개발하기 위한 JDK이다.
+ * Java ME(Micro Edition): 모바일용 배포판으로 IoT, TV, 블루레이와 같은 작은 하드웨어 자원을 갖는 장치에 적합한 JDK이다.
+ * Java EE(Enterprise Edition): 기업용 배포판으로 자바를 이용한 다중 사용자, 대규모 기업 프로그램 개발을 위한 JDK이다.
+
+# 자바 IDE
+---
+IDE(Intergrated Development Environment)란 단어가 뜻하는 그대로 소스 코드 편집, 컴파일, 디버깅을 할 수 있는 통합 개발 환경을 말한다. 
+
+ [1]: https://ko.wikipedia.org/wiki/%EC%9E%90%EB%B0%94_API "자바를 사용하여 쉽게 구현할 수 있도록 한 클래스 라이브러리의 집합이다."
