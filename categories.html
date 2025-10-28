@@ -5,33 +5,59 @@ permalink: /categories/
 ---
 
 {%- if site.posts.size > 0 -%}
-  <ul class="posts">
+<ul class="posts">
     <li class="posts-labelgroup" id="posts-labelgroup">
-      <h1 id="posts-label">posts</h1>
-      {% if site.plainwhite.search %}
-      <div class="search-container">
-        <div class="search-section">
-          <i class="icon-search"></i>
-          <input type="text" name="search" id="searchbar" autocomplete="off" aria-label="search in posts">
+        <h1 id="posts-label">posts</h1>
+        {% if site.plainwhite.search %}
+        <div class="search-container">
+            <div class="search-section">
+                <i class="icon-search"></i>
+                <input type="text" name="search" id="searchbar" autocomplete="off" aria-label="search in posts">
+            </div>
+            <div class="search-results" id="search-results" data-placeholder="No Results" style="display: none;"></div>
         </div>
-        <div class="search-results" id="search-results" data-placeholder="No Results" style="display: none;"></div>
-      </div>
-      {% endif %}
+        {% endif %}
     </li>
     <div class="post-content">
-      {% assign categories = site.categories | sort %}
-      <ul style="list-style: none; padding-left: 0;">
-      {% for category in categories %}
-        {% assign category_name = category | first %}
-        {% assign category_posts = category | last %}
-        <li style="margin-bottom: 15px;">
-          <a href="{{ '/categories/' | append: category_name | downcase | uri_escape | append: '/' | relative_url }}" style="font-size: 1.3em;">
-            {{ category_name }} 
-          </a>
-          <span style="font-size: 1em; color: #888; margin-left: 10px;">({{ category_posts | size }} Posts)</span>
-        </li>
-      {% endfor %}
-      </ul>
+        <div class="category-list-direct">
+            <h2>All Category</h2>
+            {% assign all_categories = site.categories | sort %}
+            {% for category in all_categories %}
+                {% assign cat_name = category | first %}
+                {% assign cat_posts = category | last | sort: 'date' | reverse %}
+                {% assign cat_size = cat_posts | size %}
+                {% assign cat_id = cat_name | slugify %}
+                {% if cat_size > 0 %}
+                <div class="category-section" style="margin-bottom: 20px;">
+                    <h3 class="category-header category-toggle-button" onclick="togglePosts('{{ cat_id }}')" style="cursor: pointer; padding: 5px; background: #eee; border-radius: 0; display: flex; justify-content: space-between; align-items: center;">
+                        <span>
+                            {{ cat_name }} 
+                            <span class="category-count">({{ cat_size }} posts)</span>
+                        </span>
+                        </h3>
+                    <ul id="posts-{{ cat_id }}" class="post-hyperlinks" style="list-style: none; margin-left: 20px; margin-top: 5px; padding-left: 0; display: none;">
+                    {% for post in cat_posts %}
+                    	<li>
+                    		<a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                    		<small> {{ post.date | date: "%b %d, %Y" }}</small>
+                    	</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
-  </ul>
+</ul>
+<script>
+    function togglePosts(categoryId) {
+        var postsList = document.getElementById('posts-' + categoryId);
+
+        if (postsList.style.display === 'none' || postsList.style.display === '') {
+            postsList.style.display = 'block';
+        } else {
+            postsList.style.display = 'none';
+        }
+    }
+</script>
 {%- endif -%}

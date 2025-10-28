@@ -37,6 +37,7 @@
 	div.highlight-dark {
 		padding: 5px 20px;
 	}
+
 	pre.highlight-dark, code {
 		font-family: 'Consolas', Menlo, monospace;
 		line-height: 1.4em;
@@ -53,6 +54,7 @@
 	a {
 		color: $dark_link_color;
 	}
+
 	#title a {
 		color: #fff;
 		&:hover {
@@ -61,7 +63,6 @@
 	}
 
 	.posts-labelgroup {
-
 		border-bottom: 1px solid #333;
 		.search-results {
 			background-color: #333;
@@ -81,7 +82,6 @@
 	}
 
 	.posts-labelgroup:hover {
-
 		i {
 			color: white;
 		}
@@ -91,9 +91,7 @@
 		}
 	}
 
-
 	.posts-labelgroup.focus-within {
-
 		.search-section {
 			background-color: #333;
 		}
@@ -106,28 +104,69 @@
 			color: white;
 		}
 	}
-}
-.dark table {
-	th, td {
-		border: 1px solid #333;
+
+	.navigation ul a {
+		color: $dark_text_color;
 	}
-	th {
-		background-color: #0d0d0d;
+
+	.post-content a {
+		color: $dark_text_color;
 	}
-}
-.dark {
-    .archive-year-heading {
-        color: #ddd;
-        border-bottom: 2px solid #555;
+
+	.category-header {
+        background-color: #272727 !important; 
+        border: none;
+
+        .icon-folder, .toggle-icon {
+            color: #eee;
+        }
+		
+		span {
+            background-color: transparent !important;
+        }
+
+		a {
+        	background-color: transparent !important;
+    	}
+
+		.category-count {
+			background-color: transparent !important;
+			color: #999;
+		}
+    }
+
+    .sub-categories {
+        border-left: 3px solid #333;
+    }
+
+    .is-sub {
+        border-top: 1px solid #999;
+        
+        .icon-file-text {
+            color: #999;
+        }
+    }
+    
+    .category-count {
+		background-color: #999;
+        color: #999;
+    }
+
+	.archive-year-heading {
+        color: $dark_text_color;
     }
 
     .archive-month-heading {
-        color: #aaa;
+        color: #ccc;
     }
 
     .archive-month-count {
-        color: #888;
+        color: #999;
     }
+
+	.archive-month-list {
+		border-left: 2px solid #333;
+	}
 
     .archive-post-detail-list {
         border-left: 2px solid #333;
@@ -138,10 +177,20 @@
     }
 
     .archive-post-separator {
-        color: #555;
+        color: #ccc;
     }
     
     .archive-post-link {
-        color: #ddd;
+        color: $dark_text_color;
+		margin-left: 5px;
     }
+}
+.dark table {
+	th, td {
+		border: 1px solid #333;
+	}
+
+	th {
+		background-color: #0d0d0d;
+	}
 }

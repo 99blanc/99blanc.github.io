@@ -74,14 +74,13 @@ theme: plainwhite
 
 plugins:
   - github-pages
-  - jekyll-archives
 
 jekyll-archives:
   enabled:
     - categories
-  layouts: 
+  layout: 
     category: 'category'
-  permalinks:
+  permalinks: 
     category: '/categories/:name/'
 
 permalink: /:year/:month/:day/:title/

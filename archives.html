@@ -22,32 +22,35 @@ permalink: /archives/
       {% assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse %}
       {% for year in years %}
         <div class="archive-year">
-          <h2 class="archive-year-heading">{{ year.name }}</h2>
+          <h2 class="archive-year-heading">
+            {{ year.name }} </h2>
           {% assign months = year.items | group_by_exp: "post", "post.date | date: '%m'" | sort: "name" | reverse %}
           <ul class="archive-month-list">
           {% for month_group in months %}
             {% assign month_name = month_group.items.first.date | date: '%B' %}
             <li class="archive-month-item">
               <h3 class="archive-month-heading">
-                {{ month_name }} <span class="archive-month-count">({{ month_group.items | size }} Posts)</span>
+                {{ month_name }}
               </h3>
               <ul class="archive-post-detail-list">
-              {% assign sorted_posts = month_group.items | sort: 'date' %} 
+                {% assign sorted_posts = month_group.items | sort: 'date' | reverse %} 
               {% assign last_day = "" %}
               {% for post in sorted_posts %}
-                {% assign date_format = site.plainwhite.date_format | default: "%d %b" %}
+                {% assign date_format = "%b %d" %} 
                 {% assign current_day = post.date | date: date_format %}
-                <li class="archive-post-item">
-                  <span class="archive-post-date">
+                {% assign date_is_hidden = false %}
+                {% if current_day == last_day %}
+                  {% assign date_is_hidden = true %}
+                {% endif %}
+                <li class="archive-post-item {% if date_is_hidden %}no-date{% endif %}">
+                    <span class="archive-date-group">
                     {% if current_day != last_day %}
-                      {{ current_day }}
-                    {% else %}
-                      &nbsp; 
+                      <span class="archive-post-date">{{ current_day }}</span>
+                      <span class="archive-post-separator">•</span> 
                     {% endif %}
-                  </span>
-                  <span class="archive-post-separator">•</span> 
+                    </span>
                   <a href="{{ post.url | relative_url }}" class="archive-post-link">
-                    {{ post.title }}
+                      {{ post.title }}
                   </a>
                 </li>
                 {% assign last_day = current_day %}
