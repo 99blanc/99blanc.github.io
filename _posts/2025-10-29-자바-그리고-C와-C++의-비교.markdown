@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "명품 자바 프로그래밍 개정 4판: 자바 그리고 C와 C++의 비교"
-date: 2025-10-29 01:51:00 +0900
+date: 2025-10-29 01:51:00 +09:00
 categories: Java Study
 ---
 
