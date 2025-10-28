@@ -50,5 +50,5 @@ permalink: /about/
 <br>
 
 # 📄 Portfoilo
-[![Blog](https://img.shields.io/badge/Blog-FF7F33?style=for-the-badge&logo=github&logoColor=white)](https://99blanc.github.io)
+[![Github](https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=white")](https://github.com/99blanc)
 [![YouTube](https://img.shields.io/badge/Youtube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtube.com/@99blanc)
