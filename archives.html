@@ -23,20 +23,22 @@ permalink: /archives/
       {% for year in years %}
         <div class="archive-year">
           <h2 class="archive-year-heading">
-            {{ year.name }} </h2>
+            {{ year.name }}
+            <i class="icon-calendar" style="font-size: 14px;"></i> 
+          </h2>
           {% assign months = year.items | group_by_exp: "post", "post.date | date: '%m'" | sort: "name" | reverse %}
           <ul class="archive-month-list">
           {% for month_group in months %}
-            {% assign month_name = month_group.items.first.date | date: '%B' %}
+            {% assign month_name = month_group.items.first.date | date: '%b' %}
             <li class="archive-month-item">
               <h3 class="archive-month-heading">
-                {{ month_name }}
+                {{ month_name }} •
               </h3>
               <ul class="archive-post-detail-list">
-                {% assign sorted_posts = month_group.items | sort: 'date' | reverse %} 
+                {% assign sorted_posts = month_group.items | sort: 'date' | reverse %}
               {% assign last_day = "" %}
               {% for post in sorted_posts %}
-                {% assign date_format = "%b %d" %} 
+                {% assign date_format = "%d"%}
                 {% assign current_day = post.date | date: date_format %}
                 {% assign date_is_hidden = false %}
                 {% if current_day == last_day %}
@@ -46,7 +48,7 @@ permalink: /archives/
                     <span class="archive-date-group">
                     {% if current_day != last_day %}
                       <span class="archive-post-date">{{ current_day }}</span>
-                      <span class="archive-post-separator">•</span> 
+                      <span class="archive-post-separator">•</span>
                     {% endif %}
                     </span>
                   <a href="{{ post.url | relative_url }}" class="archive-post-link">
