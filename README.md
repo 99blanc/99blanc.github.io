@@ -1,5 +1,8 @@
 # 99blanc.github.io
 
+* 원본 테마(Demo): [samarsault.com](https://samarsault.com/)
+* 수정된 테마: [99blanc.github.io](https://99blanc.github.io/)
+
 ## 💡 테마 크레딧 및 라이센스 정보 (KR)
 
 이 Jekyll 테마는 **plainwhite-jekyll** 테마이며, **Samarsault** 님에 의해 개발되고 유지 관리됩니다.
