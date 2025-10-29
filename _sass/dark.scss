@@ -1,16 +1,7 @@
-$dark_text_color: #e6e6e6;
-$dark_link_color: #4da3ff;
-
-a {
-  color: $dark_text_color;
-
-  &:hover {
-    color: $dark_link_color;
-  }
-}
-
 .dark,
 .dark * {
+  $dark_text_color: #e6e6e6;
+  $dark_link_color: #4da3ff;
   background-color: #171717;
   color: $dark_text_color;
   border-color: #e6e6e6;
@@ -22,15 +13,6 @@ a {
 
     img.dark {
       display: inline;
-    }
-  }
-
-  .social li i,
-  .navigation ul a,
-  .post-title,
-  .post-link {
-    &:hover {
-      color: $dark_link_color;
     }
   }
 
@@ -83,6 +65,15 @@ a {
     tab-size: 4;
   }
 
+  .social li i,
+  .post-title {
+    transition: color 0.3s;
+
+    &:hover {
+      color: $dark_link_color;
+    }
+  }
+
   .post-categories {
     li {
       background-color: #333;
@@ -92,10 +83,9 @@ a {
 
   #title a {
     color: $dark_text_color;
-    transition: color 0.3s;
 
     &:hover {
-      color: $dark_link_color;
+      color: $linkColor;
     }
   }
 
@@ -162,29 +152,16 @@ a {
     border-left: 1px solid #272727;
   }
 
-  .category-header {
-    &:hover {
-      .category-count {
-        color: $dark_link_color;
-      }
-
-      .category-name {
-        color: $dark_link_color;
-      }
-    }
-  }
-
   .category-post-separator {
     color: #e6e6e6;
   }
 
-  .post-hyperlinks {
-    a {
-      color: #e6e6e6;
+  .post-hyperlinks a {
+    color: #ccc;
+    transition: color 0.3s;
 
-      &:hover {
-        color: $dark_link_color;
-      }
+    &:hover {
+      color: $dark_link_color;
     }
   }
 
@@ -217,8 +194,9 @@ a {
   }
 
   .archive-post-link {
-    color: $dark_text_color;
-
+    color: #ccc;
+    transition: border-bottom 0.4s color 0.3s;
+    
     &:hover {
       color: $dark_link_color;
     }

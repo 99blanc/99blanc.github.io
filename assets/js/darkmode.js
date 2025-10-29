@@ -1,6 +1,5 @@
 function toggleDarkMode() {
     const DARK_CLASS = 'dark';
-
     var body = document.querySelector("body");
     if (body.classList.contains(DARK_CLASS)) {
         setCookie('theme', 'light');
@@ -20,28 +19,29 @@ function setCookie(name, value, days) {
     d.setTime(d.getTime() + 24*60*60*1000*days);
     document.cookie = name + "=" + value + ";path=/;SameSite=strict;expires=" + d.toGMTString();
 }
-
 function deleteCookie(name) { setCookie(name, '', -1); }
-
-
 const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 var theme = getCookie('theme');
+function initializeDarkMode() {
+    const DARK_CLASS = 'dark';
+    var body = document.querySelector("body");
+    var toggles = document.querySelectorAll('.dark-mode-toggle');
+    toggles.forEach(ti => ti.classList.add('no-transition'));
+    body.classList.add(DARK_CLASS);
+    toggles.forEach(ti => ti.checked = true);
+    window.requestAnimationFrame(() => {
+        toggles.forEach(ti => ti.classList.remove('no-transition'));
+    });
+}
 if ( (theme === null && userPrefersDark) || theme === 'dark') {
     var checkDarkDone = false;
-    function checkDark() {
+    function checkDarkAndInitialize() {
         if (!checkDarkDone) {
-            toggleDarkMode();
+            initializeDarkMode(); 
         }
         checkDarkDone = true;
     };
-
-    function toggleSwitch() {
-        document.querySelectorAll('.dark-mode-toggle').forEach(ti => ti.checked = true);
-    };
-
-    // Attempt both requestAnimationFrame and DOMContentLoaded, whichever comes first.
-    if (window.requestAnimationFrame) window.requestAnimationFrame(checkDark);
-    window.addEventListener('DOMContentLoaded', checkDark);
-
-    window.addEventListener('DOMContentLoaded', toggleSwitch);
+    if (window.requestAnimationFrame) 
+        window.requestAnimationFrame(checkDarkAndInitialize);
+    window.addEventListener('DOMContentLoaded', checkDarkAndInitialize);
 }

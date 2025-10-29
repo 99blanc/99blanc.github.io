@@ -225,6 +225,12 @@ main {
   }
 }
 
+.dark-mode-toggle.no-transition + .slider,
+.dark-mode-toggle.no-transition + .slider:before {
+    -webkit-transition: none !important;
+    transition: none !important;
+}
+
 .post {
   opacity: 0;
   animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
@@ -285,6 +291,12 @@ main {
   }
 }
 
+.icon-search {
+  &:hover {
+    color: #222 !important;
+  }
+}
+
 .icon-calendar,
 .icon-category {
   color: #555;
@@ -300,6 +312,7 @@ main {
   opacity: 0;
   animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
   animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
+  transition: color 0.3s;
 
   &:hover {
     color: $linkColor;
@@ -376,6 +389,7 @@ main {
   line-height: 1.9em;
   padding-bottom: 20px;
   border-bottom: 1px solid #ececec;
+  transition: color 0.3s;
 
   p {
     margin-top: 10px;
@@ -524,18 +538,6 @@ footer {
   border-left: 1px solid #eee;
 }
 
-.category-header {
-  &:hover {
-    .category-count {
-      color: $linkColor;
-    }
-
-    .category-name {
-      color: $linkColor;
-    }
-  }
-}
-
 .category-post-separator {
   color: #555;
 }
@@ -555,6 +557,7 @@ footer {
     color: #333;
     text-decoration: none;
     border-bottom: 1px solid transparent;
+    transition: color 0.3s;
 
     &:hover {
       color: $linkColor;
@@ -619,6 +622,7 @@ footer {
 .archive-post-link {
   color: #333;
   text-decoration: none;
+  transition: color 0.3s;
 
   &:hover {
     color: $linkColor;

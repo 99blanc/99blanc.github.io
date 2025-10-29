@@ -100,9 +100,8 @@ main {
   }
 
   &:hover {
-
     i {
-      color: $linkColor;
+      color: black;
     }
   }
 
@@ -123,7 +122,7 @@ main {
     }
 
     i {
-      color: $linkColor;
+      color: black;
       padding: 0 14px;
     }
   }
