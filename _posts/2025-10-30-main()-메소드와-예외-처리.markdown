@@ -1,0 +1,69 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: main() 메소드와 예외 처리"
+date: 2025-10-30 04:30:00 +09:00
+categories: Code Java Study
+---
+
+### main() 메소드의 특징
+---
+ 자바 응용 프로그램의 실행히 시작되는 특별한 메소드로, 다음과 같은 특징을 가지고 있다.
+
+ * public 속성: 메소드가 다른 클래스에서 호출 가능함을 나타낸다. JVM에 의해 호출되어야 하므로 public 속성으로 선언되어야 한다.
+ * static 속성: 자신을 포함하는 클래스의 객체가 생성되기 전에, 처음부터 JVM에 의해 호출되므로 static 속성으로 선언되어야 한다.
+ * void 리턴 타입: 아무 값도 반환하지 않기 때문에 void 타입으로 선언한다. main() 메소드를 끝내기 위해서는 "return;"을 반환한다.
+ * String[] args 매개 변수: 명령행에 입력된 인자들을 문자열 배열로 만들어 main() 메소드에 전달한다.
+
+### main() 메소드의 매개 변수
+---
+ args 매개 변수를 이용하여 명령행 인자를 전달받는 코드는 다음과 같이 작성할 수 있다.
+
+```java
+package ch3n1;
+
+public class MainParameter {
+	public static void main(String[] args) {
+		String a = args[0];
+		String b = args[1];
+		String c = args[2];
+
+		System.out.print(a + b + c);
+	}
+}
+```
+
+ main() 메소드에 인자를 전달하기 위해 이클립스의 Run Configurations 메뉴 항목에서 메소드에 전달할 인자를 지정할 수 있다.
+
+![main() 메소드의 명령행 전달 과정](https://drive.google.com/thumbnail?id=1IsOlfFKn2_rOfr17xcBfmy_nB99SlRnV&sz=w1000)
+
+ 이처럼 명령행을 지정하고 실행하게 되면, 출력 결과는 다음과 같다.
+
+![main() 메소드의 명령행 전달 결과](https://drive.google.com/thumbnail?id=1KQ6A36UxKWMZKSyCOKXZHuoUSICveSPU&sz=w1000)
+
+### 예외
+---
+ 자바에서 오동작이나 결과에 악영향을 미칠 수 있는 실행 중 발생한 오류를 예외라고 한다. 문법에 맞지 않게 작성된 코드는 사전에 컴파일러에 의해 파일 오류로 걸러지지만, 예외는 사용자의 잘못된 입력이나 배열의 인덱스가 배열의 크기를 넘어가는 등, 예기치 못한 상황에 의해 프로그램 실행 중에 발생한다.
+
+ * 예외 클래스: 자바 플랫폼에서 제공하는 예외 타입으로, 예외 발생을 탐지할 수 있다.
+
+ 자주 활용되는 예외 클래스 표는 다음과 같다.
+
+![예외 클래스 종류](https://drive.google.com/thumbnail?id=1L79g1WOL8NLnfF288XmShauiIA5IEny2&sz=w1000)
+
+ * [예외 처리][1]: 개발자가 작성한 프로그램의 실행 중에 예외가 발생하면 이에 대응하는 것을 말한다. 자바는 예외 처리를 위해 try-catch-finally 문을 사용한다.
+
+ try-catch-finally 문의 사용 방법은 다음과 같다.
+
+```java
+try {
+	// 예외가 발생할 가능성이 있는 실행문 블록
+}
+catch (/* 처리할 예외 타입 선언 */) {
+	// 예외 처리문 블록
+}
+finally {
+	// 예외 발생 여부와 관계없이 실행되는 블록(생략 가능)
+}
+```
+
+ [1]: https://en.wikipedia.org/wiki/Exception_handling_syntax " 예외 처리를 허용하기 위해 프로그래밍 언어에서 제공하는 구조 집합으로, 프로그램 작동 중에 발생하는 오류 처리를 일반 프로세스와 분리한다."
