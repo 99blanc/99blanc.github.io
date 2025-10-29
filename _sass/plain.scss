@@ -7,6 +7,19 @@ $mobileW: 768px;
 $smallMobileW: 480px;
 $bigScreenW: 1600px;
 $leftWidth: 220px;
+$archiveAnimationDuration: 0.4s;
+$archiveAnimationDelayIncrement: 0.2s;
+
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 *,
 *:before,
@@ -33,6 +46,7 @@ video {
 a {
   color: #000;
   transition: color 0.3s;
+
   &:hover {
     color: $linkColor;
   }
@@ -40,6 +54,7 @@ a {
 
 h2 {
   margin: 0.7em 0;
+
   @media screen and (max-width: $mobileW) {
     margin: 0.3em 0;
   }
@@ -183,7 +198,6 @@ main {
 
     a {
       display: block;
-      font-family: 'Merriweather';
       text-align: center;
       padding: 1rem 0;
       text-decoration: none;
@@ -194,6 +208,11 @@ main {
       }
     }
   }
+}
+
+.post {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ececec;
 }
 
 .post-wrapper {
@@ -233,13 +252,25 @@ main {
   justify-content: space-between;
   align-items: center;
   min-height: 30px;
+
   @media screen and (max-width: $mobileW) {
     flex-direction: column;
     align-items: baseline;
+
     .post-date {
       margin: 10px 0;
     }
   }
+}
+
+.icon-calendar {
+  color: #555;
+}
+
+.icon-category {
+  color: #555;
+  margin-right: 5px;
+  font-size: 18px;
 }
 
 .post-link {
@@ -250,16 +281,20 @@ main {
   line-height: 1.2em;
   font-size: 28px;
   margin-bottom: 10px;
+  animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement;
 }
 
 .posts,
 .post-container {
   list-style-type: none;
-  margin: 45px 30px;
+  margin: 45px 30px 0 30px;
+
   @media screen and (max-width: $smallMobileW) {
     margin-left: 20px;
     margin-right: 20px;
   }
+
   @media screen and (max-width: $mobileW) {
     padding: 0;
     margin-top: 0;
@@ -267,7 +302,40 @@ main {
 }
 
 .post-container {
-  padding-left: 30px;
+  list-style-type: none;
+  margin: 0 30px;
+  padding-left: 40px;
+  opacity: 0;
+  animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement * 3;
+
+  .post {
+    opacity: 0;
+    animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
+    animation-delay: $archiveAnimationDelayIncrement * 3;
+  }
+}
+
+.posts {
+  .posts-labelgroup {
+    opacity: 0;
+    animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
+    animation-delay: $archiveAnimationDelayIncrement;
+  }
+
+  > li {
+    opacity: 0;
+    animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
+    animation-delay: $archiveAnimationDuration + $archiveAnimationDelayIncrement;
+  }
+}
+
+.category-list-direct {
+  .category-section {
+    opacity: 0;
+    animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
+    animation-delay: $archiveAnimationDuration + $archiveAnimationDelayIncrement;
+  }
 }
 
 .post {
@@ -275,17 +343,21 @@ main {
   font-weight: 300;
   color: #222;
   line-height: 1.9em;
+
   p {
     margin-top: 10px;
   }
+
   a {
     color: $linkColor;
     text-decoration: none;
     transition: border-bottom 0.4s;
+
     &:hover {
       border-bottom: 0.5px solid $linkColor;
     }
   }
+
   h1,
   h2,
   h3,
@@ -301,6 +373,24 @@ main {
   display: flex;
   align-items: baseline;
   border-bottom: 1px solid #eee;
+  position: relative;
+  z-index: 10;
+}
+
+.search-container {
+  position: relative; 
+  z-index: 20; 
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #eee; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 30;
 }
 
 #posts-label {
@@ -359,6 +449,7 @@ footer {
       display: none;
     }
   }
+
   footer.condensed {
     display: flex;
     flex-direction: column;
@@ -373,87 +464,110 @@ footer {
   }
 }
 
-.category-header {
-    background-color: #eee !important; 
-    border: none;
-
-    .icon-folder, .toggle-icon {
-        color: #ccc;
-    }
-
-    span {
-        background-color: transparent !important;
-    }
-
-    a {
-        background-color: transparent !important;
-    }
-
-    .category-count {
-        background-color: transparent !important;
-        color: #999;
-    }
+.category-header.is-expanded .category-toggle-icon {
+    transform: rotate(180deg);
 }
 
-.sub-categories {
-    border-left: 3px solid #333;
-}
-
-.is-sub {
-    border-top: 1px solid #999;
-    
-    .icon-file-text {
-        color: #999;
-    }
+.category-name {
+  color: #222;
+  font-weight: normal;
 }
 
 .category-count {
-    background-color: #555;
-    color: #999;
+  color: #999;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+.category-toggle-icon {
+  color: #555;
+  font-size: 10px;
+  margin-right: 10px;
+  transition: transform 0.3s ease;
+}
+
+.category-section {
+  border-left: 1px solid #eee;
+}
+
+.category-post-separator {
+  color: #555;
+}
+
+.post-hyperlinks {
+  list-style: none;
+  padding: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+
+  li {
+    margin-left: 20px;
+  }
+
+  &.closed {
+    max-height: 0;
+  }
 }
 
 .archive-year-heading {
-    border-bottom: none;
+  color: #222;
+  text-transform: uppercase;
+  font-weight: normal;
 }
 
 .archive-month-heading {
-    color: #222;
+  color: #555;
 }
 
 .archive-month-count {
-    color: #555;
+  color: #999;
 }
 
 .archive-month-list {
-    border-left: 2px solid #eee;
-
-    li {
-      list-style-type: none;
-    }
+  border-left: 1px solid #eee;
 }
 
 .archive-post-detail-list {
-    border-left: 2px solid #eee;
-    padding-left: 0 !important;
-    margin-left: 0;
+  border-left: 1px solid #eee;
+  padding-left: 0;
 }
 
-.archive-post-date {
-    color: #555;
+.archive-year,
+.archive-month-list li,
+.archive-post-detail-list li {
+  list-style-type: none;
+  opacity: 0;
+  animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDuration + $archiveAnimationDelayIncrement;
 }
 
-.archive-post-separator {
-    color: #ccc;
-}
-    
 .archive-post-item {
     display: flex;
     align-items: baseline;
     list-style-type: none;
 }
 
+.archive-post-date {
+  color: #555;
+}
+
+.archive-post-separator {
+  color: #555;
+  margin-right: 5px;
+  visibility: inherit;
+}
+
+.archive-post-link {
+  color: #555;
+}
+
 .archive-date-group {
-    width: 85px;
+    width: 37px;
     flex-shrink: 0;
     text-align: right;
+}
+
+.archive-post-item.no-date .archive-date-group {
+  visibility: hidden;
 }
