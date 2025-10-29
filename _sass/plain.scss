@@ -10,14 +10,25 @@ $leftWidth: 220px;
 $archiveAnimationDuration: 0.4s;
 $archiveAnimationDelayIncrement: 0.2s;
 
-@keyframes fadeInSlideUp {
+@keyframes fadeInSlide {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeInIcon {
+  from {
+    opacity: 0;
+    transform: scale(0.8)
+  }
+  to {
+    opacity: 1;
+    transform: scale(1)
   }
 }
 
@@ -34,6 +45,7 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: scroll;
 }
 
 img,
@@ -170,6 +182,9 @@ main {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  opacity: 0;
+  animation: fadeInIcon $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement;
 
   a {
     margin-bottom: .5em;
@@ -213,6 +228,9 @@ main {
 .post {
   padding-bottom: 20px;
   border-bottom: 1px solid #ececec;
+  opacity: 0;
+  animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
 }
 
 .post-wrapper {
@@ -252,6 +270,9 @@ main {
   justify-content: space-between;
   align-items: center;
   min-height: 30px;
+  opacity: 0;
+  animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
 
   @media screen and (max-width: $mobileW) {
     flex-direction: column;
@@ -263,36 +284,53 @@ main {
   }
 }
 
-.icon-calendar {
-  color: #555;
-}
-
+.icon-calendar,
 .icon-category {
   color: #555;
-  margin-right: 5px;
-  font-size: 18px;
+  font-size: 14px;
+  opacity: 0;
+  animation: fadeInIcon $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration * 2;
 }
 
 .post-link {
   text-decoration: none;
+  opacity: 0;
+  animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
 }
 
 .post-title {
   line-height: 1.2em;
   font-size: 28px;
   margin-bottom: 10px;
-  animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
-  animation-delay: $archiveAnimationDelayIncrement;
 }
 
-.posts,
-.post-container {
+.posts {
   list-style-type: none;
-  margin: 45px 30px 0 30px;
+  margin: 45px 45px;
+  padding-left: 85px;
 
   @media screen and (max-width: $smallMobileW) {
-    margin-left: 20px;
-    margin-right: 20px;
+    padding: 10px;
+    margin-top: 0;
+  }
+
+  @media screen and (max-width: $mobileW) {
+    padding: 10px;
+    margin-top: 0;
+  }
+}
+
+.post-container {
+  list-style-type: none;
+  opacity: 0;
+  animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
+
+  @media screen and (max-width: $smallMobileW) {
+    padding: 0;
+    margin-top: 0;
   }
 
   @media screen and (max-width: $mobileW) {
@@ -301,40 +339,25 @@ main {
   }
 }
 
-.post-container {
-  list-style-type: none;
-  margin: 0 30px;
-  padding-left: 40px;
-  opacity: 0;
-  animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
-  animation-delay: $archiveAnimationDelayIncrement * 3;
-
-  .post {
-    opacity: 0;
-    animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
-    animation-delay: $archiveAnimationDelayIncrement * 3;
-  }
-}
-
 .posts {
   .posts-labelgroup {
     opacity: 0;
-    animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
+    animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
     animation-delay: $archiveAnimationDelayIncrement;
   }
 
   > li {
     opacity: 0;
-    animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
-    animation-delay: $archiveAnimationDuration + $archiveAnimationDelayIncrement;
+    animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+    animation-delay: $archiveAnimationDelayIncrement;
   }
 }
 
 .category-list-direct {
   .category-section {
     opacity: 0;
-    animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
-    animation-delay: $archiveAnimationDuration + $archiveAnimationDelayIncrement;
+    animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+    animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
   }
 }
 
@@ -465,7 +488,7 @@ footer {
 }
 
 .category-header.is-expanded .category-toggle-icon {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .category-name {
@@ -538,14 +561,15 @@ footer {
 .archive-post-detail-list li {
   list-style-type: none;
   opacity: 0;
-  animation: fadeInSlideUp $archiveAnimationDuration ease-out forwards;
-  animation-delay: $archiveAnimationDuration + $archiveAnimationDelayIncrement;
+  animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
 }
 
 .archive-post-item {
-    display: flex;
-    align-items: baseline;
-    list-style-type: none;
+  display: flex;
+  align-items: baseline;
+  list-style-type: none;
+  padding-left: 5px;
 }
 
 .archive-post-date {
@@ -563,9 +587,9 @@ footer {
 }
 
 .archive-date-group {
-    width: 37px;
-    flex-shrink: 0;
-    text-align: right;
+  width: 37px;
+  flex-shrink: 0;
+  text-align: right;
 }
 
 .archive-post-item.no-date .archive-date-group {

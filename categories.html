@@ -28,7 +28,7 @@ permalink: /categories/
         {% assign cat_id = cat_name | slugify %}
         {% if cat_size > 0 %}
         <div class="category-section">
-          <h3 class="category-header category-toggle-button" onclick="togglePosts('{{ cat_id }}')" style="cursor: pointer; padding-left: 5px; display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="category-header category-toggle-button" onclick="togglePosts('{{ cat_id }}')" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
             <span>
               <i class="icon-category" style="font-size: 14px;"></i> 
               <span class="category-name">{{ cat_name }}</span>
