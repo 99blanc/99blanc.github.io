@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   # 1. Build Job: Builds the site using your custom environment
-  build:
+  Build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,7 +43,7 @@ jobs:
           path: ./_site # Upload the built static files
 
   # 2. Deployment Job: Pushes the artifact to GitHub Pages
-  deploy:
+  Deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
