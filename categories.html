@@ -5,52 +5,52 @@ permalink: /categories/
 ---
 
 {%- if site.posts.size > 0 -%}
-  <ul class="posts">
-    <li class="posts-labelgroup" id="posts-labelgroup">
-      <h1 id="posts-label">posts</h1>
-      {% if site.plainwhite.search %}
-      <div class="search-container">
-        <div class="search-section">
-          <i class="icon-search"></i>
-          <input type="text" name="search" id="searchbar" autocomplete="off" aria-label="search in posts">
-        </div>
-        <div class="search-results" id="search-results" data-placeholder="No Results" style="display: none;"></div>
+<ul class="posts">
+  <li class="posts-labelgroup" id="posts-labelgroup">
+    <h1 id="posts-label">posts</h1>
+    {% if site.plainwhite.search %}
+    <div class="search-container">
+      <div class="search-section">
+        <i class="icon-search"></i>
+        <input type="text" name="search" id="searchbar" autocomplete="off" aria-label="search in posts">
       </div>
-      {% endif %}
-    </li>
-    <div class="post-content">
-      <div class="category-list-direct">
-        {% assign all_categories = site.categories | sort %}
-        {% for category in all_categories %}
-          {% assign cat_name = category | first %}
-          {% assign cat_posts = category | last | sort: 'date' | reverse %}
-          {% assign cat_size = cat_posts | size %}
-          {% assign cat_id = cat_name | slugify %}
-          {% if cat_size > 0 %}
-          <div class="category-section">
-            <h3 class="category-header category-toggle-button" onclick="togglePosts('{{ cat_id }}')" style="cursor: pointer; padding-left: 5px; display: flex; justify-content: space-between; align-items: center;">
-              <span>
-                <i class="icon-category" style="font-size: 14px;"></i> 
-                <span class="category-name">{{ cat_name }}</span>
-                <span class="category-count">({{ cat_size }} posts)</span>
-              </span>
-              <span id="toggle-icon-{{ cat_id }}" class="category-toggle-icon">&#9660; </span>
-            </h3>
-            <ul id="posts-{{ cat_id }}" class="post-hyperlinks closed" style="list-style: none;">
-            {% for post in cat_posts %}
-              <li>
-                <span class="category-post-separator">•</span>
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                <small> {{ post.date | date: "%b %d, %Y" }}</small>
-              </li>
-            {% endfor %}
-            </ul>
-          </div>
-          {% endif %}
-        {% endfor %}
-      </div>
+      <div class="search-results" id="search-results" data-placeholder="No Results" style="display: none;"></div>
     </div>
-  </ul>
+    {% endif %}
+  </li>
+  <div class="post-content">
+    <div class="category-list-direct">
+      {% assign all_categories = site.categories | sort %}
+      {% for category in all_categories %}
+        {% assign cat_name = category | first %}
+        {% assign cat_posts = category | last | sort: 'date' | reverse %}
+        {% assign cat_size = cat_posts | size %}
+        {% assign cat_id = cat_name | slugify %}
+        {% if cat_size > 0 %}
+        <div class="category-section">
+          <h3 class="category-header category-toggle-button" onclick="togglePosts('{{ cat_id }}')" style="cursor: pointer; padding-left: 5px; display: flex; justify-content: space-between; align-items: center;">
+            <span>
+              <i class="icon-category" style="font-size: 14px;"></i> 
+              <span class="category-name">{{ cat_name }}</span>
+              <span class="category-count">({{ cat_size }} posts)</span>
+            </span>
+            <span id="toggle-icon-{{ cat_id }}" class="category-toggle-icon">&#9660; </span>
+          </h3>
+          <ul id="posts-{{ cat_id }}" class="post-hyperlinks closed" style="list-style: none;">
+          {% for post in cat_posts %}
+            <li>
+              <span class="category-post-separator">•</span>
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              <small> {{ post.date | date: "%b %d, %Y" }}</small>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</ul>
 <script>
   function togglePosts(categoryId) {
     var postsList = document.getElementById('posts-' + categoryId);

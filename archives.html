@@ -5,64 +5,64 @@ permalink: /archives/
 ---
 
 {%- if site.posts.size > 0 -%}
-  <ul class="posts">
-    <li class="posts-labelgroup" id="posts-labelgroup">
-      <h1 id="posts-label">posts</h1>
-      {% if site.plainwhite.search %}
-      <div class="search-container">
-        <div class="search-section">
-          <i class="icon-search"></i>
-          <input type="text" name="search" id="searchbar" autocomplete="off" aria-label="search in posts">
-        </div>
-        <div class="search-results" id="search-results" data-placeholder="No Results" style="display: none;"></div>
+<ul class="posts">
+  <li class="posts-labelgroup" id="posts-labelgroup">
+    <h1 id="posts-label">posts</h1>
+    {% if site.plainwhite.search %}
+    <div class="search-container">
+      <div class="search-section">
+        <i class="icon-search"></i>
+        <input type="text" name="search" id="searchbar" autocomplete="off" aria-label="search in posts">
       </div>
-      {% endif %}
-    </li>
-    <div class="post-content">
-      {% assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse %}
-      {% for year in years %}
-        <div class="archive-year">
-          <h2 class="archive-year-heading">
-            {{ year.name }}
-            <i class="icon-calendar" style="font-size: 14px;"></i> 
-          </h2>
-          {% assign months = year.items | group_by_exp: "post", "post.date | date: '%m'" | sort: "name" | reverse %}
-          <ul class="archive-month-list">
-          {% for month_group in months %}
-            {% assign month_name = month_group.items.first.date | date: '%b' %}
-            <li class="archive-month-item">
-              <h3 class="archive-month-heading">
-                {{ month_name }} •
-              </h3>
-              <ul class="archive-post-detail-list">
-                {% assign sorted_posts = month_group.items | sort: 'date' | reverse %}
-              {% assign last_day = "" %}
-              {% for post in sorted_posts %}
-                {% assign date_format = "%d"%}
-                {% assign current_day = post.date | date: date_format %}
-                {% assign date_is_hidden = false %}
-                {% if current_day == last_day %}
-                  {% assign date_is_hidden = true %}
-                {% endif %}
-                <li class="archive-post-item {% if date_is_hidden %}no-date{% endif %}">
-                    <span class="archive-date-group">
-                    {% if current_day != last_day %}
-                      <span class="archive-post-date">{{ current_day }}</span>
-                      <span class="archive-post-separator">•</span>
-                    {% endif %}
-                    </span>
-                  <a href="{{ post.url | relative_url }}" class="archive-post-link">
-                      {{ post.title }}
-                  </a>
-                </li>
-                {% assign last_day = current_day %}
-              {% endfor %}
-              </ul>
-            </li>
-          {% endfor %}
-          </ul>
-        </div>
-      {% endfor %}
+      <div class="search-results" id="search-results" data-placeholder="No Results" style="display: none;"></div>
     </div>
-  </ul>
+    {% endif %}
+  </li>
+  <div class="post-content">
+    {% assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse %}
+    {% for year in years %}
+      <div class="archive-year">
+        <h2 class="archive-year-heading">
+          {{ year.name }}
+          <i class="icon-calendar" style="font-size: 14px;"></i> 
+        </h2>
+        {% assign months = year.items | group_by_exp: "post", "post.date | date: '%m'" | sort: "name" | reverse %}
+        <ul class="archive-month-list">
+        {% for month_group in months %}
+          {% assign month_name = month_group.items.first.date | date: '%b' %}
+          <li class="archive-month-item">
+            <h3 class="archive-month-heading">
+              {{ month_name }} •
+            </h3>
+            <ul class="archive-post-detail-list">
+              {% assign sorted_posts = month_group.items | sort: 'date' | reverse %}
+            {% assign last_day = "" %}
+            {% for post in sorted_posts %}
+              {% assign date_format = "%d"%}
+              {% assign current_day = post.date | date: date_format %}
+              {% assign date_is_hidden = false %}
+              {% if current_day == last_day %}
+                {% assign date_is_hidden = true %}
+              {% endif %}
+              <li class="archive-post-item {% if date_is_hidden %}no-date{% endif %}">
+                  <span class="archive-date-group">
+                  {% if current_day != last_day %}
+                    <span class="archive-post-date">{{ current_day }}</span>
+                    <span class="archive-post-separator">•</span>
+                  {% endif %}
+                  </span>
+                <a href="{{ post.url | relative_url }}" class="archive-post-link">
+                    {{ post.title }}
+                </a>
+              </li>
+              {% assign last_day = current_day %}
+            {% endfor %}
+            </ul>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</ul>
 {%- endif -%}
