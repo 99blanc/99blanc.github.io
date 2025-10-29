@@ -1,7 +1,16 @@
+$dark_text_color: #e6e6e6;
+$dark_link_color: #4da3ff;
+
+a {
+  color: $dark_text_color;
+
+  &:hover {
+    color: $dark_link_color;
+  }
+}
+
 .dark,
 .dark * {
-  $dark_text_color: #f6f6f6;
-  $dark_link_color: #4da3ff;
   background-color: #171717;
   color: $dark_text_color;
   border-color: #e6e6e6;
@@ -10,13 +19,31 @@
     img.light {
       display: none;
     }
+
     img.dark {
       display: inline;
     }
   }
 
+  .social li i,
+  .navigation ul a,
+  .post-title,
+  .post-link {
+    &:hover {
+      color: $dark_link_color;
+    }
+  }
+
   .post {
-	border-bottom: 1px solid #333;
+	  border-bottom: 1px solid #333;
+
+    a {
+      color: $dark_link_color;
+
+      &:hover {
+        border-bottom: 0.5px solid $dark_link_color;
+      }
+    }
   }
 
   .post p {
@@ -63,12 +90,10 @@
     }
   }
 
-  a {
-    color: $dark_link_color;
-  }
-
   #title a {
-    color: #fff;
+    color: $dark_text_color;
+    transition: color 0.3s;
+
     &:hover {
       color: $dark_link_color;
     }
@@ -117,10 +142,6 @@
     }
   }
 
-  .navigation ul a {
-    color: $dark_text_color;
-  }
-
   .post-content a {
     color: $dark_text_color;
   }
@@ -130,19 +151,41 @@
   }
 
   .category-count {
-	color: #ccc;
+	  color: #ccc;
   }
 
-  .category-toggle-icon {
-	color: #e6e6e6;
+  .icon-right-arrow {
+	  color: #e6e6e6;
   }
 
   .category-section {
     border-left: 1px solid #272727;
   }
 
+  .category-header {
+    &:hover {
+      .category-count {
+        color: $dark_link_color;
+      }
+
+      .category-name {
+        color: $dark_link_color;
+      }
+    }
+  }
+
   .category-post-separator {
     color: #e6e6e6;
+  }
+
+  .post-hyperlinks {
+    a {
+      color: #e6e6e6;
+
+      &:hover {
+        color: $dark_link_color;
+      }
+    }
   }
 
   .archive-year-heading {
@@ -175,6 +218,10 @@
 
   .archive-post-link {
     color: $dark_text_color;
+
+    &:hover {
+      color: $dark_link_color;
+    }
   }
 }
 

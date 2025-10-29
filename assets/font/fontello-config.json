@@ -237,15 +237,15 @@
       ]
     },
     {
-      "uid": "5de9370846a26947e03f63142a3f1c07",
-      "css": "angle-up",
-      "code": 61702,
-      "src": "fontawesome"
-    },
-    {
       "uid": "3db5347bd219f3bce6025780f5d9ef45",
       "css": "category",
       "code": 59394,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "399ef63b1e23ab1b761dfbb5591fa4da",
+      "css": "right-arrow",
+      "code": 59396,
       "src": "fontawesome"
     },
     {

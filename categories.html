@@ -30,11 +30,11 @@ permalink: /categories/
         <div class="category-section">
           <h3 class="category-header category-toggle-button" onclick="togglePosts('{{ cat_id }}')" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
             <span>
-              <i class="icon-category" style="font-size: 14px;"></i> 
+              <i class="icon-category"></i> 
               <span class="category-name">{{ cat_name }}</span>
               <span class="category-count">({{ cat_size }} posts)</span>
             </span>
-            <span id="toggle-icon-{{ cat_id }}" class="category-toggle-icon">&#9660; </span>
+            <i id="toggle-icon-{{ cat_id }}" class="icon-right-arrow"></i>
           </h3>
           <ul id="posts-{{ cat_id }}" class="post-hyperlinks closed" style="list-style: none;">
           {% for post in cat_posts %}
