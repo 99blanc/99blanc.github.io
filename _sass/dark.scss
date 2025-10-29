@@ -36,6 +36,18 @@
     color: $dark_text_color
   }
 
+  .social {
+    li {
+      i {
+        color: #fff !important;
+
+        &:hover {
+          color: #fff !important;
+        }
+      }
+    }
+  }
+
   .icon-calendar {
     color: #999
   }

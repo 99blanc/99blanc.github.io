@@ -192,7 +192,12 @@ main {
 
   li {
     i {
+      color: #000 !important;
       font-size: 34px;
+
+      &:hover {
+        color: #000 !important;
+      }
     }
   }
 }
