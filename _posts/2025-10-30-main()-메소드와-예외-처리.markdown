@@ -66,4 +66,4 @@ finally {
 }
 ```
 
- [1]: https://en.wikipedia.org/wiki/Exception_handling_syntax " 예외 처리를 허용하기 위해 프로그래밍 언어에서 제공하는 구조 집합으로, 프로그램 작동 중에 발생하는 오류 처리를 일반 프로세스와 분리한다."
+ [1]: https://en.wikipedia.org/wiki/Exception_handling_syntax "예외 처리를 허용하기 위해 프로그래밍 언어에서 제공하는 구조 집합으로, 프로그램 작동 중에 발생하는 오류 처리를 일반 프로세스와 분리한다."
