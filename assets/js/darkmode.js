@@ -20,7 +20,7 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + value + ";path=/;SameSite=strict;expires=" + d.toGMTString();
 }
 function deleteCookie(name) { setCookie(name, '', -1); }
-const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+var userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 var theme = getCookie('theme');
 function initializeDarkMode() {
     const DARK_CLASS = 'dark';

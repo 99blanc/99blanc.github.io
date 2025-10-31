@@ -7,7 +7,7 @@ categories: Code Java Study
 
 ### 0으로 나눌 때 발생하는 ArithmeticException 예외 처리
 ---
- try-catch 문을 이용하여 정수를 0으로 나누는 경우에 "0으로 나눌 수 없습니다! 다시 입력하세요."를 출력하고 다시 입력 받는 프로그램의 예제 코드는 다음과 같다.
+ try-catch 문을 이용하여 정수를 0으로 나누는 경우에 오류 안내문을 출력하고 다시 입력 받는 프로그램의 예제 코드는 다음과 같다.
 
 ```java
 package ch3n15;

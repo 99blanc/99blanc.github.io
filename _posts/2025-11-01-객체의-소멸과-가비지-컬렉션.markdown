@@ -64,4 +64,3 @@ System.gc(); // 가비지 컬렉션을 강제로 요청한다. 호출 즉시 가
  [3]: https://ko.wikipedia.org/wiki/%EC%93%B0%EB%A0%88%EA%B8%B0_%EC%88%98%EC%A7%91_(%EC%BB%B4%ED%93%A8%ED%84%B0_%EA%B3%BC%ED%95%99)#%EA%B0%9D%EC%B2%B4_%EC%9D%B4%EB%8F%99_%EA%B8%B0%EB%B2%95 "실행 중 예외가 발생하더라도, JVM이 무시하고 스택 추적만 출력한 채 종료되며, 다른 객체의 finalize() 메소드 호출을 방해할 수 있다."
  [4]: https://ko.wikipedia.org/wiki/%EC%93%B0%EB%A0%88%EA%B8%B0_%EC%88%98%EC%A7%91_(%EC%BB%B4%ED%93%A8%ED%84%B0_%EA%B3%BC%ED%95%99)#%EA%B0%9D%EC%B2%B4_%EC%9D%B4%EB%8F%99_%EA%B8%B0%EB%B2%95 "메소드 내의 객체 자신을 정적 필드와 같이 다시 접근 가능한 곳에 할당하면, 가비지 컬렉터의 회수 대상에서 제외되어 객체가 부활할 수 있다."
  [5]: https://en.wikipedia.org/wiki/Tracing_garbage_collection "특정 루트 객체의 참조 체인으로 도달할 수 있는 객체를 추적하여 할당을 해제해야 하는 객체를 결정하고 나머지는 가비지로 간주하여 수집하는 자동 메모리 관리의 한 형태이다."
-
