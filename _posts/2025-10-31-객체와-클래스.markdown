@@ -26,10 +26,10 @@ categories: Code Java Study
  자바 클래스는 class 카워드를 사용하여 선언한다. 클래스의 [구성 요소][8]를 멤버라고 부르며, 멤버는 필드(멤버 변수)와 메소드(멤버 함수)로 두 가지이다.
 
 ```java
-public class HelloWorldApp { //클래스. 메소드를 넣을 수 있다.
+public class HelloWorldApp { // 클래스. 메소드를 넣을 수 있다.
 	// 전역 변수의 시작점
-	public static void main(String[] args) { //메인 메소드의 시작점, public 없이는 작동하지 않는다.
-		//지역 변수의 시작점
+	public static void main(String[] args) { // 메인 메소드의 시작점, public 없이는 작동하지 않는다.
+		// 지역 변수의 시작점
 		System.out.println("Hello World!"); // Hello World를 출력한다.
 	} // 메소드의 끝, 다른 메소드가 붙을 수 있다.
 } // 클래스의 끝, 다른 클래스가 붙을 수 있으나 해당 클래스는 public 키워드가 붙어있지 않아야 한다.

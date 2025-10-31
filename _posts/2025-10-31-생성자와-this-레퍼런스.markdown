@@ -1,0 +1,192 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: 생성자와 this 레퍼런스"
+date: 2025-10-31 11:08:00 +09:00
+categories: Code Java Study
+---
+
+### 생성자의 개념과 목적
+---
+ 객체가 생성될 때 객체의 초기화를 위해 실행되는 메소드로, 자바, C++, C#, Python 등 모든 객체 지향 언어에 존재한다.
+
+### 생성자 선언 및 활용
+---
+ [생성자][1]는 객체가 생성되는 순간에 자동으로 호출되는 메소드로서, 객체에 필요한 초기화를 실행하는 코드를 담아야 한다.
+
+ 생성자의 특징을 정리하기 위한 예제 코드는 다음과 같다.
+
+```java
+package ch4n3;
+
+public class Circle {
+	final double PI = 3.141592;
+	int radius;
+	String name;
+	
+	public Circle() {
+		radius = 1;
+		name = "";
+	}
+	
+	public Circle(int r, String n) {
+		radius = r;
+		name = n;
+	}
+	
+	public double getArea( ) {
+		return PI * radius * radius;
+	}
+	
+	public static void main(String[] args) {
+		Circle pizza = new Circle(10, "자바 피자");
+		double area = pizza.getArea();
+		System.out.println(pizza.name + "의 면적은 " + area);
+		
+		Circle donut = new Circle();
+		donut.name = "도넛 피자";
+		area = donut.getArea();
+		System.out.println(donut.name + "의 면적은 " + area);
+	}
+}
+```
+
+### 생성자 특징
+---
+ 특징은 다음과 같다.
+
+ * 클래스 명과 동일한 생성자 명: 이름은 반드시 클래스 이름과 동일하게 작성해야 한다.
+ * 오버로딩: 매개 변구의 개수와 타입만 다르다면, 클래스 내에 생성자를 여러 개 둘 수 있다.
+ * 생성 시 한 번 호출: 객체 생성은 반드시 new 키워드를 통해서만 이루어지며, 호출하고 싶을 때 아무 때나 호출하는 것이 아니고, 자동으로 한 번만 호출된다.
+ * 리턴 타입 지정 불가: 생성자는 어떤 값도 리턴하지 않기 때문에 리턴 타입을 선언해서는 안된다.
+ * 초기 작업: 객체가 생성될 때, 필드 초기화, 필요한 메모리 확보, 파일 열기, 네트워크 연결 등 객체가 활동하기 전에 필요한 준비를 하는데 이용된다.
+
+ 생성자의 선언 및 활용 연습을 위한 예제 코드는 다음과 같다.
+
+```java
+package ch4n4;
+
+public class Book {
+	String title;
+	String author;
+	
+	public Book(String t) { // 생성자 1
+		title = t;
+		author = "작자 미상";
+	}
+	
+	public Book(String t, String a) { // 생성자 1 오버로딩
+		title = t;
+		author = a;
+	}
+	
+	public static void main(String[] args) {
+		Book littlePrince = new Book("어린 왕자", "생텍쥐페리"); // 생성자 1 호출
+		Book loveStory = new Book("춘향전"); // 생성자 1 오버로딩 호출
+		System.out.println(littlePrince.title + " " + littlePrince.author);
+		System.out.println(loveStory.title + " " + loveStory.author);
+	}
+}
+```
+
+검증을 위한 실행 결과는 다음과 같다.
+
+![예제 4-4 생성자 선언 및 활용 연습](https://drive.google.com/thumbnail?id=1A1wVpJlLvi59Pu6lB5nyGKS1HDnBjinR&sz=w1000)
+
+### 기본 생성자
+---
+ 매개 변수와 실행 코드가 없어 아무 일도 하지 않고 단순 리턴하는 생성자로, 디폴트 생성자라고도 부른다. 생성자가 없는 클래스는 있을 수 없으며, 객체가 생성될 때 반드시 생성자가 실행되기 때문이다. 생성자가 하나도 없는 경우, 컴파일러는 기본 생성자를 자동으로 생성하며, 생성자가 하나라도 존재하는 클래스에는 컴파일러가 기본 생성자를 생성하지 않는다.
+
+ 앞서 설명한 기본 생성자에 대한 예시 코드는 다음과 같다.
+
+```java
+final double PI = 3.141592;
+
+public class CircleA {
+	int radius;
+}
+
+public class CircleB {
+	int radius;
+
+	public CircleB(int r) {
+		radius = r;
+	}
+}
+
+public class DefaultConstructor {
+	public static void main(String[] args) {
+		CircleA pizza = new Circle() // 정상적인 표현이다.
+		CircleB donut = new Circle(); // 컴파일 오류, 생성자 Circle()이 생성되지 않았다.
+	}
+}
+```
+
+### this 레퍼런스의 개념
+---
+ 자바의 중요한 키워드로서, 단어 뜻 그대로 객체 자신을 가리키는 레퍼런스이다. 보다 정확히 말하면 현재 실행되고 있는 메소드가 속한 객체에 대한 레퍼런스로, 컴파일러에 의해 자동 관리된다.
+
+```java
+public class Circle {
+	int radius;
+
+	public Circle(int r) {
+		this.radius = r; // 멤버 radius 변수를 가리킨다.
+	}
+
+	public int getRadius() {
+		return radius;
+	}
+}
+```
+
+### this 레퍼런스의 필요성
+---
+ 클래스 내에서 멤버 변수에 접근할 때 굳이 this 레퍼런스를 사용할 필요는 없지만 매개 변수의 이름은 그 자체로서 코드를 읽는 사람에게 그 용도를 나타내므로, 적합한 이름을 붙이는 것은 중요하다.
+
+### this 레퍼런스로 다른 생성자 호출
+---
+ this() 메소드는 클래스 내에서 생성자가 다른 생성자를 호출할 때 사용되는 자바 코드이다. 이 메소드를 이용한 예제 코드는 다음과 같다.
+
+```java
+package ch4n5;
+
+public class Book {
+	String title;
+	String author;
+	
+	void show() {
+		System.out.println(title + " " + author);
+	}
+	
+	public Book() {
+		this("", ""); // this() 메소드는 생성자의 첫 번째 문장이어야 한다.
+		System.out.print("생성자 호출");
+	}
+	
+	public Book(String title) {
+		this(title, "작자 미상");
+	}
+	
+	public Book(String title, String author) {
+		this.title = title;
+		this.author = author;
+	}
+	
+	public static void main(String[] args) {
+		Book littlePrince = new Book("어린 왕자", "생텟쥐페리");
+		Book loveStory = new Book("춘향전");
+		Book emptyBook = new Book();
+		loveStory.show();
+	}
+}
+```
+
+### this 레퍼런스 사용 시 주의 사항
+---
+ this() 메소드 사용 시 다음과 같은 주의 사항이 있다.
+
+ * this() 메소드는 반드시 생성자 코드에서만 호출할 수 있다.
+ * this() 메소드는 반드시 같은 클래스 내 다른 생성자를 호출할 때 사용된다.
+ * this() 메소드는 반드시 생성자의 첫 번째 문장이 되어야 한다.
+
+ [1]: https://ko.wikipedia.org/wiki/%EC%83%9D%EC%84%B1%EC%9E%90 "객체를 생성하기 위해 호출되는 특수한 유형의 메소드이자 객체의 초기화를 담당하는 서브 루틴을 가리킨다."
