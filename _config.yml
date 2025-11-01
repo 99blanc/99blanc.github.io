@@ -77,12 +77,4 @@ theme: plainwhite
 plugins:
   - github-pages
 
-jekyll-archives:
-  enabled:
-    - categories
-  layout: 
-    category: 'category'
-  permalinks: 
-    category: '/categories/:name/'
-
-permalink: /:year/:month/:day/:title/
+permalink: "/:year:month:day:hour:minute/"

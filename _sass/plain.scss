@@ -673,6 +673,7 @@ footer {
 }
 
 .github-stat-item {
+  max-height: 200;
   opacity: 0;
   animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
   animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
