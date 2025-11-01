@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About
-permalink: /about/
+permalink: /about
 ---
 
 # 🧑‍💻 Programmer | Sehyun Kim (김세현)

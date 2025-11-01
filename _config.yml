@@ -77,4 +77,4 @@ theme: plainwhite
 plugins:
   - github-pages
 
-permalink: "/:year:month:day:hour:minute/"
+permalink: "/:year:month:day:hour:minute"
