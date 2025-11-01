@@ -32,11 +32,17 @@ permalink: /statistics/
     </div>
     <div class="category-stats-container">
       {% assign latest_post = site.posts | sort: 'date' | reverse | first %}
-      {% assign latest_category = latest_post.categories | first %}
+      {% assign latest_categories_list = latest_post.categories | join: ", " %}
       <div class="latest-update-info">
         <i class="icon-sync"></i>
-        <span class="latest-category-header">Latest Update Category: </span>
-        <strong class="latest-category-name">{{ latest_category }}</strong>
+        <span class="latest-category-header">Latest Update Category</span>
+        <br>
+        <br>
+        {%- if latest_post.categories.size > 0 %}
+          <strong class="latest-category-name">{{ latest_categories_list }}</strong>
+        {%- else %}
+          <strong class="latest-category-name">Uncategorized</strong>
+        {%- endif %}
       </div>
       <h4 class="total-posts-header">• Total {{ total_posts }} Posts</h3>
       {% assign all_categories = site.categories | sort %}
@@ -108,17 +114,34 @@ permalink: /statistics/
   });
   localStorage.setItem(COLOR_KEY, JSON.stringify(storedColors));
   const latestCategoryElement = document.querySelector('.latest-category-name');
-  const latestCategoryName = latestCategoryElement ? latestCategoryElement.textContent.trim() : null;
-  if (latestCategoryName && storedColors[latestCategoryName]) {
-    const color = storedColors[latestCategoryName].hex;
-    latestCategoryElement.style.color = color;
-    const latestInfoIcon = document.querySelector('.latest-update-info .icon-sync');
-    if (latestInfoIcon) {
-      latestInfoIcon.style.color = color;
-    }
+  const latestInfoIcon = document.querySelector('.latest-update-info .icon-sync');
+  if (latestCategoryElement) {
+      const categoryString = latestCategoryElement.textContent.trim();
+      const categoryNames = categoryString.split(',').map(name => name.trim()).filter(name => name.length > 0);
+      latestCategoryElement.textContent = '';
+      const fragment = document.createDocumentFragment();
+      let isFirst = true;
+      categoryNames.forEach((name) => {
+          const colorData = storedColors[name];
+          let color = colorData ? colorData.hex : '#777777';
+          if (!isFirst) {
+              fragment.appendChild(document.createTextNode(', '));
+          }
+          const span = document.createElement('span');
+          span.textContent = name;
+          span.style.color = color;
+          span.style.fontWeight = 'bold';
+          fragment.appendChild(span);
+          if (isFirst && latestInfoIcon) {
+              latestInfoIcon.style.color = color;
+          }
+          
+          isFirst = false;
+      });
+      latestCategoryElement.appendChild(fragment);
   }
   const statBars = document.querySelectorAll('.stat-bar');
-  let delay = 0; 
+  let delay = 0;
   const delayIncrement = 150;
   statBars.forEach(bar => {
     const percentage = bar.dataset.percentage;
