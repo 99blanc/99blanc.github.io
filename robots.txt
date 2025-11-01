@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://99blanc.github.io/sitemap.xml 
+Sitemap: {{ '/sitemal.xml' | relative_url | prepend: site.url }}
