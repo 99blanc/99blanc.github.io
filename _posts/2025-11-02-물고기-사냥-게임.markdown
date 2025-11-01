@@ -1,0 +1,377 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: 물고기 사냥 게임"
+date: 2025-11-02 07:52:00 +09:00
+last_modified_at: 2025-11-02 07:52:00 +09:00
+categories: Code Java Challenge
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 오픈 챌린지 문제
+---
+ 추상 클래스 및 상속 개념을 이용하는 물고기 사냥 미니 게임을 아래 제시된 규칙과 제약 조건을 모두 충족하여 Bear, Fish FishHuntingMinigame 3개의 클래스를 설계하고 구현하라.
+
+|요소|제약 조건 및 규칙
+|:---:|:---:|
+|게임판크기|10행, 20열의 격자판을 사용|
+|객체 배치|Bear 객체: 초기 위치는 (0, 0), 모양은 'B'<br>Fish 객체: 초기 위치는 (19, 9), 모양은 'F'
+|Bear 객체 이동|입력 키: a(왼쪽), f(오른쪽), d(위), s(아래)|
+|Fish 객체 이동|턴 마다 확률적 이동<br>5번의 턴 중 3번은 제자리에 머문다.<br>나머지 2번은 상/하/좌/우 중 랜덤하게 한 칸씩 이동한다.<br>격자판 경계를 벗어날 수 없다.|
+|승리 조건|Bear 객체의 위치가 Fish 객체의 위치가 같아지면 게임이 성공적으로 끝난다.|
+
+ 제시 코드는 다음과 같다.
+
+ * GameObject.java
+
+```java
+public abstract class GameObject {
+    protected int distance; 
+    protected int x, y;     
+    
+    public GameObject(int startX, int startY, int distance) {
+        this.x = startX;
+        this.y = startY; 
+        this.distance = distance;
+    }
+    
+    public int getX() { return x; }
+    public int getY() { return y; }
+    
+    // 두 객체가 같은 위치에 있는지 확인
+    public boolean collide(GameObject p) {
+        if (this.x == p.getX() && this.y == p.getY()) { return true; }
+        else { return false; }
+    }
+    
+    protected abstract void move(); 
+    protected abstract char getShape(); 
+}
+```
+
+ * FishHuntingMinigame.java
+
+```java
+public class FishHuntingMinigame {
+    public static void main(String[] args) {
+        // 게임 초기화 및 run() 메서드를 호출하여 게임을 실행하는 로직을 구현합니다.
+    }
+}
+```
+
+### 오픈 챌린지 풀이
+---
+ Bear 객체와 Fish 객체를 GameObject 객체에 상속시켜 move() 메소드를 구현하고 Random 클래스를 이용하여 5가지 확률을 통해 10행, 20열의 경계 조건을 검사하며 이동하도록 설계했다. 자세한 설계 내용은 다음과 같다.
+
+ * Bear 객체: 사용자의 키 입력을 받아 한 칸씩 움직이며, 경계를 벗어나지 않도록 검사했다.
+
+```java
+package ch5nC;
+
+import java.util.Scanner;
+
+public class Bear extends GameObject {
+    private Scanner scanner;
+    
+    public Bear(int startX, int startY, int distance) {
+        super(startX, startY, distance);
+        this.scanner = new Scanner(System.in);
+    }
+
+    @Override
+    protected void move() {
+        System.out.print("Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> ");
+        String direction = scanner.next();
+        
+        int newX = x;
+        int newY = y;
+
+        switch (direction) {
+            case "a": newX -= distance; break; // 왼쪽
+            case "f": newX += distance; break; // 오른쪽
+            case "d": newY -= distance; break; // 위
+            case "s": newY += distance; break; // 아래
+            default: 
+                System.out.println("잘못된 입력입니다. 제자리에 머뭅니다.");
+                return;
+        }
+
+        // 경계 검사 (10행 20열 격자판 가정: X=0~19, Y=0~9)
+        if (newX >= 0 && newX < 20) {
+            x = newX;
+        } else {
+            System.out.println("벽에 부딪혔습니다. (X 경계)");
+        }
+        
+        if (newY >= 0 && newY < 10) {
+            y = newY;
+        } else {
+            System.out.println("벽에 부딪혔습니다. (Y 경계)");
+        }
+    }
+
+    @Override
+    protected char getShape() {
+        return 'B';
+    }
+}
+```
+
+ * Fish 객체: 5번 중 3번은 제자리에 있고, 2번은 4가지 방향 중 랜덤하게 움직이도록 설계했다.
+
+```java
+package ch5nC;
+
+import java.util.Random;
+
+public class Fish extends GameObject {
+    private Random random;
+
+    public Fish(int startX, int startY, int distance) {
+        super(startX, startY, distance);
+        this.random = new Random();
+    }
+
+    @Override
+    protected void move() {
+        // 0부터 4까지의 난수 생성 (총 5가지 경우)
+        int moveChance = random.nextInt(5); 
+
+        // 3/5 확률로 제자리에 머뭄 (0, 1, 2)
+        if (moveChance < 3) {
+            return; 
+        }
+
+        // 2/5 확률로 랜덤하게 이동 (3, 4)
+        int direction = random.nextInt(4); // 0:왼쪽, 1:오른쪽, 2:위, 3:아래
+
+        int newX = x;
+        int newY = y;
+
+        switch (direction) {
+            case 0: newX -= distance; break; // 왼쪽
+            case 1: newX += distance; break; // 오른쪽
+            case 2: newY -= distance; break; // 위
+            case 3: newY += distance; break; // 아래
+        }
+
+        // 경계 검사 (10행 20열 격자판 가정: X=0~19, Y=0~9)
+        if (newX >= 0 && newX < 20) {
+            x = newX;
+        }
+        
+        if (newY >= 0 && newY < 10) {
+            y = newY;
+        }
+    }
+
+    @Override
+    protected char getShape() {
+        return 'F';
+    }
+}
+```
+
+ * FishHuntingMinigame 게임 실행 로직: 게임판 출력과 게임 루프, 승리 조건을 담당하는 메인 클래스로 설계했다.
+
+```java
+package ch5nC;
+
+public class FishHuntingMinigame {
+    
+    private static final int MAP_ROWS = 10;
+    private static final int MAP_COLS = 20;
+    
+    private GameObject bear;
+    private GameObject fish;
+    
+    public FishHuntingMinigame() {
+        // 곰(B)과 물고기(F) 객체 생성 및 초기 위치 설정
+        // (X, Y, distance) -> (열, 행, 이동거리)
+        bear = new Bear(0, 0, 1);     // (0열, 0행)에서 시작
+        fish = new Fish(19, 9, 1);    // (19열, 9행)에서 시작
+    }
+
+    private void drawMap() {
+        // 10행 x 20열 지도 출력
+        char[][] map = new char[MAP_ROWS][MAP_COLS];
+
+        // 맵 초기화
+        for (int i = 0; i < MAP_ROWS; i++) {
+            for (int j = 0; j < MAP_COLS; j++) {
+                map[i][j] = '-';
+            }
+        }
+
+        // 객체 배치: Y는 행, X는 열
+        map[bear.getY()][bear.getX()] = bear.getShape();
+        map[fish.getY()][fish.getX()] = fish.getShape();
+
+        // 맵 출력
+        System.out.println("\n--- 물고기 사냥 미니 게임 (10행 x 20열) ---");
+        for (int i = 0; i < MAP_ROWS; i++) {
+            for (int j = 0; j < MAP_COLS; j++) {
+                System.out.print(map[i][j]);
+            }
+            System.out.println();
+        }
+    }
+    
+    public void run() {
+        System.out.println("물고기 사냥 게임을 시작합니다.");
+        
+        while (true) {
+            drawMap();
+            
+            // 1. Bear 이동
+            bear.move();
+            
+            // 2. Bear와 Fish의 충돌 검사
+            if (bear.collide(fish)) {
+                System.out.println("Bear가 Fish를 잡았습니다! 게임 성공!");
+                drawMap();
+                break;
+            }
+            
+            // 3. Fish 이동
+            fish.move();
+            
+            // 4. Fish 이동 후 충돌 검사 (Fish가 Bear가 있던 자리로 움직일 수도 있음)
+            if (bear.collide(fish)) {
+                System.out.println("Bear가 Fish를 잡았습니다! 게임 성공!");
+                drawMap();
+                break;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        FishHuntingMinigame game = new FishHuntingMinigame();
+        game.run();
+    }
+}
+```
+
+ * 실행: 잘못된 위치 이동, 잘못된 키 입력, 벽 판정, 게임 성공 여부를 테스트했고, 게임의 결과는 다음과 같다.
+
+```bash
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------B
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------F
+Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> s
+
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------B
+--------------------
+--------------------
+--------------------
+-------------------F
+Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> s
+
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------B
+--------------------
+--------------------
+------------------F-
+Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> s
+
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------B
+--------------------
+------------------F-
+Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> s
+
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+------------------FB
+--------------------
+Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> d
+
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------B
+-------------------F
+--------------------
+Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> e
+잘못된 입력입니다. 제자리에 머뭅니다.
+
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------B
+-------------------F
+--------------------
+Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> f
+벽에 부딪혔습니다. (X 경계)
+
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------B
+-------------------F
+--------------------
+Bear의 이동 방향 (a:왼쪽, s:아래, d:위, f:오른쪽) >> s
+Bear가 Fish를 잡았습니다! 게임 성공!
+
+--- 물고기 사냥 미니 게임 (10행 x 20열) ---
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+-------------------F
+--------------------
+```

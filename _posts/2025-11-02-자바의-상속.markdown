@@ -1,0 +1,162 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: 자바의 상속"
+date: 2025-11-02 06:56:00 +09:00
+last_modified_at: 2025-11-02 06:56:00 +09:00
+categories: Code Java Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 상속의 특징과 객체
+---
+ 상속의 몇 가지 특징은 다음과 같다.
+
+ * 단일 상속: 클레스의 다중 상속을 지원하지 않는다.
+ * 무한한 상속 횟수: 상속의 횟수에 제한을 두지 않는다. 이는 다이아몬드 상속 문제와 직결된다.
+ * 최상위 클래스: 계층 구조의 최상위에는 java.lang.Object 클래스가 있다.
+
+ 상속과 객체 사이의 관계를 알아보기 위한 예제 코드는 다음과 같다.
+
+```java
+package ch5n1;
+
+class Point {
+	private int x, y;
+	
+	public void set(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public void showPoint() {
+		System.out.println("(" + x + ", " + y + ")");
+	}
+}
+
+class ColorPoint extends Point { // Point 클래스를 상속받은 ColorPoint 클래스를 선언한다.
+	private String color;
+	
+	public void setColor(String color) {
+		this.color = color;
+	}
+	
+	public void showColorPrint() { // 컬러 점의 좌표를 출력한다.
+		System.out.print(color);
+		showPoint(); // Point 클래스의 showPoint() 메소드를 호출한다.
+	}
+}
+```
+
+### 업캐스팅과 다운캐스팅
+---
+ 일반적으로 [캐스팅][1]은 명시적 타입 변환을 의미하며, 서브 클래스의 객체에 대한 레퍼런스를 슈퍼 클래스 타입으로 변환하는 것을 업케스팅(Upcasting)이라고 한다. 업캐스팅은 슈퍼 클래스의 레퍼런스로 서브 클래스의 객체를 가리키게 한다. 이와 달리 반대로 캐스팅하는 것을 다운캐스팅(Downcasting)이라고 한다. 다운캐스팅은 업캐스팅과는 달리 명시적으로 타입 변환을 지정해야 한다.
+
+### super, instanceof 키워드
+---
+ 서브 클래스에서 super 키워드를 이용하면 정적 바인딩(Static Binding)을 통해 슈퍼 클래스의 멤버에 접근할 수 있다. super 키워드 자체가 자바 컴파일러에 의해 지원되는 것으로 슈퍼 클래스에 대한 레퍼런스이다. instanceof 키워드는 레퍼런스가 가리키는 객체가 어떤 클래스 타입인지 구분하기 위해 사용하며, 이항 연산자로서 다음과 같이 사용할 수 있다.
+
+```java
+레퍼런스 instanceof 클래스
+```
+
+### 메소드 오버라이딩의 제약 사항
+---
+ 상속과 관련하여 메소드를 오버라이딩할 때 다음 몇 가지 조건을 지켜야 한다.
+
+ * 동일한 원형 작성: 슈퍼 클래스의 메소드와 동일한 원형으로 작성한다.
+ * 접근 범위: 슈퍼 클래스 메소드의 접근 지정자보다 접근의 범위를 좁혀 오버라이딩할 수 없다.
+ * 키워드 제한: static, private, final 키워드로 선언된 메소드는 서브 클래스에서 오버라이딩할 수 없다.
+ 
+### 동적 바인딩과 정적 바인딩
+---
+ 동적 바인딩(Dynamic Binding)은 실행할 메소드를 컴파일 타임에 결정하지 않고 런타임에 결정하는 것을 말하며, 자바에서는 동적 바인딩을 통해 오버라이딩된 메소드가 항상 실행되도록 보장한다. 이와 달리 정적 바인딩은 실행할 메소드를 컴파일 타임에 결정하는 것을 의미한다.
+
+### 추상 클래스
+---
+ 추상 메소드(Abstract Method)란 선언은 되어 있으나 코드가 구현되어 있지 않은, 즉 껍데기만 있는 메소드이다. 추상 메소드를 작성하려면 abstract 키워드와 함께 원형만 선언하고, 코드는 작성하지 않는다. 추상 클래스(Abstract Class)가 되는 경우는 2가지로서, 추상 메소드와 마찬가지로 모두 abstract 키워드로 선언해야 하며, 특징은 다음과 같다.
+
+ * 객체 생성 불가: 객체를 생성할 목적으로 만드는 클래스가 아니기 때문에, 응용 프로그램은 추상 클래스의 객체를 생성할 수 없다.
+ * 상속: 단순히 상속받는 서브 클래스는 추상 클래스가 되며, 추상 메소드를 그대로 상속받는다.
+ * 구현 목적: 추상 메소드를 통해 서브 클래스가 구현할 메소드를 명로하게 알려주는 인터페이스 역할로, 슈퍼 클래스에 선언된 모든 추상 메소드를 서브 클래스에서 오버라이딩하여 실행 가능한 코드로 만들어야 한다. 이를 통해 서브 클래스는 추상 메소드를 목적에 맞게 구현하는 다형성을 실천할 수 있다.
+
+ 추상 클래스 구현을 연습하기 위한 예제 코드는 다음과 같다.
+
+```java
+package ch5n7;
+
+public abstract class Calculator {
+	public abstract int add(int a, int b);
+	public abstract int subtract(int a, int b);
+	public abstract double average(int[] a);
+}
+
+class GoodCalc extends Calculator {
+
+	@Override
+	public int add(int a, int b) {
+		return a + b;
+	}
+
+	@Override
+	public int subtract(int a, int b) {
+		return a - b;
+	}
+
+	@Override
+	public double average(int[] a) {
+		double sum = 0;
+		
+		for (int i = 0; i < a.length; ++i) {
+			sum += a[i];
+		}
+		
+		return sum/a.length;
+	}
+	
+	public static void main(String[] args) {
+		GoodCalc c = new GoodCalc();
+		System.out.println(c.add(2, 3));
+		System.out.println(c.subtract(2, 3));
+		System.out.println(c.average(new int[] { 2, 3, 4 }));
+	}
+}
+```
+
+### 인터페이스
+---
+ 자바의 인터페이스는 interface 키워드를 사용하여 클래스와 같은 방법으로 생성할 수 있다. 선언을 연습하기 위한 예시 코드는 다음과 같으며,
+
+```java
+interface PhoneInterface { // PhoneInterface 인터페이스를 선언한다.
+	public static final int TIMEOUT = 10000;
+	public abstract void sendCall(); // 추상 메소드, public abstract 키워드의 생략이 가능하다.
+	public abstract void receiveCall(); // 추상 메소드, public abstract 키워드의 생략이 가능하다.
+	public default void printLogo() { // 디폴트 메소드이다.
+		System.out.println("** Phone **");
+	}
+}
+```
+
+ 인터페이스의 특징은 다음과 같다.
+
+ * 객체 생성 불가: 추상 메소드는 public abstract 키워드로 정해져 있으며, 생략될 수 있고, 다른 접근 지정으로 지정될 수 없다. default, private, static 메소드들은 모두 인터페이스 내에 코드가 작성되어 있어야 한다.
+ * 인터페이스 타입의 레퍼런스 변수 선언 가능: 예시를 위한 코드는 다음과 같다.
+
+```java
+PhoneInterface galaxy;
+```
+
+ * 상속: 인터페이스는 다른 인터페이스를 상속할 수 있으며, 다중 인터페이스를 구현할 수 있다.
+ * 구현 목적: 상속받을 서브 클래스에게 구현할 메소드들의 원형을 모두 알려주어, 클래스가 스스로의 목적에 맞게 메소드를 구현하도록 하는 것이다.
+
+### 추상 클래스와 인터페이스 비교
+---
+ 추상 클래스와 인터 페이스는 객체를 생성할 수 없고, 상속을 위한 슈퍼 클래스로만 사용되며, 클래스의 다형성을 실천하기 위한 목적을 갖는다는 유사점이 있다. 그러나 이 둘은 여러 면에서 다르다.
+ 
+![추상 클래스와 인터페이스의 비교](https://drive.google.com/thumbnail?id=1lGDsf7HvkcHZuVj4iZAJ6lxdx4e27Elh&sz=w1000)
+
+ [1]: https://en.wikipedia.org/wiki/Type_conversion "표현식에서 하나의 데이터 타입을 다른 데이터 타입으로 변경하는 다양한 방법을 의미한다."
+ [2]: https://ko.wikipedia.org/wiki/%EC%97%B0%EC%82%B0_(%EC%88%98%ED%95%99) "연산자의 정의에 따라 한 개 이상의 피연산자를 계산하여 하나의 결과값을 구하는 것을 연산이라고 하며, 피연산자 또는 항이 두 개일 때를 이항연산이라고 한다."
+
