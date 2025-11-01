@@ -2,7 +2,11 @@
 layout: post
 title: "명품 자바 프로그래밍 개정 4판: 개발 도구와 자바 플랫폼"
 date: 2025-10-29 02:22:00 +09:00
+last_modified_at: 2025-10-29 02:22:00 +09:00
 categories: Java Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
 ---
 
 ### JRE와 JDK

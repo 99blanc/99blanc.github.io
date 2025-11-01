@@ -2,7 +2,11 @@
 layout: post
 title: "명품 자바 프로그래밍 개정 4판: 객체의 소멸과 가비지 컬렉션"
 date: 2025-11-01 01:38:00 +09:00
+last_modified_at: 2025-11-01 01:38:00 +09:00
 categories: Code Java Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
 ---
 
 ### 객체 생성과 객체 소멸
