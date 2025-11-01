@@ -5,12 +5,13 @@ permalink: /about
 ---
 
 # 🧑‍💻 Programmer | Sehyun Kim (김세현)
+---
  **Java/Spring & Unity Visualization Developer**
 
 <br>
 
 # 🚀 About Me
-
+---
 안녕하세요! **Java/Spring 기반 백엔드 시스템 개발** 및 **Unity를 활용한 2D/3D 개발**에 경험이 있는 프로그래머 김세현입니다.
 
 💡 저는 **견고한 백엔드 시스템 구축(Java/Spring)** 또는 **Unity를 활용한 시스템 개발 역량**을 이용한, 개발자가 되는 것이 목표입니다.
@@ -18,6 +19,7 @@ permalink: /about
 <br>
 
 # 🛠️ Tech Stack
+---
 
 | Category | Skill |
 | :--- | :--- |
@@ -29,6 +31,7 @@ permalink: /about
 <br>
 
 # 🏆 Certification & Education
+---
 
 | Category | Detail | Year |
 | :--- | :--- | :--- |
@@ -40,6 +43,7 @@ permalink: /about
 <br>
 
 # ☎️ Contact
+---
 
 | Category | Detail |
 | :--- | :--- |
@@ -50,8 +54,6 @@ permalink: /about
 <br>
 
 # 📄 Portfoilo
-
-<br>
-
+---
 [![Blog](https://img.shields.io/badge/Blog-FF7F33?style=for-the-badge&logo=github&logoColor=white)](https://99blanc.github.io)
 [![YouTube](https://img.shields.io/badge/Youtube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtube.com/@99blanc)

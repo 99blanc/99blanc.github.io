@@ -86,6 +86,10 @@
     }
   }
 
+  .post-title {
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.01);
+  }
+
   .post-categories {
     li {
       background-color: #333;
@@ -148,6 +152,12 @@
     color: $dark_text_color;
   }
   
+  .category-header {
+    background-color: #171717;
+    border: 1px solid #272727; 
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.01);
+  }
+
   .category-name {
     color: #fff;
   }
@@ -158,10 +168,6 @@
 
   .icon-right-arrow {
 	  color: #e6e6e6;
-  }
-
-  .category-section {
-    border-left: 1px solid #272727;
   }
 
   .category-post-separator {
@@ -178,7 +184,9 @@
   }
 
   .archive-year {
-    border-left: 1px solid #272727;
+    background-color: #171717;
+    border: 1px solid #272727; 
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.01);
   }
 
   .archive-year-heading {
@@ -191,10 +199,6 @@
 
   .archive-month-count {
     color: #ccc;
-  }
-
-  .archive-month-list {
-    border-left: 1px solid #272727;
   }
 
   .archive-post-detail-list {
@@ -221,12 +225,17 @@
   .github-stats-container,
   .category-stats-container {
     background-color: #171717;
-    box-shadow: 0 2px 10px rgba(200, 200, 200, 0.05);
+    border: 1px solid #272727;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.01);
   }
 
   .latest-update-info,
   .latest-category-header,
-  .latest-category-name,
+  .latest-category-name {
+    color: #999;
+    background-color: #171717;
+  }
+
   .category-stat-item,
   .category-label-group,
   .category-info-right,
@@ -234,26 +243,27 @@
   .stat-axis-container,
   .stat-bar-wrapper,
   .stat-axis-name {
+    color: #999;
     background-color: #171717;
   }
 
   .stat-bar-background {
-    background-color: #272727;
+    background-color: #222;
   }
 
   .stat-bar-tooltip,
   .stat-bar-name {
-    background: #999;
+    color: #222;
+    background: #eee;
 
     &::after {
-      background: #999;
+      background: #eee;
     }
   }
 
-  .total-posts-header,
   .category-stat-name,
   .category-percentage {
-    color: #ccc;
+    color: #999;
     background-color: #171717;
   }
 

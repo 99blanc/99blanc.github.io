@@ -330,6 +330,7 @@ main {
 }
 
 .post-title {
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   line-height: 1.3em;
   font-size: 28px;
   font-weight: normal;
@@ -526,11 +527,14 @@ footer {
 }
 
 .category-header {
+  background-color: #fff;
+  border: 1px solid #eee; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-size: 20px;
   line-height: 1.2;
   margin: 0;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .category-header.is-expanded .icon-right-arrow {
@@ -557,7 +561,7 @@ footer {
 }
 
 .category-section {
-  border-left: 1px solid #eee;
+  padding-bottom: 5px;
 }
 
 .category-post-separator {
@@ -572,7 +576,7 @@ footer {
 
   li {
     margin-left: 20px;
-    margin-bottom: 5px;
+    margin-top: 5px;
   }
 
   a {
@@ -592,7 +596,10 @@ footer {
 }
 
 .archive-year {
-  border-left: 1px solid #eee;
+  background-color: #fff;
+  border: 1px solid #eee; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding-bottom: 17px;
 }
 
 .archive-year-heading {
@@ -608,10 +615,6 @@ footer {
 
 .archive-month-count {
   color: #999;
-}
-
-.archive-month-list {
-  border-left: 1px solid #eee;
 }
 
 .archive-post-detail-list {
@@ -671,6 +674,7 @@ footer {
   flex-wrap: nowrap;
   justify-content: center;
   background-color: #fff;
+  border: 1px solid #eee;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   opacity: 0;
   animation: fadeInIcon $archiveAnimationDuration ease-out forwards;
@@ -689,42 +693,38 @@ footer {
   margin-top: 20px;
   padding: 20px 20px 30px 20px;
   background-color: #fff;
+  border: 1px solid #eee;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
   opacity: 0;
   animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
   animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
 }
 
 .latest-update-info {
-  color: #555;
-  text-align: center;
+  color: #999;
   font-size: 15px;
+  font-weight: bold;
+  text-align: right;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
   
   .icon-sync {
-    margin-right: 5px;
+    margin: 0;
   }
-  
-  .latest-category-name {
-    font-weight: 600;
-  }
-}
-
-.total-posts-header {
-  color: #999;
-  text-align: right;
-  font-weight: normal;
-  padding: 0;
 }
 
 .category-stat-item {
-  margin-bottom: 30px;
+  margin: 0;
 }
 
 .category-label-group {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 8px;
+  margin: 0;
+  padding: 0;
   font-size: 1.1em;
   opacity: 0;
   animation: fadeInIcon $archiveAnimationDuration ease-out forwards;
@@ -732,7 +732,8 @@ footer {
 }
 
 .category-stat-name {
-  color: #333;
+  color: #999;
+  font-size: 15px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -744,7 +745,7 @@ footer {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  margin-left: 5px;
+  margin-left: 8px;
   background-color: var(--bar-color, #0a59b0);
   box-shadow: 0 0 0 2px rgba(var(--bar-color-rgb, 10, 89, 176), 0.3);
 }
@@ -755,10 +756,9 @@ footer {
 }
 
 .category-percentage {
-    font-size: 0.9em;
-    color: var(--bar-color, #0a59b0);
-    margin-right: 5px;
-    white-space: nowrap;
+  font-size: 0.9em;
+  color: #999;
+  white-space: nowrap;
 }
 
 .stat-bar-wrapper {
@@ -767,12 +767,12 @@ footer {
 }
 
 .stat-bar-tooltip {
-  color: #fff;
+  color: #ececec;
   position: absolute;
   top: -35px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #333;
+  background-color: #777;
   padding: 5px 10px;
   border-radius: 4px;
   font-size: 12px;
@@ -791,7 +791,7 @@ footer {
     transform: translateX(-50%) rotate(45deg);
     width: 10px;
     height: 10px;
-    background-color: #333;
+    background-color: #777;
   }
 }
 

@@ -24,27 +24,13 @@ permalink: /statistics
   <div class="post-content">
     <div class="github-stats-container">
       <a href="https://github.com/99blanc">
-        <img class="github-stat-item" align="center" src="https://github-readme-stats.vercel.app/api?username=99blanc&locale=kr&show_icons=true&hide_border=true&custom_title=99blanc's%20Github%20저장소%20통계&title_color=777777&hide=stars,contribs&rank_icon=github&bg_color=00000000&disable_animations=true"/></img>
+        <img class="github-stat-item" align="center" src="https://github-readme-stats.vercel.app/api?username=99blanc&locale=kr&show_icons=true&hide_border=true&custom_title=99blanc's%20Github%20저장소%20통계&title_color=999999&hide=stars,contribs&rank_icon=github&bg_color=00000000&disable_animations=true"/></img>
       </a>
       <a href="https://github.com/99blanc">
-        <img class="github-stat-item" align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=99blanc&locale=kr&hide=ShaderLab,HLSL,TSQL&hide_border=true&custom_title=99blanc's%20Github%20언어%20통계&title_color=777777&layout=compact&bg_color=00000000&disable_animations=true"/></img>
+        <img class="github-stat-item" align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=99blanc&locale=kr&hide=ShaderLab,HLSL,TSQL&hide_border=true&custom_title=99blanc's%20Github%20언어%20통계&title_color=999999&layout=compact&bg_color=00000000&disable_animations=true"/></img>
       </a>
     </div>
     <div class="category-stats-container">
-      {% assign latest_post = site.posts | sort: 'date' | reverse | first %}
-      {% assign latest_categories_list = latest_post.categories | join: ", " %}
-      <div class="latest-update-info">
-        <i class="icon-sync"></i>
-        <span class="latest-category-header">Latest Update Category</span>
-        <br>
-        <br>
-        {%- if latest_post.categories.size > 0 %}
-          <strong class="latest-category-name">{{ latest_categories_list }}</strong>
-        {%- else %}
-          <strong class="latest-category-name">Uncategorized</strong>
-        {%- endif %}
-      </div>
-      <h4 class="total-posts-header">• Total {{ total_posts }} Posts</h3>
       {% assign all_categories = site.categories | sort %}
       {% for category in all_categories %}
         {% assign cat_name = category | first %}
@@ -80,6 +66,17 @@ permalink: /statistics
           </div>
         </div>
       {% endfor %}
+      {% assign latest_post = site.posts | sort: 'date' | reverse | first %}
+      {% assign latest_categories_list = latest_post.categories | join: ", " %}
+      <div class="latest-update-info">
+        <i class="icon-sync"></i>
+        <span class="latest-category-header">Latest Update Category • </span>
+        {%- if latest_post.categories.size > 0 %}
+          <strong class="latest-category-name">{{ latest_categories_list }}</strong>
+        {%- else %}
+          <strong class="latest-category-name">Uncategorized</strong>
+        {%- endif %}
+      </div>
     </div>
   </div>
 </ul>
