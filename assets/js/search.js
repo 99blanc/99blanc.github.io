@@ -12,7 +12,7 @@ window.onload = function () {
         searchInput: $searchbar,
         resultsContainer: $searchResults,
         json: '{{ "/search.json" | relative_url }}',
-        searchResultTemplate: '<a href="{url}" target="_blank">{title}</a>',
+        searchResultTemplate: '<a href="{url}">{title}</a>',
         noResultsText: ''
     });
 

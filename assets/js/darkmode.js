@@ -9,7 +9,6 @@ function toggleDarkMode() {
         body.classList.add(DARK_CLASS);
     }
 }
-
 function getCookie(name) {
     var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
     return v ? v[2] : null;
@@ -30,6 +29,7 @@ function initializeDarkMode() {
     body.classList.add(DARK_CLASS);
     toggles.forEach(ti => ti.checked = true);
     window.requestAnimationFrame(() => {
+        toggles.forEach(ti => ti.checked = true);
         toggles.forEach(ti => ti.classList.remove('no-transition'));
     });
 }
