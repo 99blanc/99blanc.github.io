@@ -297,16 +297,20 @@ main {
 }
 
 .icon-search {
+  vertical-align: middle;
+
   &:hover {
     color: #222 !important;
   }
 }
 
 .icon-calendar,
-.icon-category {
+.icon-category,
+.icon-chart {
   color: #555;
   font-size: 14px;
   margin-left: 5px;
+  vertical-align: middle;
   opacity: 0;
   animation: fadeInIcon $archiveAnimationDuration ease-out forwards;
   animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration * 2;
@@ -516,12 +520,20 @@ footer {
   }
 }
 
+.category-header {
+  font-size: 20px;
+  line-height: 1.2;
+  margin: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .category-header.is-expanded .icon-right-arrow {
   transform: rotate(90deg);
 }
 
 .category-name {
-  color: #222;
+  color: #000;
   font-weight: normal;
 }
 
@@ -535,7 +547,7 @@ footer {
 .icon-right-arrow {
   color: #555;
   font-size: 14px;
-  margin-right: 5px;
+  vertical-align: middle;
   transition: transform 0.3s ease;
 }
 
@@ -574,8 +586,13 @@ footer {
   }
 }
 
+.archive-year {
+  border-left: 1px solid #eee;
+}
+
 .archive-year-heading {
-  color: #222;
+  color: #000;
+  font-size: 24px;
   text-transform: uppercase;
   font-weight: normal;
 }
@@ -642,4 +659,195 @@ footer {
 
 .archive-post-item.no-date .archive-date-group {
   visibility: hidden;
+}
+
+.github-stats-container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  animation: fadeInIcon $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
+}
+
+.github-stat-item {
+  opacity: 0;
+  animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
+}
+
+.category-stats-container {
+  max-width: 100%;
+  margin-top: 20px;
+  padding: 20px 20px 30px 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  animation: fadeInSlide $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration;
+}
+
+.latest-update-info {
+  color: #555;
+  text-align: center;
+  font-size: 15px;
+  
+  .icon-sync {
+    margin-right: 5px;
+  }
+  
+  .latest-category-name {
+    font-weight: 600;
+  }
+}
+
+.total-posts-header {
+  color: #999;
+  text-align: right;
+  font-weight: normal;
+  padding: 0;
+}
+
+.category-stat-item {
+  margin-bottom: 30px;
+}
+
+.category-label-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  opacity: 0;
+  animation: fadeInIcon $archiveAnimationDuration ease-out forwards;
+  animation-delay: $archiveAnimationDelayIncrement + $archiveAnimationDuration * 2;
+}
+
+.category-stat-name {
+  color: #333;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.category-stat-name::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 5px;
+  background-color: var(--bar-color, #0a59b0);
+  box-shadow: 0 0 0 2px rgba(var(--bar-color-rgb, 10, 89, 176), 0.3);
+}
+
+.category-info-right {
+  display: flex;
+  align-items: center;
+}
+
+.category-percentage {
+    font-size: 0.9em;
+    color: var(--bar-color, #0a59b0);
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
+.stat-bar-wrapper {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.stat-bar-tooltip {
+  color: #fff;
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: #333;
+  }
+}
+
+.stat-bar-background {
+  background-color: #eee;
+  height: 12px;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.stat-bar {
+  height: 100%;
+  transition: width 0.8s ease-out;
+  border-radius: 0;
+  width: 0;
+}
+
+.stat-axis-container {
+  max-width: 100%;
+  position: relative;
+  height: 25px;
+  margin-top: 5px;
+}
+
+.stat-axis-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.stat-axis-labels {
+  color: #777;
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.stat-axis-labels span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 5px;
+    background-color: #ccc;
+  }
+  
+  &:first-child { transform: translateX(0); left: 0 !important; } 
+  &:last-child { transform: translateX(-100%); left: 100% !important; }
 }

@@ -1,0 +1,141 @@
+---
+layout: default
+title: Statistics
+permalink: /statistics/
+---
+
+{% assign total_posts = site.posts | size %}
+{% assign cache_buster = site.time | date: "%s" %}
+
+{%- if site.posts.size > 0 -%}
+<ul class="posts">
+  <li class="posts-labelgroup" id="posts-labelgroup">
+    <h1 id="posts-label">posts</h1>
+    {% if site.plainwhite.search %}
+    <div class="search-container">
+      <div class="search-section">
+        <i class="icon-search"></i>
+        <input type="text" name="search" id="searchbar" autocomplete="off" aria-label="search in posts">
+      </div>
+      <div class="search-results" id="search-results" data-placeholder="No Results" style="display: none;"></div>
+    </div>
+    {% endif %}
+  </li>
+  <div class="post-content">
+    <div class="github-stats-container">
+      <a href="https://github.com/99blanc">
+        <img class="github-stat-item" height=200 align="center" src="https://github-readme-stats.vercel.app/api?username=99blanc&locale=kr&show_icons=true&hide_border=true&custom_title=99blanc's%20Github%20저장소%20통계&title_color=777777&hide=stars,contribs&rank_icon=github&bg_color=00000000&disable_animations=true"/></img>
+      </a>
+      <a href="https://github.com/99blanc">
+        <img class="github-stat-item" height=200 align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=99blanc&locale=kr&hide=ShaderLab,HLSL,TSQL&hide_border=true&custom_title=99blanc's%20Github%20언어%20통계&title_color=777777&layout=compact&bg_color=00000000&disable_animations=true"/></img>
+      </a>
+    </div>
+    <div class="category-stats-container">
+      {% assign latest_post = site.posts | sort: 'date' | reverse | first %}
+      {% assign latest_category = latest_post.categories | first %}
+      <div class="latest-update-info">
+        <i class="icon-sync"></i>
+        <span class="latest-category-header">Latest Update Category: </span>
+        <strong class="latest-category-name">{{ latest_category }}</strong>
+      </div>
+      <h4 class="total-posts-header">• Total {{ total_posts }} Posts</h3>
+      {% assign all_categories = site.categories | sort %}
+      {% for category in all_categories %}
+        {% assign cat_name = category | first %}
+        {% assign cat_posts = category | last %}
+        {% assign cat_size = cat_posts | size %}
+        {% assign cat_percentage = cat_size | times: 100.0 | divided_by: total_posts | round: 1 %}
+        <div class="category-stat-item" data-category-slug="{{ cat_name | slugify }}">
+          <div class="category-label-group">
+            <span class="category-stat-name">{{ cat_name }}</span>
+            <div class="category-info-right">
+              <span class="category-percentage">({{ cat_percentage }}%)</span>
+              <i class="icon-chart"></i>
+            </div>
+          </div>
+          <div class="stat-bar-wrapper">
+            <div class="stat-bar-background">
+              <div class="stat-bar" data-percentage="{{ cat_percentage }}"></div>
+            </div>
+            <div class="stat-bar-tooltip">
+              <strong class="stat-bar-name">{{ cat_name }}</strong>: {{ cat_size }} Posts ({{ cat_percentage }}%)
+            </div>
+            <div class="stat-axis-container">
+              <div class="stat-axis-line"></div>
+              <div class="stat-axis-labels">
+                <span class="stat-axis-name" style="left: 0%;">0%</span>
+                <span class="stat-axis-name" style="left: 20%;">20%</span>
+                <span class="stat-axis-name" style="left: 40%;">40%</span>
+                <span class="stat-axis-name" style="left: 60%;">60%</span>
+                <span class="stat-axis-name" style="left: 80%;">80%</span>
+                <span class="stat-axis-name" style="left: 100%;">100%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</ul>
+{%- endif -%}
+<script>
+  function getRandomColor() {
+    const hex = Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return { hex: '#' + hex, rgb: `${r}, ${g}, ${b}` };
+  }
+  const COLOR_KEY = 'categoryColors'; 
+  let storedColors = JSON.parse(localStorage.getItem(COLOR_KEY)) || {};
+  const categoryItems = document.querySelectorAll('.category-stat-item');
+  categoryItems.forEach(item => {
+    const categoryNameElement = item.querySelector('.category-stat-name');
+    const categoryName = categoryNameElement ? categoryNameElement.textContent : 'Unknown';
+    let colorData;
+    if (storedColors[categoryName]) {
+      colorData = storedColors[categoryName];
+    } else {
+      colorData = getRandomColor();
+      storedColors[categoryName] = colorData;
+    }
+    const statBar = item.querySelector('.stat-bar');
+    if (statBar) {
+      statBar.style.backgroundColor = colorData.hex;
+      item.style.setProperty('--bar-color', colorData.hex);
+      item.style.setProperty('--bar-color-rgb', colorData.rgb);
+    }
+  });
+  localStorage.setItem(COLOR_KEY, JSON.stringify(storedColors));
+  const latestCategoryElement = document.querySelector('.latest-category-name');
+  const latestCategoryName = latestCategoryElement ? latestCategoryElement.textContent.trim() : null;
+  if (latestCategoryName && storedColors[latestCategoryName]) {
+    const color = storedColors[latestCategoryName].hex;
+    latestCategoryElement.style.color = color;
+    const latestInfoIcon = document.querySelector('.latest-update-info .icon-sync');
+    if (latestInfoIcon) {
+      latestInfoIcon.style.color = color;
+    }
+  }
+  const statBars = document.querySelectorAll('.stat-bar');
+  let delay = 0; 
+  const delayIncrement = 150;
+  statBars.forEach(bar => {
+    const percentage = bar.dataset.percentage;
+    setTimeout(() => {
+      bar.style.width = percentage + '%'; 
+    }, 100 + delay);
+    delay += delayIncrement;
+  });
+  document.querySelectorAll('.stat-bar-wrapper').forEach(wrapper => {
+    const tooltip = wrapper.querySelector('.stat-bar-tooltip');
+    wrapper.addEventListener('mouseover', () => {
+      tooltip.style.opacity = '1';
+      tooltip.style.visibility = 'visible';
+    });
+    wrapper.addEventListener('mouseout', () => {
+      tooltip.style.opacity = '0';
+      tooltip.style.visibility = 'hidden';
+    });
+  });
+</script>

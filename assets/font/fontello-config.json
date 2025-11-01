@@ -249,6 +249,18 @@
       "src": "fontawesome"
     },
     {
+      "uid": "44a0e2660ac966cdfaa04deb6aac51df",
+      "css": "shield",
+      "code": 61746,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "266d5d9adf15a61800477a5acf9a4462",
+      "css": "chart",
+      "code": 59395,
+      "src": "fontawesome"
+    },
+    {
       "uid": "1ab7ce829fcc5f8b138f9745b1d7b547",
       "css": "youtube-1",
       "code": 61802,

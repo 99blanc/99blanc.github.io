@@ -149,7 +149,7 @@
   }
   
   .category-name {
-    color: #eee;
+    color: #fff;
   }
 
   .category-count {
@@ -175,6 +175,10 @@
     &:hover {
       color: $dark_link_color;
     }
+  }
+
+  .archive-year {
+    border-left: 1px solid #272727;
   }
 
   .archive-year-heading {
@@ -207,20 +211,70 @@
 
   .archive-post-link {
     color: #ccc;
-    transition: border-bottom 0.4s color 0.3s;
+    transition: color 0.3s;
     
     &:hover {
       color: $dark_link_color;
     }
   }
-}
 
+  .github-stats-container,
+  .category-stats-container {
+    background-color: #171717;
+    box-shadow: 0 2px 10px rgba(100, 100, 100, 0.05);
+  }
+
+  .latest-update-info,
+  .latest-category-header,
+  .latest-category-name,
+  .category-stat-item,
+  .category-label-group,
+  .category-info-right,
+  .icon-chart,
+  .stat-axis-container,
+  .stat-bar-wrapper,
+  .stat-axis-name {
+    background-color: #171717;
+  }
+
+  .stat-bar-background {
+    background-color: #272727;
+  }
+
+  .stat-bar-tooltip,
+  .stat-bar-name {
+    background: #999;
+
+    &::after {
+      background: #999;
+    }
+  }
+
+  .total-posts-header,
+  .category-stat-name,
+  .category-percentage {
+    color: #ccc;
+    background-color: #171717;
+  }
+
+  .stat-axis-line,
+  .stat-axis-labels {
+    background-color: #ccc;
+  }
+
+  .stat-axis-labels span {
+
+    &::before {
+      background-color: #ccc;
+    }
+  }
+}
 .dark table {
   th, td {
     border: 1px solid #333;
   }
 
   th {
-    background-color: #0d0d0d;
+    background-color: #171717;
   }
 }

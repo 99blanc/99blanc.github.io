@@ -59,6 +59,8 @@ plainwhite:
       url: "/categories"
     - title: Archives
       url: "/archives"
+    - title: Statistics
+      url: "/statistics"
     - title: About
       url: "/about"
 

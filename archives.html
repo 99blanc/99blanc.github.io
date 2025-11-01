@@ -23,8 +23,8 @@ permalink: /archives/
     {% for year in years %}
       <div class="archive-year">
         <h2 class="archive-year-heading">
-          {{ year.name }}
           <i class="icon-calendar" style="font-size: 14px;"></i> 
+          {{ year.name }}
         </h2>
         {% assign months = year.items | group_by_exp: "post", "post.date | date: '%m'" | sort: "name" | reverse %}
         <ul class="archive-month-list">
