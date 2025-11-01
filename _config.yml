@@ -76,6 +76,7 @@ theme: plainwhite
 
 plugins:
   - github-pages
+  - jekyll-sitemap
 
 jekyll-archives:
   enabled:
