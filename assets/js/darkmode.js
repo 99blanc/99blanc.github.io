@@ -4,9 +4,14 @@ function toggleDarkMode() {
     if (body.classList.contains(DARK_CLASS)) {
         setCookie('theme', 'light');
         body.classList.remove(DARK_CLASS);
+        giscusTheme = 'noborder_light';
     } else {
         setCookie('theme', 'dark');
         body.classList.add(DARK_CLASS);
+        giscusTheme = 'noborder_gray';
+    }
+    if (typeof setGiscusTheme === 'function') {
+        setGiscusTheme(giscusTheme);
     }
 }
 function getCookie(name) {
@@ -19,8 +24,6 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + value + ";path=/;SameSite=strict;expires=" + d.toGMTString();
 }
 function deleteCookie(name) { setCookie(name, '', -1); }
-var userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-var theme = getCookie('theme');
 function initializeDarkMode() {
     const DARK_CLASS = 'dark';
     var body = document.querySelector("body");
@@ -33,15 +36,19 @@ function initializeDarkMode() {
         toggles.forEach(ti => ti.classList.remove('no-transition'));
     });
 }
-if ( (theme === null && userPrefersDark) || theme === 'dark') {
-    var checkDarkDone = false;
-    function checkDarkAndInitialize() {
-        if (!checkDarkDone) {
-            initializeDarkMode(); 
-        }
-        checkDarkDone = true;
-    };
-    if (window.requestAnimationFrame) 
-        window.requestAnimationFrame(checkDarkAndInitialize);
-    window.addEventListener('DOMContentLoaded', checkDarkAndInitialize);
-}
+var userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+var theme = getCookie('theme');
+window.addEventListener('DOMContentLoaded', () => {
+    if ( (theme === null && userPrefersDark) || theme === 'dark') {
+        var checkDarkDone = false;
+        function checkDarkAndInitialize() {
+            if (!checkDarkDone) {
+                initializeDarkMode();
+            }
+            checkDarkDone = true;
+        };
+        if (window.requestAnimationFrame) 
+            window.requestAnimationFrame(checkDarkAndInitialize);
+        checkDarkAndInitialize();
+    }
+});

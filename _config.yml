@@ -79,3 +79,16 @@ plugins:
   - github-pages
 
 permalink: "/:year:month:day:hour:minute"
+
+comments:
+  active: 'giscus'
+  giscus:
+    repo: "99blanc/99blanc.github.io"
+    repo_id: "R_kgDOQHwlEw"
+    category: "Announcements"
+    category_id: "DIC_kwDOQHwlE84CxVaZ"
+    mapping: pathname
+    strict: "0"
+    input_position: bottom
+    lang: ko
+    reactions_enabled: "0"
