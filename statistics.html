@@ -69,7 +69,7 @@ permalink: /statistics
       {% assign latest_post = site.posts | sort: 'date' | reverse | first %}
       {% assign latest_categories_list = latest_post.categories | join: ", " %}
       <div class="latest-update-info">
-        <i class="icon-sync"></i>
+        <i class="icon-shield"></i>
         <span class="latest-category-header">Latest Update Category • </span>
         {%- if latest_post.categories.size > 0 %}
           <strong class="latest-category-name">{{ latest_categories_list }}</strong>

@@ -24,11 +24,22 @@ $animationDelayIncrement: 0.2s;
 @keyframes fadeInIcon {
   from {
     opacity: 0;
-    transform: scale(0.8)
+    transform: scale(0.8);
   }
   to {
     opacity: 1;
-    transform: scale(1)
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInTooltip {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
   }
 }
 
@@ -199,6 +210,41 @@ main {
         color: #000 !important;
       }
     }
+
+    &:hover .social-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s, visibility 0s;
+      animation: fadeInTooltip $animationDuration ease-out forwards;
+    }
+  }
+}
+
+.social-tooltip {
+  color: #ececec;
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  background-color: #777;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0s;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: #777;
   }
 }
 
@@ -777,6 +823,13 @@ footer {
 .stat-bar-wrapper {
   margin-bottom: 15px;
   position: relative;
+
+  &:hover .stat-bar-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s, visibility 0s;
+      animation: fadeInTooltip $animationDuration ease-out forwards;
+    }
 }
 
 .stat-bar-tooltip {
@@ -784,7 +837,6 @@ footer {
   position: absolute;
   top: -35px;
   left: 50%;
-  transform: translateX(-50%);
   background-color: #777;
   padding: 5px 10px;
   border-radius: 4px;
@@ -793,7 +845,7 @@ footer {
   z-index: 100;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition: opacity 0.3s, visibility 0s;
   pointer-events: none;
   
   &::after {

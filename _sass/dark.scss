@@ -50,6 +50,15 @@
     }
   }
 
+  .social-tooltip {
+    color: #222;
+    background: #eee;
+
+    &::after {
+      background: #eee;
+    }
+  }
+
   .icon-calendar {
     color: #999
   }

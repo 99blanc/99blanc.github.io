@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="{{ site.plainwhite.html_lang }}">
-
 <head>
   <link rel="preconnect" href="https://giscus.app">
   <link rel="dns-prefetch" href="https://giscus.app">
@@ -17,13 +16,11 @@
   </title>
   {%- include head.html -%}
 </head>
-
 {%- if site.plainwhite.condensed_mobile contains page.layout -%}
 {% assign condensed_class = "condensed" %}
 {% else %}
 {% assign condensed_class = "" %}
 {%- endif -%}
-
 <body>
   <main class="container">
     <section class="about">
@@ -50,99 +47,129 @@
       <ul class="social about-footer {{condensed_class}}">
         {%- if site.plainwhite.social_links.github -%}
         <a href="https://github.com/{{ site.plainwhite.social_links.github }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-github-circled"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.github }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.gitlab -%}
         <a href="https://gitlab.com/{{ site.plainwhite.social_links.gitlab }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-gitlab"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.gitlab }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.linkedIn -%}
         <a href="https://www.linkedin.com/{{ site.plainwhite.social_links.linkedIn }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-linkedin-squared"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.linkedIn }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.twitter -%}
         <a href="https://twitter.com/{{ site.plainwhite.social_links.twitter }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-twitter-squared"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.twitter }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.instagram -%}
         <a href="https://instagram.com/{{ site.plainwhite.social_links.instagram }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-instagram"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.instagram }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.facebook -%}
         <a href="https://facebook.com/{{ site.plainwhite.social_links.facebook }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-facebook-squared"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.facebook }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.youtube -%}
         <a href="https://youtube.com/{{ site.plainwhite.social_links.youtube }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-youtube"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.youtube }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.pinterest -%}
         <a href="https://pinterest.com/{{ site.plainwhite.social_links.pinterest }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-pinterest-squared"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.pinterest }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.dribbble -%}
         <a href="https://dribbble.com/{{ site.plainwhite.social_links.dribbble }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-dribbble"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.dribbble }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.flickr -%}
         <a href="https://flickr.com/{{ site.plainwhite.social_links.flickr }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-flickr"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.flickr }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.telegram -%}
         <a href=" https://t.me/{{ site.plainwhite.social_links.telegram }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-telegram"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.telegram }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.soundcloud -%}
         <a href=" https://soundcloud.com/{{ site.plainwhite.social_links.soundcloud }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-soundcloud"></i>
-          </li>
-        </a>
-        {%- endif -%}
-        {%- if site.plainwhite.social_links.email -%}
-        <a href="mailto:{{ site.plainwhite.social_links.email }}" target="_blank">
-          <li>
-            <i class="icon-mail-alt"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.soundcloud }}</span>
           </li>
         </a>
         {%- endif -%}
         {%- if site.plainwhite.social_links.stackoverflow -%}
         <a href="https://stackoverflow.com/users/{{ site.plainwhite.social_links.stackoverflow }}" target="_blank">
-          <li>
+          <li style="position: relative;"> 
             <i class="icon-stack-overflow"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.stackoverflow }}</span>
+          </li>
+        </a>
+        {%- endif -%}
+        {%- if site.plainwhite.social_links.phone -%}
+        <a>
+          <li style="position: relative;"> 
+            <i class="icon-phone-squared"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.phone }}</span>
+          </li>
+        </a>
+        {%- endif -%}
+        {%- if site.plainwhite.social_links.email -%}
+        <a>
+          <li style="position: relative;"> 
+            <i class="icon-mail-alt"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.email }}</span>
+          </li>
+        </a>
+        {%- endif -%}
+        {%- if site.plainwhite.social_links.rss -%}
+        <a href="{{ site.url }}/{{ site.plainwhite.social_links.rss}}">
+          <li style="position: relative;"> 
+            <i class="icon-rss"></i>
+            <span class="social-tooltip">{{ site.plainwhite.social_links.rss }}</span>
           </li>
         </a>
         {%- endif -%}
@@ -185,7 +212,6 @@
   {% if site.plainwhite.dark_mode %}
   <script type="text/javascript" src="{{ "/assets/js/darkmode.js" | relative_url }}"></script>
   {% endif %}
-
   {%- if site.plainwhite.analytics_id -%}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.plainwhite.analytics_id }}"></script>
   <script>
@@ -195,11 +221,46 @@
     gtag('config', '{{ site.plainwhite.analytics_id }}');
   </script>
   {%- endif -%}
-
   {% if site.plainwhite.search %}
   <script src="{{ "/assets/js/simple-jekyll-search.min.js" | relative_url }}"></script>
   <script src="{{ "/assets/js/search.js" | relative_url }}"></script>
   {% endif %}
 </body>
-
 </html>
+<script>
+document.querySelectorAll('.social a').forEach(socialLink => {
+  const tooltip = socialLink.querySelector('.social-tooltip');
+  if (tooltip) {
+    const textToCopy = tooltip.textContent.trim();
+    socialLink.addEventListener('click', (e) => {
+      if (socialLink.href && socialLink.href.length > 0 && socialLink.href !== '#') {
+        return;
+      }
+      e.preventDefault();
+      if (navigator.clipboard) {
+          navigator.clipboard.writeText(textToCopy).then(() => {
+              alert(`Copy to clipboard! ${textToCopy}`);
+          }).catch(err => {
+              console.error('Copy failed. ', err);
+          });
+      } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = textToCopy;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          alert(`Copy to clipboard! ${textToCopy}`);
+      }
+    });
+    socialLink.addEventListener('mouseover', () => {
+      tooltip.style.opacity = '1';
+      tooltip.style.visibility = 'visible';
+    });
+    socialLink.addEventListener('mouseout', () => {
+      tooltip.style.opacity = '0';
+      tooltip.style.visibility = 'hidden';
+    });
+  }
+});
+</script>

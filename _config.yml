@@ -16,10 +16,6 @@ plainwhite:
   tagline: |
     Java/Spring & Unity
     Visualization Developer
-
-    +82) 010-4505-7365
-    t990421@naver.com
-    tpgus990421@gmail.com
   date_format: "%b %-d, %Y"
   sitemap: true # set to true to generate sitemap.xml content
   search: true # set to true to enable searchbar
@@ -32,19 +28,21 @@ plainwhite:
     #- post
   # generate social links in footer
   social_links:
-    #twitter: samarsault
     github:  99blanc
-    #linkedIn: in/samarsault
-    #dribbble: jekyll
-    #flickr:   jekyll
-    #instagram: jekyll
-    #pinterest: jekyll
-    youtube: '@99blanc'
-    #facebook: jekyll
-    #soundcloud: jekyll
-    #telegram: jekyll
     #gitlab: jekyll
-    #email: jekyll
+    #linkedIn: jekyll
+    #twitter: jekyll
+    #instagram: jekyll
+    #facebook: jekyll
+    youtube: '@99blanc'
+    #pinterest: jekyll
+    #dribbble: jekyll
+    #flickr: jekyll
+    #telegram: jekyll
+    #soundcloud: jekyll
+    #stackoverflow: jekyll
+    phone: '+82) 010-4505-7365'
+    email: 'tpgus990421@gmail.com'
 
     # Mastodon instances
     # mastodon:
@@ -52,6 +50,8 @@ plainwhite:
     #   instance: example.com
     # - username: jekyll2
     #   instance: example.com
+
+    rss: 'feed.xml'
 
   navigation:
     - title: Home
