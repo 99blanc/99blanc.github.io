@@ -34,6 +34,27 @@
     color: #ddd;
   }
 
+  .post-navigation {
+    a {
+      color: #ccc;
+      background-color: #171717;
+      border: 1px solid #272727; 
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.01);
+
+      &:hover {
+      color: $dark_link_color;
+    }
+    }
+  }
+
+  .next-post {
+    color: #ccc;
+  }
+
+  .previous-post {
+    color: #ccc;
+  }
+
   .social [class^="icon-"] {
     color: $dark_text_color
   }

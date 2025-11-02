@@ -288,6 +288,55 @@ main {
   animation-delay: $animationDelayIncrement + $animationDuration;
 }
 
+.post-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 28px 0 0 0;
+  padding-top: 10px;
+
+  a {
+    color: #333;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #eee; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      color: $linkColor;
+    }
+  }
+
+  .next-post {
+    color: #333;
+    padding-left: 15px;
+    font-size: 1em;
+    opacity: 0;
+    animation: fadeInSlide $animationDuration ease-out forwards;
+    animation-delay: $animationDelayIncrement + $animationDuration;
+  }
+
+  .previous-post {
+    color: #333;
+    padding-right: 15px;
+    font-size: 1em;
+    opacity: 0;
+    animation: fadeInSlide $animationDuration ease-out forwards;
+    animation-delay: $animationDelayIncrement + $animationDuration;
+  }
+
+  .previous-post-placeholder {
+    min-width: 120px;
+  }
+
+  .next-post-placeholder {
+    min-width: 120px;
+  }
+}
+
 .post-wrapper {
   border-bottom: 1px solid #ececec;
   margin-bottom: 1rem;

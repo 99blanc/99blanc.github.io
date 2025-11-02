@@ -37,6 +37,22 @@ layout: default
       <div class="post">
         {{ content }}
       </div>
+      <div class="post-navigation">
+        {% if page.previous.url %}
+          <a href="{{ page.previous.url | relative_url }}" class="previous-post">
+            <i class="icon-angle-circled-left"></i> Prev
+          </a>
+        {% else %}
+          <span class="previous-post-placeholder"></span>
+        {% endif %}
+        {% if page.next.url %}
+          <a href="{{ page.next.url | relative_url }}" class="next-post">
+            Next <i class="icon-angle-circled-right"></i>
+          </a>
+        {% else %}
+          <span class="next-post-placeholder"></span>
+        {% endif %}
+      </div>
       <div id="giscus-comments">
         <script>
           var userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
