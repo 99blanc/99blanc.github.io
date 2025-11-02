@@ -63,6 +63,7 @@ layout: default
           script.src = "https://giscus.app/client.js";
           script.setAttribute('data-repo', "99blanc/99blanc.github.io");
           script.setAttribute('data-repo-id', "R_kgDOQHwlEw");
+          script.setAttribute('data-origin', window.location.origin);
           script.setAttribute('data-category', "Announcements");
           script.setAttribute('data-category-id', "DIC_kwDOQHwlE84CxVaZ");
           script.setAttribute('data-mapping', "pathname");
@@ -75,7 +76,7 @@ layout: default
           script.setAttribute('crossorigin', "anonymous");
           script.setAttribute('async', "");
           document.getElementById('giscus-comments').appendChild(script);
-          function setGiscusTheme(themeName) {
+          window.setGiscusTheme = function(themeName) {
               var iframe = document.querySelector('iframe.giscus-frame');
               if (iframe) {
                   iframe.contentWindow.postMessage(
