@@ -228,6 +228,9 @@
 </body>
 </html>
 <script>
+window.addEventListener('blur', hideAllSocialTooltips);
+window.addEventListener('focus', hideAllSocialTooltips);
+window.addEventListener('scroll', hideAllSocialTooltips);
 document.querySelectorAll('.social a').forEach(socialLink => {
   const tooltip = socialLink.querySelector('.social-tooltip');
   if (tooltip) {
@@ -263,4 +266,10 @@ document.querySelectorAll('.social a').forEach(socialLink => {
     });
   }
 });
+function hideAllSocialTooltips() {
+    document.querySelectorAll('.social-tooltip').forEach(tooltip => {
+        tooltip.style.opacity = '0';
+        tooltip.style.visibility = 'hidden';
+    });
+}
 </script>

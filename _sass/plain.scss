@@ -49,6 +49,12 @@ $animationDelayIncrement: 0.2s;
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  min-width: 0;
+}
+
 body {
   font-family: "Raleway", sans-serif;
   font-size: 16px;
@@ -137,7 +143,6 @@ main {
       max-width: 280px;
     }
 
-    min-width: $leftWidth;
     justify-content: center;
     flex-direction: column;
     align-items: center;
@@ -429,22 +434,26 @@ main {
   line-height: 1.3em;
   font-size: 28px;
   font-weight: normal;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .posts {
+  padding-left: 110px;
+}
+
+.posts,
+.post-container {
   list-style-type: none;
-  margin: 10px 10px;
-  padding-left: 100px;
+  margin: 0;
 
   @media screen and (max-width: $smallMobileW) {
-    padding: 10px;
-    margin-top: 0;
+    margin: 0 10px 0 10px;
+    padding: 0;
   }
 
   @media screen and (max-width: $mobileW) {
-    padding: 10px;
-    margin-top: 0;
+    margin: 0 10px 0 10px;
+    padding: 0;
   }
 }
 
@@ -497,7 +506,6 @@ main {
   font-weight: 300;
   color: #222;
   line-height: 1.9em;
-  padding: 20px 20px 20px 20px;
   transition: color 0.3s;
   background-color: #fff;
   border: 1px solid #eee; 
