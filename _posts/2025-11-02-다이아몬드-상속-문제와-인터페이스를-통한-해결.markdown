@@ -2,8 +2,8 @@
 layout: post
 title: "객체 지향 원리: 다이아몬드 상속 문제와 인터페이스를 통한 해결"
 date: 2025-11-02 09:15:00 +09:00
-last_modified_at: 2025-11-02 09:15:00 +09:00
-categories: Study OOP Inheritance
+last_modified_at: 2025-11-03 20:03:00 +09:00
+categories: Inheritance OOP Study
 sitemap:
   changefreq: daily
   priority: 0.5

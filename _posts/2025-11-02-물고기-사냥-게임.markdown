@@ -2,8 +2,8 @@
 layout: post
 title: "명품 자바 프로그래밍 개정 4판: 물고기 사냥 게임"
 date: 2025-11-02 07:52:00 +09:00
-last_modified_at: 2025-11-02 12:11:00 +09:00
-categories: Code Java Challenge
+last_modified_at: 2025-11-03 20:03:00 +09:00
+categories: Challenge Code Java
 sitemap:
   changefreq: daily
   priority: 0.5
