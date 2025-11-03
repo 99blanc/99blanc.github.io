@@ -15,7 +15,7 @@ plainwhite:
   name: 99blanc, Sehyun Kim
   tagline: |
     Java/Spring & Unity
-    Visualization Developer
+    Developer
   date_format: "%b %-d, %Y"
   sitemap: true # set to true to generate sitemap.xml content
   search: true # set to true to enable searchbar

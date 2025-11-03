@@ -6,7 +6,7 @@ permalink: /about
 
 # 🧑‍💻 Programmer | Sehyun Kim (김세현)
 ---
- **Java/Spring & Unity Visualization Developer**
+ **Java/Spring & Unity Developer**
 
 <br>
 
