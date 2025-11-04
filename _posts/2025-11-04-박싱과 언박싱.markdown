@@ -1,0 +1,149 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: 박싱과 언박싱"
+date: 2025-11-04 22:31:00 +09:00
+last_modified_at: 2025-11-04 22:31:00 +09:00
+categories: Code Java Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 박싱과 언박싱의 개념
+---
+ [박싱][1](Boxing)과 [언박싱][2](Unboxing)은 자바에서 기본 타입의 값을 해당 타입의 래퍼 클래스 객체로 변환하거나 그 반대로 변환하는 과정을 말한다.
+
+ * 박싱(Boxing): 기본 타입을 래퍼 클래스 객체로 변환하는 것이다.
+ * 언박싱(Unboxing): 래퍼 클래스 객체를 기본 타입으로 변환하는 것이다.
+
+ (JDK 1.5버전 이후부터)개발자의 편의를 위해 자바 컴파일러가 이 과정을 자동으로 처리해주는데, 이를 자동 박싱과, 자동 언박싱이라고 하며 예제는 다음과 같다.
+
+```java
+// 박싱 (Boxing)의 예
+Integer obj1 = Integer.valueOf(10); // 명시적 박싱
+
+// 자동 박싱 (Autoboxing)의 예
+Integer obj2 = 20; // 컴파일러가 Integer.valueOf(20)으로 자동 변환한다.
+
+// 언박싱 (Unboxing)의 예
+int value1 = obj1.intValue(); // 명시적 언박싱
+
+// 자동 언박싱 (Auto-unboxing)의 예
+int value2 = obj2; // 컴파일러가 obj2.intValue()로 자동 변환한다.
+```
+
+ 래퍼 클래스는 객체이므로 null 값을 가질 수 있지만, 자동 언박싱이 수행되는 시점에 해당 래퍼 객체가 null 값을 가지면 자바는 null 포인터를 기본 타입으로 변환하려 시도한다. 이 과정 중에 **NullPointerException** 예외가 발생하며, 예제 코드는 다음과 같다.
+
+```java
+Integer i = null;
+int j = i; // 컴파일 시점에는 문제 없으나, 실행 시점에 NullPointerException 예외가 발생한다.
+```
+
+### 박싱과 언박싱의 필요성 및 활용
+---
+ 자바 컬렉션 프레임워크나 [제네릭][3]과 같은 많은 JDK 클래스와 가능은 객체만을 다루도록 설계되어 있는데, 단순한 기본 타입의 값을 사용할 수 없으므로 래퍼 클래스와 박싱 그리고 언박싱 과정이 필요하다.
+
+ |타입||사용처|설명|
+ |:---:|:---:|:---:|
+ |기본 타입|간단한 연산, 메모리 효율성이 중요할 때 사용|객체가 아니므로 null 값을 가질 수 없다.
+ |래퍼 클래스|컬렉션 저장, 객체 간의 동기화, null 값 처리를 할 때 사용|객체이므로 null 값을 가질 수 있다.
+
+### 효율성의 논의
+---
+ 자동 박싱과 자동 언박싱은 내부적으로 새로운 래퍼 객체를 생성하거나 객체에서 값을 추출하는 연산을 실행한다. 이는 반복문과 같이 빈번히 박싱과 언박싱이 일어나는 상황에서 성능 저하나 불필요한 메모리 사용을 야기할 수 있으므로, 성능이 중요한 코드에서는 기본 타입을 사용하는 것이 더 효율적이다.
+
+ * 하나, 힙 메모리 사용 시 가비지 컬렉션의 부하: 힙 메모리에 주소를 저장하기 때문에 기본 타입을 사용하는 것보다 성능 상의 오버헤드가 발생한다.
+
+|비교 요소|기본 타입|래퍼 클래스|성능 영향|
+|:---:|:---:|:---:|:---:|
+|저장 위치|스택 메모리|힙 메모리|값을 추출해내는데 힙 메모리가 더 느리다.|
+|객체 생성|없다.|박싱 시 매 번 새로운 객체를 생성한다.|객체 생성에 시간이 소요된다.|
+|GC 부하|없다.|생성된 객체가 GC의 대상이 된다.|GC 작업 빈도가 증가하면서, 성능 저하에 영향을 끼친다.|
+
+ 	* 오버헤드: 특히 반복문 안에서 래퍼 클래스를 사용해 박싱과 언박싱이 빈번하게 발생하면, 힙 메모리에 수많은 임시 객체가 생성되고 소멸하며, 가비지 컬렉션에 큰 부담을 주어 프로그램의 속도가 느려지게 된다.
+
+ * 둘, 메모리 사용량 증가: 래퍼 클래스 객체는 단순한 기본 타입 값 외에도 객체 해더 정보를 포함하기 때문에, 기본 타입보다 메모리 차지량이 크다.
+
+```java
+int ap; // 4 바이트의 공간을 차지한다.
+Integer aw; // 경우에 따라 16-24 바이트 이상의 공간을 차지한다.
+```
+
+ * 셋, 연산 속도 차이: 기본 타입에 대한 연산은 CPU 레지스터에서 직접 처리되므로 빠르지만, 래퍼 클래스 객체를 사용해 연산을 수행하려면 반드시 언박싱 과정을 거쳐야 하므로 지연 시간이 발생한다.
+
+### 박싱과 언박싱의 성능차 확인
+---
+ long 기본 타입의 덧셈 연산과 Long 레퍼 클래스의 덧셈 연산을 비교하여 실행 시간을 측정하는 예제 코드는 다음과 같다.
+
+```java
+public class PrimitiveVsWrapperPerformance {
+    // 반복 횟수: 오버헤드를 누적시켜 차이를 명확하게 보기 위해 큰 값을 사용한다.
+    private static final int ITERATIONS = 100_000_000; 
+
+    public static void main(String[] args) {
+        System.out.println("반복 횟수: " + ITERATIONS + "회\n");
+
+        // 1. 기본 타입 성능 측정
+        long startTimePrimitive = System.currentTimeMillis();
+        long sumPrimitive = 0L; // long 기본 타입 변수를 선언한다.
+        
+        for (int i = 0; i < ITERATIONS; i++) {
+            sumPrimitive += i; // 기본 타입 간의 단순 덧셈 연산을 실시한다.
+        }
+        
+        long endTimePrimitive = System.currentTimeMillis();
+        long durationPrimitive = endTimePrimitive - startTimePrimitive;
+
+        System.out.println("--- 기본 타입 (long) 연산 ---");
+        System.out.println("최종 합계 (더미): " + sumPrimitive);
+        System.out.println("소요 시간: " + durationPrimitive + " ms");
+        
+        System.out.println("\n----------------------------\n");
+        
+        // 2. 래퍼 클래스 성능 측정(자동 박싱과 언박싱 발생)
+        long startTimeWrapper = System.currentTimeMillis();
+        Long sumWrapper = 0L; // Long 래퍼 클래스 객체
+        
+        for (int i = 0; i < ITERATIONS; i++) {
+            // 이 줄에서 자동 언박싱과 자동 박싱이 연속적으로 발생한다.
+            // 1) sumWrapper (Long 객체)가 long (기본 타입)으로 언박싱된다.
+            // 2) 언박싱된 값에 i(기본 타입)가 더해진다.
+            // 3) 결과값(기본 타입)이 다시 sumWrapper(Long 객체)로 박싱되어 저장된다.
+            sumWrapper += i; 
+        }
+        
+        long endTimeWrapper = System.currentTimeMillis();
+        long durationWrapper = endTimeWrapper - startTimeWrapper;
+
+        System.out.println("--- 래퍼 클래스 (Long) 연산 ---");
+        System.out.println("최종 합계 (더미): " + sumWrapper);
+        System.out.println("소요 시간: " + durationWrapper + " ms");
+        
+        System.out.println("\n----------------------------");
+        System.out.println("성능 차이 (배수): " + (double)durationWrapper / durationPrimitive);
+    }
+}
+```
+
+ 실행 결과는 다음과 같다.
+
+```bash
+반복 횟수: 100000000회
+
+--- 기본 타입 (long) 연산 ---
+최종 합계 (더미): 4999999950000000
+소요 시간: 20 ms
+
+----------------------------
+
+--- 래퍼 클래스 (Long) 연산 ---
+최종 합계 (더미): 4999999950000000
+소요 시간: 134 ms
+
+----------------------------
+성능 차이 (배수): 6.7
+```
+
+ [1]: https://en.wikipedia.org/wiki/Boxing_(computer_programming) "값을 참조로 사용할 수 있도록 객체 내에 기본 유형을 배치하는 변환이다."
+ [2]: https://en.wikipedia.org/wiki/Boxing_(computer_programming) "언박싱은 래퍼 객체에서 기본 값을 추출하는 역변환이다."
+ [3]: https://ko.wikipedia.org/wiki/%EC%A0%9C%EB%84%A4%EB%A6%AD_%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D "데이터 형식에 의존하지 않고, 하나의 값이 여러 다른 데이터 타입들을 가질 수 있는 기술에 중점을 두어 재사용성을 높일 수 있는 프로그래밍 방식이다."
