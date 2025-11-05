@@ -2,14 +2,14 @@
 layout: post
 title: "명품 자바 프로그래밍 개정 4판: main() 메소드와 예외 처리"
 date: 2025-10-30 04:30:00 +09:00
-last_modified_at: 2025-10-30 04:30:00 +09:00
+last_modified_at: 2025-11-05 09:15:00 +09:00
 categories: Code Java Study
 sitemap:
   changefreq: daily
   priority: 0.5
 ---
 
-### main() 메소드의 특징
+### main() 메소드 특징
 ---
  자바 응용 프로그램의 실행히 시작되는 특별한 메소드로, 다음과 같은 특징을 가지고 있다.
 
@@ -18,7 +18,7 @@ sitemap:
  * void 리턴 타입: 아무 값도 반환하지 않기 때문에 void 타입으로 선언한다. main() 메소드를 끝내기 위해서는 "return;"을 반환한다.
  * String[] args 매개 변수: 명령행에 입력된 인자들을 문자열 배열로 만들어 main() 메소드에 전달한다.
 
-### main() 메소드의 매개 변수
+### main() 메소드 매개 변수
 ---
  args 매개 변수를 이용하여 명령행 인자를 전달받는 코드는 다음과 같이 작성할 수 있다.
 

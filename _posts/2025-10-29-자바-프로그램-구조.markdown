@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "명품 자바 프로그래밍 개정 4판: 자바 프로그램의 구조"
+title: "명품 자바 프로그래밍 개정 4판: 자바 프로그램 구조"
 date: 2025-10-29 03:45:00 +09:00
-last_modified_at: 2025-10-29 03:45:00 +09:00
+last_modified_at: 2025-11-05 09:15:00 +09:00
 categories: Code Java Study
 sitemap:
   changefreq: daily
