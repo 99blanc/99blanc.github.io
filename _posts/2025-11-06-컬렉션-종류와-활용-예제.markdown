@@ -1,0 +1,215 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: 컬렉션 종류와 활용 예제"
+date: 2025-11-06 21:53:00 +09:00
+last_modified_at: 2025-11-06 21:53:00 +09:00
+categories: Code Java Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### Vector<E>
+---
+ [Vector][1] 클래스는 배열을 가변 크기로 다룰 수 있게 하고, 객체의 삽입, 삭제, 이동이 쉽도록 구성한 컬렉션 클래스이다. 삽입되는 요수의 개수에 따라 자동으로 크기를 조절하고, 요소의 삽입과 삭제에 따라 자동으로 요소들의 자리를 이동한다. 자바 내부에서 크기를 구성하는 방식은 다음과 같다.
+
+ * 크기가 설정된 경우: "새로운 용량 = 현재 용량 + 설정 용량", 만약 설정 용량이 5로 설정되어 있다고 가정하면, 용량이 부족할 때마다 크기는 5씩 증가합니다.
+ * 크기가 설정되지 않는 경우: "새로운 용량 = 현재 용량 * 2", 이는 효율성을 위해 가장 일반적으로 사용되고, ArrayList 클래스가 용량을 확장하는 기본 방식과 동일하다.
+
+ 스레드 [동기화][2](Thread-Safe)를 지원하기 때문에 모든 메소드에 synchronized 키워드가 붙어 있어 성능 상의 [오버헤드][3]가 발생하며, 크기 확장 시 새로운 배열을 만들고 기존 요소를 모두 복사하는 작업이 필요하여 성능 비용이 발생한다.
+
+### ArrayList<E>
+---
+ ArrayList 클래스는 가변 크기의 배열을 구현하여 Vector 클래스와 유사하지만, 스레드 간에 동기화를 지원하지 않기 때문에, 다수의 스레드가 동시에 요소를 삽입하거나 삭제할 때 데이터가 훼손될 우려가 있다. 멀티 스레드 동기화를 위한 시간 소모가 없어, Vector 클래스보다 속도가 빠르고, 단일 스레드 응용에 효과적이다.
+
+### Iterator<E>
+---
+ Vector, ArrayRList, LinkedList, Set 클래스와 같이 요소가 순서대로 저장된 컬렉션에서 요소를 순차 검색할 때 java.util 패키지의 Iterator<E> 인터페이스를 사용할 수 있다.
+
+### HashMap<K, V>
+---
+ 키와 값의 쌍으로 구성되는 요소를 다루며, K 인자는 키로 사용할 데이터 타입을, V 인자는 값으로 사용할 데이터 타입의 타입 매개 변수이다. 장단점은 다음과 같다.
+
+ * 빠른 요소의 삽입, 삭제 시간: 요소의 위치를 결정하는 해시 함수가 간단한 코드로 이루어지며, 다른 요소들의 위치 이동이 필요없다.
+ * 빠른 검색: 키가 저장된 위치를 곧바로 찾아내므로, 모든 요소들을 하나씩 비교할 필요가 없다.
+ * 응용: 인덱스를 이용하여 접근할 수 없으므로, 빠른 삽입과 검색이 필요한 응용에 적합하다.
+
+### LinkedList<E>
+---
+ List<E> 인터페이스를 궤현한 클래스로서 요소들을 양방향으로 연결하여 관리한다는 점을 제외하고, Vector, ArrayList 클래스와 유사하다.
+
+### 컬렉션 클래스 활용
+---
+ java.util 패키지에 포함된 컬렉션 클래스는 다음과 같이 컬렉션을 다루는 유용한 여러 메소드를 지원한다.
+
+ * sort(): 컬렉션에 포함된 요소들을 정렬한다.
+ * reverse(): 요소를 역순으로 정렬한다.
+ * max(): 요소의 최댓값을 찾는다.
+ * min(): 요소의 최솟값을 찾는다.
+ * binarySearch(): 이진 검색한다.
+
+### Point 포인트만 다루는 Vector<Point> 활용
+---
+ 점(x, y)를 표현하는 Point 클래스를 만들고, Point 객체만 다루는 Vector 클래스를 작성하는 예제 코드는 다음과 같다.
+
+```java
+package ch7n2;
+
+import java.util.Vector;
+
+class Point {
+	private int x, y;
+	
+	public Point(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public String toString() {
+		return "(" + x + "," + y + ")";
+	}
+}
+
+public class PointVectorEx {
+	public static void main(String[] args) {		
+		Vector<Point> v = new Vector<Point>(); // Point 객체를 요소로 다루는 Vector 객체를 생성한다.
+		
+		// 3개의 Point 객체들을 삽입한다.
+		v.add(new Point(2, 3));
+		v.add(new Point(-5, 20));
+		v.add(new Point(30, -8));
+		
+		v.remove(1); // 인덱스 1의 Point(-5, 20) 객체를 삭제한다.
+		
+		for (int i = 0; i < v.size(); ++i) {
+			Point p = v.get(i); // 벡터의 i 번째 Point 객체를 얻어낸다.
+			System.out.println(p); // p.toString() 메소드를 이용하여 p 객체를 출력한다.
+		}
+	}
+}
+```
+
+### 문자열을 입력받아 저장하는 ArrayList<String> 활용
+---
+ 이름을 4개 입력받아 ArrayList 객체에 저장하고 모두 출력한 후 제일 긴 이름을 출력하는 예제 코드는 다음과 같다.
+
+```java
+package ch7n3;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class ArrayListEx {
+	public static void main(String[] args) {
+		// 문자열만 삽입 가능한 ArrayList 객체 생성
+		ArrayList<String> a = new ArrayList<String>();
+		
+		// 키보드로부터 4개의 이름을 입력 받아 ArrayList 객체에 삽입한다.
+		Scanner scanner = new Scanner(System.in); // Scanner 객체 생성
+		for (int i = 0; i < 4; ++i) {
+			System.out.print("이름을 입력하세요>>");
+			String s =  scanner.next(); // 키보드로부터 이름을 입력받는다.
+			a.add(s);
+		}
+		
+		// ArrayList 객체에 들어 있는 모든 이름을 출력한다.
+		for (int i = 0; i < a.size(); ++i) {
+			String name = a.get(i); // ArrayList 객체에 i 번째 문자열을 얻어온다.
+			System.out.print(name + " ");
+		}
+		
+		// 가장 긴 이름을 출력한다.
+		int logestIndex = 0; // 현재 가장 긴 이름이 있는 ArrayList 객체 내의 인덱스를 저장한다.
+		for (int i = 1; i < a.size(); ++i) {
+			// 이름 길이를 비교한다.
+			if (a.get(logestIndex).length() < a.get(i).length()) {
+				logestIndex = i; // i 번째 이름이 더 긴 이름이다.
+			}
+		}
+		
+		System.out.println("\n가장 긴 이름은 : " + a.get(logestIndex));
+		scanner.close();
+	}
+}
+```
+
+### Vector 속의 모든 요소들을 출력하고 합을 구하는 Iterator<Integer> 활용
+---
+ 모든 요소들을 출력하고 합을 구하는 예제 코드는 다음과 같다.
+
+```java
+package ch7n4;
+
+import java.util.Iterator;
+import java.util.Vector;
+
+public class IteratorEx {
+	public static void main(String[] args) {
+		// 정수 값만 다루는 제네릭 벡터를 생성한다.
+		Vector<Integer> v = new Vector<Integer>();
+		v.add(5);
+		v.add(4);
+		v.add(-1);
+		v.add(2, 100);
+		
+		// Iterator 인터페이스를 이용한 모든 정수를 출력한다.
+		Iterator<Integer> it = v.iterator(); // Iterator 객체를 얻는다.
+		while (it.hasNext()) {
+			int n = it.next();
+			System.out.println(n);
+		}
+		
+		// Iterator 인터페이스를 이용하여 모든 정수를 더한다.
+		int sum = 0;
+		it = v.iterator();
+		while (it.hasNext()) {
+			int n = it.next();
+			sum += n;
+		}
+		
+		System.out.println("Vector 객체에 있는 정수 합 : " + sum);
+	}
+}
+```
+
+### 영어 및 한글 단어 쌍의 저장 및 검색하는 HashMap<String, String> 활용
+---
+ 영어 및 한글 단어를 쌍으로 저장하고 영어로 한글을 검색하는 예제 코드는 다음과 같다.
+
+```java
+package ch7n5;
+
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class HashMapDicEx {
+	public static void main(String[] args) {
+		HashMap<String, String> dic = new HashMap<String, String>(); // 해시맵을 생성한다.
+		dic.put("baby", "아기");
+		dic.put("love", "사랑");
+		dic.put("apple", "사과");
+		
+		// 사용자로부터 영어 단어를 입력받고 한글 단어를 검색한다.
+		Scanner scanner = new Scanner(System.in);
+		while (true) {
+			System.out.print("찾고 싶은 단어는?");
+			String eng = scanner.next();
+			if (eng.equals("exit")) {
+				System.out.println("종료합니다.");
+				break;
+			}
+			
+			// eng 키의 kor 값을 검색한다.
+			String kor = dic.get(eng);
+			if (kor == null) {
+				System.out.println(eng + "은(는) 없는 단어입니다.");
+			}
+			else {
+				System.out.println(kor);
+			}
+		}
+		
+		scanner.close();
+	}
+}
+```
