@@ -49,7 +49,7 @@ Box<Integer> integerBox = new Box<>(); // T를 Integer로 구체화한다. (다�
 
  |제네릭 타입 정의|바이트 코드 변환 후(소거)|
  |:---:|:---:|
- |List<String>|List<Object>|
+ |List<`String`>|List<`Object`>|
  |T(제한이 없는 타입)|Object|
  |T extends Number(제한된 타입)|Number|
 
