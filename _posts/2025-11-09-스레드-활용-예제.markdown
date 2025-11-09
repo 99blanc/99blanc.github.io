@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "명품 자바 프로그래밍 개정 4판: 스레드 예제"
+title: "명품 자바 프로그래밍 개정 4판: 스레드 활용 예제"
 date: 2025-11-09 15:10:00 +09:00
-last_modified_at: 2025-11-05 15:10:00 +09:00
+last_modified_at: 2025-11-10 07:47:00 +09:00
 categories: Code Java Study
 sitemap:
   changefreq: daily
