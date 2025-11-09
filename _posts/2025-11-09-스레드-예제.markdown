@@ -1,0 +1,227 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: 스레드 예제"
+date: 2025-11-09 15:10:00 +09:00
+last_modified_at: 2025-11-05 15:10:00 +09:00
+categories: Code Java Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### Thread 클래스
+---
+ Thread 클래스의 경로명은 java.lang.Thread이고, Thread 클래스를 상속받아 개발자의 스레드 코드를 만들 수 있으며, 스레드를 만들고 유지 관리하기 위해 다음과 같은 메소드를 제공한다.
+
+ |Thread 메소드|내용|
+ |:---:|:---:|
+ |Thread()<br>Thread(Runnable target)<br>Thread(String name)<br>Thread(Runnable target, String name)|스레드 객체 생성<br>Runnable 객체인 target을 이용하여 스레드 객체 생성<br>name 이름인 스레드 객체 생성<br>Runnable 객체를 이용하여, 이름이 name인 스레드 객체 생성|
+ |void run()|스레드 코드로서 JVM에 의해 호출된다. 개발자는 반드시 이 메소드를 오버라이딩하여 스레드 코드를 작성하여야 한다. 이 메소드가 종료하면 스레드도 종료한다.|
+ |void start()|JVM에게 스레드 실행을 시작하도록 요청한다.|
+ |void interrupt()|스레드를 강제로 종료한다.|
+ |static void yield()|다른 스레드에게 실행을 양보한다. 이때 JVM은 스레드 스케줄링을 시행하며, 다른 스레드를 선택하여 실행시킨다.|
+ |void join()|스레드가 종료할 때까지 기다린다.|
+ |long getId()|스레드의 ID 값을 반환한다.|
+ |String getName()|스레드의 이름을 반환한다.|
+ |int getPriority()|스레드의 우선 순위 값(1에서 10 사이의 값)을 반환한다.|
+ |void setPriority(int n)|스레드의 우선 순위 값을 n값으로 변경한다.|
+ |Thread.State getState()|스레드의 상태 값을 반환한다.|
+ |static void sleep(long mills)|스레드는 mills 시간 동안 휴식한다. mills 값의 단위는 밀리초이다.|
+ |static Thread currentThread()|현재 실행 중인 스레드 객체의 레퍼런스를 반환한다.|
+
+### Thread 클래스 작성
+---
+ Thread를 상속받아 스레드 코드를 작성하는 예제는 다음과 같다.
+
+ * 스레드 클래스 작성: Thread 클래스를 상속받아 TimerThread 클래스를 작성한다.
+
+```java
+class TimerThread extends Thread {
+	// Thread 상속
+}
+```
+
+ * 스레드 코드 작성: Thread 클래스의 run() 메소드를 오버라이딩한다. run() 메소드에 작성된 코드를 스레드 코드라고 부르며, run() 메소드에서부터 실행을 시작하고 run() 메소드가 종료하면 스레드도 종료한다.
+
+```java
+class TimerThread extends Thread {
+	@Override
+	public void run() {
+		// run() 메소드 오버라이딩
+	}
+}
+```
+
+ * 스레드 객체 생성: 스레드 객체를 생성한 것으로 스레드가 작동하는 것은 아니고, JVM에 등록되어 스케줄링 되어야 작동한다.
+ * 스레드 시작: start() 메소드를 호출하여 스레드를 동작시킨다.
+ 
+```java
+class TimerThread extends Thread {
+	@Override
+	public void run() {}
+}
+
+public class TestThread {
+	public static void main(String[] args) {
+		TimerThread th = new TimerThread(); // 스레드 객체 생성
+		th.start(); // 스레드 시작
+	}
+}
+```
+ 
+ Thread 클래스를 상속받아 1초 단위로 출력하는 타이머 스레드를 만드는 예제 코드는 다음과 같다.
+
+```java
+package ch13n1;
+
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.Font;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+class TimerThread extends Thread {
+	private JLabel timerLabel; // 타이머 값이 출력되는 레이블이다.
+	
+	public TimerThread(JLabel timerLabel) {
+		this.timerLabel = timerLabel; // 타이머 카운트를 출력할 레이블이다.
+	}
+	
+	// 스레드 코드로 run() 메소드가 종료하면 스레드도 종료된다.
+	@Override
+	public void run() {
+		int n = 0; // 타이머 카운트 값이다.
+		
+		while (true) {
+			timerLabel.setText(Integer.toString(n)); // 레이블에 카운트 값 출력
+			++n;
+			
+			try {
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e) {
+				return; // 예외가 발생하면 스레드 종료
+			}
+		}
+	}
+}
+
+public class ThreadTimerEx extends JFrame {
+	public ThreadTimerEx() {
+		setTitle("Thread 클래스를 상속받은 타이머 스레드 예제");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Container c = getContentPane();
+		c.setLayout(new FlowLayout());
+		
+		// 타이머 값을 출력할 레이블을 생성한다.
+		JLabel timerLabel = new JLabel();
+		timerLabel.setFont(new Font("Gothic", Font.ITALIC, 80));
+		c.add(timerLabel);
+		TimerThread th = new TimerThread(timerLabel);
+		setSize(300, 170);
+		setVisible(true);
+		th.start();
+	}
+	
+	public static void main(String[] args) {
+		new ThreadTimerEx();
+	}
+}
+```
+
+### Runnable 인터페이스 작성
+---
+ Runnable 인터페이스는 경로면 java.lang.Runnable이며, 다음과 같이 run() 추상 메소드 하나만 가지고 있다.
+
+```java
+interface Runnable {
+	public void run();
+}
+```
+
+ * 스레드 클래스 선언: 스레드 클래스를 정의하기 위해 Runnable 인터페이스 구현한다.
+
+```java
+class TimerRunnable implements Runnable {}
+```
+
+ * 스레드 코드 작성: Runnable 인터페이스의 run() 메소드를 오버라이딩하여 스레드 코드를 작성한다.
+
+```java
+class TimerRunnnable implements Runnable {
+	@Override
+	public void run() {
+		// run() 메소드 오버라이딩
+	}
+}
+```
+
+ * 스레드 객체 생성: 생성자에 TimerRunnable 객체를 전달하여 Thread 객체를 생성한다.
+ * 스레드 시작: start() 메소드를 호출하여 스레드를 동작시킨다.
+
+```java
+class TimerRunnnable implements Runnable {
+	@Override
+	public void run() {}
+}
+
+public class ThestRunnable {
+	public static void main(String[] args) {
+		Thread th = new Thread(new TimerRunnable()); // 스레드 객체 생성
+		th.start(); // 스레드 시작
+	}
+}
+```
+
+### Thread 클래스 상속과 Runnable 인터페이스 구현 차이
+---
+ 자바에서 스레드를 생성하는 방식은 앞서 설명한 것과 같이 크게 두 가지로 나뉘며, 다음과 같은 차이가 있다.
+
+ |구분|Thread 클래스 상속|Runnable 인터페이스 구현|
+ |:---:|:---:|:---:|
+ |코드 작성|`class myThread extends Thread`|`class myRunnable implements Runnable`|
+ |스레드 객체 생성|`myThread th = new myThread();`|`Thread th = new Thread(new myRunnable());`|
+ |장점|코드 구조가 간결해진다.|다중 상속의 제약을 피할 수 있다.<br>스레드 코드를 재사용하기 용이하다.|
+ |단점|자바의 단일 상속 원칙을 지켜야 한다.|Thread 객체를 생성자에 넣어 다시 만들어야 한다.|
+
+ 예시로 어떤 플레이어가 캐릭터를 상속받으면서 동시에 스레드 기능까지 갖추려면 다음과 같이 구현할 수 있다.
+
+```java
+class Player extends Character implements Runnable {} // 인터페이스는 다중 구현이 가능하다.
+```
+
+### 스레드 정보
+---
+ 생성된 스레드에 관련된 정보는 JVM에 의해 관리되며, 대부분은 Thread 클래스의 메소드를 통해 읽어낼 수 있다.
+
+ |필드|타입|내용|
+ |:---:|:---:|:---:|
+ |스레드 이름|문자열|스레드의 이름으로서 사용자가 지정한다.|
+ |스레드 ID|정수|스레드 고유의 식별자 번호이다.|
+ |스레드의 PC(Program Count)|정수|현재 실행 중인 스레드 코드의 주소이다.|
+ |스레드 상태|정수|NEW, RUNNABLE, WAITING, TIMED_WAITING, BLOCK, TERMINATED 등 6개 상태 중 하나를 반환한다.|
+ |스레드 우선 순위|정수|스레드 스케줄링 시 사용되는 우선 순위 값으로서 1에서 10 사이의 값이며 10이 최상위 우선 순위를 나타낸다.|
+ |스레드 그룹|정수|여러 개의 자바 스레드가 하나의 그룹을 형성할 수 있으며, 이 경우는 스레드가 속한 그룹이다.|
+ |스레드 레지스터 스택|메모리 블록|스레드가 실행되는 동안의 레지스터 값이다.|
+
+### 데몬 스레드와 사용자 스레드
+---
+ [데몬][1] 스레드(Demon Thread)는 사용자 스레드의 보조 역할을 수행하기 위해 만들어진 스레드이다. 사용자 스레드는 주 스레드 또는 비데몬 스레드(Non-Daemon Thread)라고도 불리며, 프로그램의 핵심 작업을 담당하는 스레드이다.
+
+ |특징|사용자 스레드|데몬 스레드|
+ |:---:|:---:|:---:|
+ |주요 역할|프로그램의 핵심 작업 및 주 실행 흐름을 담당한다.|사용자 스레드를 지원하는 보조 작업 및 백그라운드 서비스를 담당한다.|
+ |프로그램 종료|모든 사용자 스레드가 종료되어야 JVM이 끝난다.|모든 사용자 스레드가 끝나면 작업 여부와 관계없이 JVM에 의해 강제로 종료된다.|
+ |기본 생성|Thread 객체 생성 시 기본 값으로 설정된다.|명시적으로 start() 메소드의 호출 전에 setDaemon(true) 메소드를 호출해야 한다.|
+ |중요성|프로그램의 생존과 직결되는 필수적인 스레드이다.|사용자 스레드가 살아있는 동안만 필요로 하는 선택적인 서비스 스레드이다.|
+
+ 프로그램의 종료 원칙은 다음과 같다.
+
+ |상태|JVM 종료 여부|설명|
+ |사용자 스레드 O<br> 데몬 스레드 X|종료되지 않는다.|핵심 작업이 남아 있으므로 프로그램은 계속 실행된다.|
+ |사용자 스레드 O<br> 데몬 스레드 O|종료되지 않는다.|핵심 작업(사용자 스레드)이 남아 있으므로 대기한다.|
+ |사용자 스레드 X<br> 데몬 스레드 O|즉시 종료한다.|핵심 작업이 모두 끝나면, 보조 역할인 데몬 스레드는 강제로 종료한다.|
+ |사용자 스레드 X<br> 데몬 스레드 X|종료한다.|모든 스레드가 종료되었기에, 프로그램이 완전이 끝난다.|
+
+ [1]: https://en.wikipedia.org/wiki/Daemon_(computing) "대화형 사용자의 직접 제어가 아닌 백그라운드 프로세스로 실행되는 프로그램을 의미한다."
