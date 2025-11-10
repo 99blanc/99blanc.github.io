@@ -39,8 +39,8 @@ permalink: /categories
           <ul id="posts-{{ cat_id }}" class="post-hyperlinks closed" style="list-style: none;">
           {% for post in cat_posts %}
             <li>
-              <span class="category-post-separator">•</span>
               <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              <span class="category-post-separator">•</span>
               <small> {{ post.date | date: "%b %d, %Y" }}</small>
             </li>
           {% endfor %}
@@ -52,9 +52,14 @@ permalink: /categories
   </div>
 </ul>
 <script>
+  var isAnimating = false;
   function togglePosts(categoryId) {
+    if (isAnimating) return;
     var postsList = document.getElementById('posts-' + categoryId);
     var header = postsList.closest('.category-section').querySelector('.category-header');
+    var toggleIcon = header.querySelector('.icon-right-arrow');
+    const TRANSITION_DURATION = 300;
+    isAnimating = true;
     if (postsList.classList.contains('closed')) {
       postsList.classList.remove('closed');
       postsList.style.maxHeight = '0';
@@ -62,17 +67,27 @@ permalink: /categories
       postsList.style.maxHeight = postsList.scrollHeight + "px";
       postsList.classList.add('opened');
       header.classList.add('is-expanded');
+      if (toggleIcon) {
+        toggleIcon.style.transform = 'rotate(90deg)';
+      }
+      setTimeout(() => {
+        postsList.style.maxHeight = null;
+        isAnimating = false;
+      }, TRANSITION_DURATION);
     } else {
       postsList.style.maxHeight = postsList.scrollHeight + "px";
       header.classList.remove('is-expanded');
+      if (toggleIcon) {
+        toggleIcon.style.transform = 'rotate(0deg)';
+      }
       setTimeout(() => {
         postsList.style.maxHeight = "0";
       }, 10);
       setTimeout(() => {
         postsList.classList.remove('opened');
         postsList.classList.add('closed');
-        postsList.style.maxHeight = null; 
-      }, 400); 
+        isAnimating = false;
+      }, TRANSITION_DURATION); 
     }
   }
 </script>
