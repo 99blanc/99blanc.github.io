@@ -3,7 +3,6 @@ layout: default
 title: Archives
 permalink: /archives
 ---
-
 {%- if site.posts.size > 0 -%}
 <ul class="posts">
   <li class="posts-labelgroup" id="posts-labelgroup">
@@ -19,44 +18,68 @@ permalink: /archives
     {% endif %}
   </li>
   <div class="post-content">
+    {% assign current_year = site.time | date: '%Y' %}
+    {% assign current_month = site.time | date: '%m' %}
     {% assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse %}
     {% for year in years %}
-      <div class="archive-year">
-        <h2 class="archive-year-heading">
-          <i class="icon-calendar" style="font-size: 14px;"></i> 
-          {{ year.name }}
+      {% assign year_id = year.name | slugify %}
+      {% assign is_current_year = false %}
+      {% if year.name == current_year %}
+        {% assign is_current_year = true %}
+      {% endif %}
+      <div class="archive-year" id="archive-year-{{ year_id }}">
+        <h2 class="archive-year-heading archive-toggle-button {% if is_current_year %}is-expanded{% endif %}" 
+            onclick="{% unless is_current_year %}togglePosts('posts-{{ year_id }}', this){% endunless %}" 
+            style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; {% if is_current_year %}cursor: default;{% endif %}">
+          <span>
+            <i class="icon-calendar" style="font-size: 14px;"></i> 
+            {{ year.name }}
+          </span>
+          <i id="toggle-icon-posts-{{ year_id }}" class="icon-right-arrow" style="{% if is_current_year %}transform: rotate(90deg); display: none;{% endif %}"></i>
         </h2>
+        <ul id="posts-{{ year_id }}" class="post-hyperlinks {% unless is_current_year %}closed{% endunless %} post-month-list" style="list-style: none; overflow: hidden; {% if is_current_year %}max-height: fit-content;{% else %}max-height: 0;{% endif %}">
         {% assign months = year.items | group_by_exp: "post", "post.date | date: '%m'" | sort: "name" | reverse %}
-        <ul class="archive-month-list">
         {% for month_group in months %}
           {% assign month_name = month_group.items.first.date | date: '%b' %}
+          {% assign month_key = year.name | append: month_group.name %}
+          {% assign month_id = month_key | slugify %}
+          {% assign is_current_month = false %}
+          {% if is_current_year and month_group.name == current_month %}
+            {% assign is_current_month = true %}
+          {% endif %}
           <li class="archive-month-item">
-            <h3 class="archive-month-heading">
-              {{ month_name }} •
+            <h3 class="archive-month-heading archive-toggle-button {% if is_current_month %}is-expanded{% endif %}" 
+                onclick="{% unless is_current_month %}togglePosts('month-{{ month_id }}', this, 'posts-{{ year_id }}'){% endunless %}"
+                style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding-left: 20px; {% if is_current_month %}cursor: default;{% endif %}">
+              <span>
+                {{ month_name }}
+                <span class="category-count">({{ month_group.items | size }} posts)</span>
+              </span>
+              <i id="toggle-icon-month-{{ month_id }}" class="icon-right-arrow" style="{% if is_current_month %}transform: rotate(90deg); display: none;{% endif %}"></i>
             </h3>
-            <ul class="archive-post-detail-list">
+            <ul id="month-{{ month_id }}" class="post-hyperlinks {% unless is_current_month %}closed{% endunless %} archive-post-detail-list" style="list-style: none; overflow: hidden; {% if is_current_month %}max-height: fit-content;{% else %}max-height: 0;{% endif %}">
               {% assign sorted_posts = month_group.items | sort: 'date' | reverse %}
-            {% assign last_day = "" %}
-            {% for post in sorted_posts %}
-              {% assign date_format = "%d"%}
-              {% assign current_day = post.date | date: date_format %}
-              {% assign date_is_hidden = false %}
-              {% if current_day == last_day %}
-                {% assign date_is_hidden = true %}
-              {% endif %}
-              <li class="archive-post-item {% if date_is_hidden %}no-date{% endif %}">
+              {% assign last_day = "" %}
+              {% for post in sorted_posts %}
+                {% assign date_format = "%d"%}
+                {% assign current_day = post.date | date: date_format %}
+                {% assign date_is_hidden = false %}
+                {% if current_day == last_day %}
+                  {% assign date_is_hidden = true %}
+                {% endif %}
+                <li class="archive-post-item {% if date_is_hidden %}no-date{% endif %}">
                   <span class="archive-date-group">
                   {% if current_day != last_day %}
                     <span class="archive-post-date">{{ current_day }}</span>
                     <span class="archive-post-separator">•</span>
                   {% endif %}
                   </span>
-                <a href="{{ post.url | relative_url }}" class="archive-post-link">
+                  <a href="{{ post.url | relative_url }}" class="archive-post-link">
                     {{ post.title }}
-                </a>
-              </li>
-              {% assign last_day = current_day %}
-            {% endfor %}
+                  </a>
+                </li>
+                {% assign last_day = current_day %}
+              {% endfor %}
             </ul>
           </li>
         {% endfor %}
@@ -65,4 +88,68 @@ permalink: /archives
     {% endfor %}
   </div>
 </ul>
+<script>
+  var isAnimating = false;
+  function togglePosts(elementId, headerElement, parentId = null) {
+    if (isAnimating)
+      return;
+    var postsList = document.getElementById(elementId);
+    var toggleIcon = headerElement.querySelector('.icon-right-arrow');
+    var parentList = parentId ? document.getElementById(parentId) : null;
+    const TRANSITION_DURATION = 400;
+    function updateParentHeight(isOpening, postsListHeight = postsList.scrollHeight) {
+        if (parentList) {
+            let currentParentHeightValue = parseInt(parentList.style.maxHeight) || parentList.scrollHeight;
+            if (isOpening) {
+                parentList.style.maxHeight = (currentParentHeightValue + postsListHeight) + "px";
+            } else {
+                setTimeout(() => {
+                    let finalHeight = Math.max(0, currentParentHeightValue - postsListHeight);
+                    if (parentList.style.maxHeight !== "0px") {
+                         parentList.style.maxHeight = finalHeight + "px";
+                    }
+                }, TRANSITION_DURATION);
+            }
+        }
+    }
+    isAnimating = true;
+    if (postsList.classList.contains('closed')) {
+        postsList.classList.remove('closed');
+        postsList.style.maxHeight = '0';
+        void postsList.offsetHeight;
+        const postsListHeight = postsList.scrollHeight;
+        postsList.style.maxHeight = postsListHeight + "px";
+        postsList.classList.add('opened');
+        headerElement.classList.add('is-expanded');
+        if (toggleIcon) {
+            toggleIcon.style.transform = 'rotate(90deg)';
+        }
+        if (parentId) {
+            updateParentHeight(true, postsListHeight);
+        }
+        setTimeout(() => {
+            postsList.style.maxHeight = null;
+            isAnimating = false;
+        }, TRANSITION_DURATION);
+    } else {
+        const postsListHeight = postsList.scrollHeight;
+        postsList.style.maxHeight = postsListHeight + "px";
+        headerElement.classList.remove('is-expanded');
+        if (parentId) {
+            updateParentHeight(false, postsListHeight);
+        }
+        setTimeout(() => {
+            postsList.style.maxHeight = "0";
+        }, 10);
+        if (toggleIcon) {
+            toggleIcon.style.transform = 'rotate(0deg)';
+        }
+        setTimeout(() => {
+            postsList.classList.remove('opened');
+            postsList.classList.add('closed');
+            isAnimating = false;
+        }, TRANSITION_DURATION);
+    }
+  }
+</script>
 {%- endif -%}
