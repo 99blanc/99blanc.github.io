@@ -183,12 +183,6 @@
   .post-content a {
     color: $dark_text_color;
   }
-  
-  .category-header {
-    background-color: #171717;
-    border: 1px solid #272727; 
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.01);
-  }
 
   .category-name {
     color: #fff;
@@ -200,6 +194,12 @@
 
   .icon-right-arrow {
 	  color: #e6e6e6;
+  }
+
+  .category-section {
+    background-color: #171717;
+    border: 1px solid #272727; 
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.01);
   }
 
   .category-post-separator {
@@ -222,7 +222,7 @@
   }
 
   .archive-year-heading {
-    color: $dark_text_color;
+    color: #999;
   }
 
   .archive-month-heading {
