@@ -96,7 +96,7 @@ permalink: /archives
     var postsList = document.getElementById(elementId);
     var toggleIcon = headerElement.querySelector('.icon-right-arrow');
     var parentList = parentId ? document.getElementById(parentId) : null;
-    const TRANSITION_DURATION = 400;
+    const TRANSITION_DURATION = 300;
     function updateParentHeight(isOpening, postsListHeight = postsList.scrollHeight) {
         if (parentList) {
             let currentParentHeightValue = parseInt(parentList.style.maxHeight) || parentList.scrollHeight;
