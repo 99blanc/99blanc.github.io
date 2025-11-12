@@ -3,7 +3,7 @@ layout: post
 title: "명품 자바 프로그래밍 개정 4판: 네트워크"
 date: 2025-11-12 12:39:00 +09:00
 last_modified_at: 2025-11-12 12:39:00 +09:00
-categories: Java Study
+categories: Network Study
 sitemap:
   changefreq: daily
   priority: 0.5
