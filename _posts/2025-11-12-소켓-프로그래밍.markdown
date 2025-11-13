@@ -1,0 +1,154 @@
+---
+layout: post
+title: "명품 자바 프로그래밍 개정 4판: 소켓 프로그래밍"
+date: 2025-11-13 15:39:00 +09:00
+last_modified_at: 2025-11-13 15:39:00 +09:00
+categories: Code Java Network Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 소켓
+---
+ [소켓 통신][1]은 개발자가 TCP/IP 네트워크를 이용하여 통신 프로그램을 작성하도록 지원하는 기반 기술이다. 소켓은 통신하는 두 응용 프로그램 간의 통신 링크의 각 끝단으로서, TCP/IP의 네트워크 기능을 활용하여 다른 컴퓨터의 소켓과 데이터를 주고 받으며, 특정 포트에 연결되어 해당 응용 프로그램을 식별한다.
+
+### 소켓과 서버 클라이언트 통신
+---
+ 서버 소켓과 클라이언트 소켓 2가지 종류가 있으며, 이 둘은 다음과 같이 용도가 서로 다르다.
+
+ * 서버 소켓: 서버 응용 프로그램이 사용자의 접속을 기다리는 목적(Listen)으로만 사용된다. 클라이언트가 접속해오면, 클라이언트 소켓을 만들어 상대 클라이언트와 통신하게 한다.
+ * 클라이언트 소켓: 클라이언트 응용 프로그램에서 이용하는 소켓으로, 서버에 접속하기 위해 사용된다.
+
+ 예제 그림은 다음과 같다.
+
+![소켓을 이용한 서버와 클라이언트 통신](https://drive.google.com/thumbnail?id=1H4KpvPdoblZX8B0UoQYTifNxWaCZnM7x&sz=w1000)
+
+### Socket 클래스
+---
+ Socket 클래스는 java.net 패키지에 포함되어 있는 클래스로서 클라이언트 소켓을 구현한다. Socket 클래스의 생성자는 연결할 서버의 IP 주소와 포트 번호를 인자로 받아서 Socket 객체를 생성한다. 클라이언트 자신의 주소와 포트 번호가 아님에 주의하며, 더 자세한 클라이언트 용 프로그램 작성 방법은 다음과 같다.
+
+ * 클라이언트 소켓 생성 및 서버 접속: 서버에 연결하기 위해 다음과 같이 클라이언트 소켓 객체를 생성한다. 클라이언트의 포트(Local Port)는 사용되지 않는 포트 중에서 자동으로 선택된다. Socket 객체가 생성되면 설정된 주소와 포트로 자동 접속이 이루어진다.
+
+```java
+Socket clientSocket = new Socket("128.12.1.1", 5550); // 128.12.1.1 서버에 접속한다.
+```
+
+```java
+Socket clientSocket = new Socket(); // 연결되지 않은 소켓을 생성한다.
+clientSocket.bind(new InetSocketAddress("192.168.1.21", 1234)); // 소켓에 자신의 IP 주소와 로컬 포트를 결합한다.
+clientSocket.connect(new InetSocketAddress("128.12.1.1", 5550)); // 서버 응용 프로그램에 접속하도록 IP 주소와 포트를 기입한다.
+```
+
+ * 네트워크 입출력 [스트림][2] 생성: Socket 클래스의 getInputStream(), getOutputStream() 메소드들을 이용하여 서버와 데이터를 주고 받을 소켓 스트림을 얻어내고 이를 버퍼 스트림에 연결할 수 있다.
+
+```java
+BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream));
+BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream));
+```
+
+ * 데이터 입출력: in 입력 스트림을 통해 데이터를 받을 수 있고, out 출력 스트림을 통해 데이터를 보낼 수 있다. 따라서 서버로의 데이터 전송은 버퍼 출력 스트림인 out 객체를 통해 가능하다.
+
+```java
+out.write("hello" + "\n");
+out.flush();
+// out 스트림은 버퍼 입출력 스트림으로 버퍼가 차기 전까지 데이터를 보내지 않기 때문에 강제로 out.flush() 메소드를 호출하여 스트림 속의 데이터를 모두 즉각 전송하도록 한다.
+
+int x = in.read(); // 클라이언트로부터 한 개의 문자를 수신한다.
+String line = in.readLine(); // 클라이언트로부터 한 행의 문자를 수신한다.
+```
+
+ * 데이터 송수신 종료: 소켓 연결을 끊고자 한다면 다음과 같이 한다.
+
+```java
+socket.close();
+```
+
+ Socket 클래스의 생성자를 정리한 표는 다음과 같다.
+
+ |생성자|설명|
+ |:---:|:---:|
+ |Socket()|연결되지 않은 상태의 소켓을 생성한다.|
+ |Socket(InetAdddress address, int port)|소켓을 생성하고, 지정된 IP 주소와 포트 번호에서 대기하는 원격 응용 프로그램의 소켓에 연결한다.|
+ |Socket(String host, int port)|소켓을 생성하여 지정된 호스트와 포트 번호에 연결한다 호스트 이름이 `null`인 경우에는 [루프백][3](Loopback) 주소로 가정한다.|
+
+ Socket 클래스의 주요 메소드를 정리한 표는 다음과 같다.
+
+ |메소드|설명|
+ |:---:|:---:|
+ |void bind(SocketAddress bindpoint)|소켓에 로컬 IP 주소와 로컬 포트를 지정한다.|
+ |void close()|소켓을 닫는다|
+ |void connect(SocketAddress endpoint)|서버에 연결한다.|
+ |InetAddress getInetAddress()|소켓에 연결된 서버 IP 주소를 반환한다.|
+ |InputStream getInputStream()|소켓의 입력 스트림을 반환한다. 이 스트림을 이용하여 소켓이 상대편으로부터 받은 데이터를 읽을 수 있다.|
+ |InetAddress getLocalAddress()|소켓의 로컬 주소를 반환한다.|
+ |int getLocalPort()|소켓의 로컬 포트 번호를 반환한다.|
+ |int getPort()|소켓에 연결된 서버의 포트 번호를 반환한다.|
+ |OutputStream getOutputStream()|소켓의 출력 스트림을 반환한다. 이 스트림에 출력하면 소켓이 서버로 데이터를 전송할 수 있다.|
+ |boolean isBound()|소켓이 로컬 주소와 결합되어 있으면 참을 반환한다.|
+ |boolean isConnected()|소켓이 서버에 연결되어 있으면 참을 반환한다.|
+ |booelan isClosed()|소켓이 닫혀있으면 참을 반환한다.|
+ |void setSoTimeout(int timeout)|데이터 읽기 타임아웃의 시간을 지정한다. 0 값이면 타입아웃이 해제된다.|
+
+### ServerSocket 클래스
+---
+ ServerSocket 클래스는 java.net 패키지에 포함되어 있으며, 클라이언트로부터 연결 요청을 기다리는 목적으로만 사용된다. 서버가 클라이언트의 연결 요청을 수락하면 Socket 객체를 별도로 생성하고, 이 Socket 객체가 클라이언트와 데이터를 주고받는다.
+
+ * 서버 소켓 생성: ServerSocket 생성자는 포트 번호를 인자로 받아서 ServerSocket 객체를 생성한다. 이미 사용 중인 포트 번호를 지정하면 오류가 발생한다.
+
+```java
+ServerSocket listener = new ServerSocket(9999);
+```
+
+ * 클라이언트로부터 접속 대기: accept() 메소드를 이용하여 클라이언트로부터의 연결 요청을 기다린다. accept() 메소드가 연결을 수락하면 다음과 같이 Socket 객체를 하나 별도로 생성하여 반환한다.
+
+```java
+Socket socket = listener.accept();
+```
+
+ * 네트워크 입출력 스트림 생성: 클라이언트로부터 데이터를 주고 받기 위한 스트림 객체는, ServerSocket 객체의 accept() 메소드로부터 얻은 socket 객체의 getInputStream(), getOutputStream() 메소드를 이용하여 얻어낸다.
+
+```java
+BufferReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+BufferWriter out = new BufferedWriter(new OutputStreamReader(socket.getOutputStream()));
+```
+
+ * 데이터 송수신: in 버퍼 스트림을 이용하여 문자 데이터를 수신할 수 있으며, out 버퍼 스트림을 이용하여 클라이언트로 데이터를 전송할 수 있다.
+
+```java
+int x = in.read(); // 클라이언트로부터 한 개의 문자를 수신한다.
+String line = in.readLine(); // 클라이언트로부터 한 행의 문자열을 수신한다.
+
+out.write("Hi!, Client" + "\n");
+out.flush();
+// out.flush() 메소드를 호출하면 버퍼 스트림 속의 데이터를 모두 즉각 클라이언트로 전송한다.
+```
+
+ * 데이터 송수신 및 서버 응용 프로그램 종료: 소켓 연결이나 서버 응용 프로그램을 끊고자 하면 다음과 같이 한다.
+
+```java
+socket.close(); // 소켓 연결을 끊는다.
+serverSocket.close(); // 서버 응용 프로그램을 종료한다.
+```
+
+ ServerSocket 클래스의 생성자를 정리한 표는 다음과 같다.
+
+ |생성자|설명|
+ |:---:|:---:|
+ |ServerSocket(int port)|지정된 포트 번호와 결합된 소켓을 생성한다.|
+
+ ServerSocket 클래스의 주요 메소드를 정리한 표는 다음과 같다.
+
+ |메소드|설명|
+ |:---:|:---:|
+ |Socket accept()|클라이언트로부터 연결 요청을 기다리다 요청이 들어오면 수락하고 클라이언트와 데이터를 주고 받을 새 Socket 객체를 반환한다.|
+ |void close()|서버 소켓을 닫는다.|
+ |InetAddress getInetAddress()|서버 소켓의 로컬 IP 주소를 반환한다.|
+ |int getLocalPort()|서버 소켓의 로컬 포트 번호를 반환한다.|
+ |boolean isBound()|서버 소켓이 로컬 주소와 결합되어 있으면 참을 반환한다.|
+ |boolean isClosed()|서버 소켓이 닫혀있으면 참을 반환한다.|
+ |void setSoTimeout(int timeout)|accept() 메소드가 대기하는 타임아웃의 시간을 지정한다. 0 값이면 무한정 대기한다.|
+
+ [1]: https://en.wikipedia.org/wiki/Network_socket "네트워크를 통해 데이터를 주고 받기 위한 끝단(Endpoint) 역할을 하는 컴퓨터 네트워크의 네트워크 노드 내의 소프트웨어 구조이다."
+ [2]: https://ko.wikipedia.org/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0_%EC%8A%A4%ED%8A%B8%EB%A6%BC "전송된 정보를 수집하거나 정보를 전송할 때 사용되는 디지털 방식으로 암호화 된 일관된 신호의 흐름을 말한다."
+ [3]: https://ko.wikipedia.org/wiki/%EB%A3%A8%ED%94%84%EB%B0%B1#%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC_%EC%9E%A5%EB%B9%84 "수신된 데이터를 전송자에게 피드(Feed)하는 소프트웨어 방법으로, 물리적 연결 문제의 디버깅을 돕기 위해서 사용된다."
