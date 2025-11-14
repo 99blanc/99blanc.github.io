@@ -500,6 +500,7 @@ main {
   border: 1px solid #eee; 
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 10px;
+  margin-bottom: 10px;
 
   p {
     margin-top: 10px;
@@ -836,7 +837,7 @@ footer {
 
 .category-stats-container {
   max-width: 100%;
-  margin-top: 10px;
+  margin: 10px 0 10px 0;
   padding: 15px 15px 15px 15px;
   background-color: #fff;
   border: 1px solid #eee;
