@@ -2,7 +2,7 @@
 layout: post
 title: "명품 자바 프로그래밍 개정 4판: 스레드 활용 예제"
 date: 2025-11-09 15:10:00 +09:00
-last_modified_at: 2025-11-10 07:47:00 +09:00
+last_modified_at: 2025-11-15 16:41:00 +09:00
 categories: Code Java Study
 sitemap:
   changefreq: daily
@@ -53,6 +53,7 @@ class TimerThread extends Thread {
 ```
 
  * 스레드 객체 생성: 스레드 객체를 생성한 것으로 스레드가 작동하는 것은 아니고, JVM에 등록되어 스케줄링 되어야 작동한다.
+
  * 스레드 시작: start() 메소드를 호출하여 스레드를 동작시킨다.
  
 ```java
@@ -158,6 +159,7 @@ class TimerRunnnable implements Runnable {
 ```
 
  * 스레드 객체 생성: 생성자에 TimerRunnable 객체를 전달하여 Thread 객체를 생성한다.
+ 
  * 스레드 시작: start() 메소드를 호출하여 스레드를 동작시킨다.
 
 ```java
