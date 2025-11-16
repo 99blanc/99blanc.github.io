@@ -1,0 +1,79 @@
+---
+layout: post
+title: "자바 심층 탐구: 어노테이션이란?"
+date: 2025-11-16 14:56:00 +09:00
+last_modified_at: 2025-11-16 14:56:00 +09:00
+categories: Java Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 어노테이션
+---
+ 어노테이션(Annotation)은 자바 소스 코드에 [메타 데이터][1](Metadata)를 추가하는 기능이다. 즉 코드 자체의 의미를 설명하는 정보를 말한다.
+
+ * 본질: 코드의 실행 로직에는 영향을 주지 않으면서, JVM이 해당 코드를 어떻게 처리해야 하는지에 대한 부가 정보를 제공한다.
+
+ * 표기: `@` 기호를 사용하여 클래스, 메소드, 필드, 매개 변수 등에 부착한다.
+
+### 어노테이션 목적 및 기능
+---
+ 어노테이션은 과거 XML 설정 파일로 관리되던 부가 정보를 코드 내부로 가져와 [선언형 프로그래밍][2]을 가능하게 한다.
+
+ * 컴파일러 경고 제어: `@Override` 나 `@SuppressWarnings` 처럼 컴파일러에게 특정 코드의 오버라이딩 여부를 확인하게 하거나, 특정 경고를 무시하도록 지원한다.
+
+ * 빌드 및 배포 정보: `@Deprecated` 와 같이 [문서화 도구][3](Javadoc)가 코드를 인식하고 문서를 생성하는데 필요한 정보를 제공한다.
+
+ * 런타임 처리: 실행 시점에 [리플렉션][4](Reflection) 기능을 이용하여 어노테이션 정보를 추출하고, 그 정보를 바탕으로 프레임워크가 동적으로 동작을 결정하게 한다.
+
+### 표준 어노테이션
+---
+ 표준 어노테이션(Built-In Annotation)은자바에서 기본으로 제공하는 어노테이션으로, 주로 컴파일러의 동작을 제어한다.
+
+ |어노테이션|대상|목적|
+ |:---:|:---:|:---:|
+ |@Override|메소드|상위 클래스나 인터페이스의 메소드를 재정의했음을 컴파일러에게 알린다.|
+ |@Deprecated|클래스, 메소드, 필드|해당 요소가 더 이상 사용되지 않음을 표시하고, 사용 시 컴파일러 경고를 발생시켜 사용자에게 대체 수단을 알린다.|
+ |@SupressWarnings|모든 선언부|컴파일러에 특정 경고를 무시하도록 지시한다.|
+ |@FunctionalInterface|인터페이스|인터페이스가 함수형 인터페이스 조건을 만족하는지 확인한다.|
+
+### 메타 어노테이션
+---
+ 메타 어노테이션(Meta Annotations)은 사용자 어노테이션을 정의할 때 사용되는 어노테이션으로, 정의된 어노테이션이 언제(When), 어디서(Where), 어떻게(How) 동작할 지 설명한다.
+
+ |어노테이션|대상|목적|
+ |:---:|:---:|:---:|
+ |@Target|어노테이션|어노테이션이 적용될 수 있는 위치를 지정한다.|
+ |@Retention|어노테이션|어노테이션의 유지 시점을 지정한다.<br>- SOURCE: 컴파일 시 버려진다.<br>- CLASS: .class 파일에 남지만 런타임에는 사용이 불가능하다.<br>- RUNTIME: .class 파일에 남아 런타임에 리플렉션으로 정보에 접근이 가능하다.|
+ |@Documented|어노테이션|해당 어노테이션 정보가 Javadoc 문서에 포함되도록 지정한다.|
+ |@Inherited|어노테이션|해당 어노테이션이 상속될 수 있도록 지정한다.|
+
+### 사용자 정의 어노테이션
+---
+ 사용자가 직접 어노테이션을 정의할 때는 interface 키워드 앞에 `@` 기호를 붙여 선언하며, 요소들은 메소드 형태로 정의한다.
+
+```java
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MyCustomAnnotation {
+  String value() default "기본값"; // 어노테이션 요소 (String 타입, 기본값 설정)
+  int count() default 1; // 요소 추가
+}
+```
+
+ 위의 예시처럼 @MyCustomAnnotation 어노테이션을 정의하면, 개발자는 원하는 메소드에 부착하여 런타임에 처리할 수 있다.
+
+```java
+public class MyService {
+  @MyCustomAnnotation(value = "로그인 체크", count = 5)
+  public void checkUser()  {
+    ...
+  }
+}
+```
+
+ [1]: https://en.wikipedia.org/wiki/Metadata "다른 데이터의 특성을 정의하고 설명하는 데이터이다."
+ [2]: https://ko.wikipedia.org/wiki/%EC%84%A0%EC%96%B8%ED%98%95_%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D "'무엇을(What)' 할지 결과를 묘사하는 방식의 프로그래밍 패러다임이다. 명령형 프로그래밍의 어떻게(How) 할지와 대비되는 방식이다."
+ [3]: https://en.wikipedia.org/wiki/Javadoc " 자바를 위한 API 문서 생성기로, 자바 소스 코드의 정보를 바탕으로 HTML 형식의 문서와 확장 기능을 통해 다른 형식으로 문서를 생성한다."
+ [4]: https://en.wikipedia.org/wiki/Reflective_programming#Uses "프로그램이 실행 중에 자신의 구조를 파악하고 조작할 수 있는 기능으로, 런타임에 특정 클래스의 정보를 추출할 수 있는 프로그래밍 기법이다."
