@@ -6,15 +6,15 @@ permalink: /about
 
 # 🧑‍💻 Programmer | Sehyun Kim (김세현)
 ---
- **Java & Unity, C# Developer**
+ **Java/Spring & Unity Developer**
 
 <br>
 
 # 🚀 About Me
 ---
-안녕하세요! **Java 기반 시스템** 및 **Unity, C# 언어를 활용한 2D/3D** 개발에 경험있는 프로그래머 김세현입니다.
+안녕하세요! **Java/Spring 기반 백엔드 시스템 개발** 및 **Unity를 활용한 2D/3D 개발**에 경험이 있는 프로그래머 김세현입니다.
 
-💡 저는 **Java, Unity, C# 언어를 활용한 개발 역량**을 이용한, 개발자가 되는 것이 목표입니다.
+💡 저는 **견고한 백엔드 시스템 구축(Java/Spring)** 또는 **Unity를 활용한 시스템 개발 역량**을 이용한, 개발자가 되는 것이 목표입니다.
 
 <br>
 
@@ -23,8 +23,8 @@ permalink: /about
 
 | Category | Skill |
 | :--- | :--- |
-| **Language** | <img src="https://img.shields.io/badge/Java-FC801D?style=for-the-badge&logo=openjdk&logoColor=white"> <img src="https://img.shields.io/badge/CSharp-9B4F96?style=for-the-badge&logo=sharp&logoColor=white"> <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white"> |
-| **Database** | <img src="https://img.shields.io/badge/MSSQL-3465A4?style=for-the-badge&logo=googlecloudstorage&logoColor=white"> |
+| **Language** | <img src="https://img.shields.io/badge/Java-FC801D?style=for-the-badge&logo=openjdk&logoColor=white"> <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/CSharp-9B4F96?style=for-the-badge&logo=sharp&logoColor=white"> <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white"> |
+| **Database** | <img src="https://img.shields.io/badge/MySQL-0073A8?style=for-the-badge&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/MSSQL-3465A4?style=for-the-badge&logo=googlecloudstorage&logoColor=white"> |
 | **VCS** | <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/SVN-7C98D5?style=for-the-badge&logo=subversion&logoColor=white"> <img src="https://img.shields.io/badge/Fork-007ACC?style=for-the-badge&logo=greasyfork&logoColor=white"> |
 | **IDE & Tool** | <img src="https://img.shields.io/badge/IntelliJ%20IDEA-FF8000?style=for-the-badge&logo=intellijidea&logoColor=white"> <img src="https://img.shields.io/badge/Eclipse-2C2255?style=for-the-badge&logo=eclipse&logoColor=white"> <img src="https://img.shields.io/badge/Unity-00CCAA?style=for-the-badge&logo=unity&logoColor=black"> <img src="https://img.shields.io/badge/Visual%20Studio-5C2D91?style=for-the-badge&logo=vectorlogozone&logoColor=white"> |
 
