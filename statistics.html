@@ -82,6 +82,28 @@ permalink: /statistics
 </ul>
 {%- endif -%}
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const githubStatsContainer = document.querySelector('.github-stats-container');
+    const statImages = document.querySelectorAll('.github-stat-item');
+    let loadFailureCount = 0;
+    const totalStats = statImages.length;
+    if (githubStatsContainer && totalStats > 0) {
+      statImages.forEach(imgElement => {
+        imgElement.onload = function() {
+        };
+        imgElement.onerror = function() {
+          loadFailureCount++;
+          if (loadFailureCount >= 1) { 
+            githubStatsContainer.style.display = 'none';
+            console.warn('GitHub Stats image failed to load. Hiding the entire container.');
+          }
+        };
+        if (imgElement.complete && imgElement.naturalHeight === 0) {
+           githubStatsContainer.style.display = 'none';
+        }
+      });
+    }
+  });
   function getRandomColor() {
     const hex = Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
     const r = parseInt(hex.substring(0, 2), 16);
