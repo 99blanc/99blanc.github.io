@@ -1,0 +1,29 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 다양한 데이터 타입"
+date: 2025-11-28 03:20:00 +09:00
+last_modified_at: 2025-11-28 03:20:00 +09:00
+categories: CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 데이터 타입
+---
+ C# 언어는 다양한 종류의 데이터 타입을 제공한다. 모든 데이터 형식의 근간을 이루는 [기본 데이터 타입][1](Primitive Type)과 상수(Constants) 그리고 열거 타입(Enumerator)과, 기본 데이터 타입을 부품삼아 구성되는 [복합 데이터 타입][2](Complex Data Type)을 지원한다.
+
+![C# 값 타입과 참조 타입](https://drive.google.com/thumbnail?id=1GdIqXxQanfLwrcEdZgxeyjns3dgNXAl7&sz=w1000)
+
+### 스택과 값 타입
+---
+ 값 타입의 변수는 모두 [스택][3]에 저장되며, 코드 블록 안에서 생성된 모든 값 타입의 변수들은 프로그램 실행이 코드 블록을 닫히면 메모리에서 제거된다.
+
+### 힙과 참조 타입
+---
+ 참조 타입의 변수는 [힙][4]과 스택을 함께 이용하는데, 힙 영역에는 데이터를 저장하고 스택 영역에는 데이터가 저장된 힙 메모리의 주소를 저장한다. 다시 말해 데이터를 직접 저장하는 대신 실제 데이터가 저장된 메모리의 주소를 참조한다고 해서 참조 타입인 것이다.
+
+ [1]: https://en.wikipedia.org/wiki/Primitive_data_type " 모든 다른 데이터 타입이 구성된 기본 데이터 타입의 집합이다."
+ [2]: https://en.wikipedia.org/wiki/Complex_data_type "기본 데이터 타입을 기반으로 구성한다."
+ [3]: https://ko.wikipedia.org/wiki/%EB%8F%99%EC%A0%81_%EB%A9%94%EB%AA%A8%EB%A6%AC_%ED%95%A0%EB%8B%B9#%EC%9A%A9%EC%96%B4 "함수 호출 시마다 일시적으로 저장되었다가 함수가 종료되면 자동으로 소멸되는 메모리 영역이다."
+ [4]: https://ko.wikipedia.org/wiki/%EB%8F%99%EC%A0%81_%EB%A9%94%EB%AA%A8%EB%A6%AC_%ED%95%A0%EB%8B%B9#%EC%9A%A9%EC%96%B4 "객체(인스턴스)가 저장되며, 사용자가 명시적으로 해제하거나 가비지 컬렉터에 의해 메모리가 정리되는 영역이다."
