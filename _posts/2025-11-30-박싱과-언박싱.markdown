@@ -1,0 +1,75 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 박싱과 언박싱"
+date: 2025-11-30 22:20:00 +09:00
+last_modified_at: 2025-11-30 22:20:00 +09:00
+categories: CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 박싱
+---
+ [박싱][1](Boxing)은 값 타입을 object 타입 또는 값 타입에서 구현된 임의의 인터페이스 타입으로 변환하는 프로세스이다.
+
+ |구분|설명|
+ |:---:|:---:|
+ |정의|스택(Stack) 메모리 영역에 저장된 값 타입 데이터를 힙(Heap) 메모리 영역에 할당된 object 인스턴스로 래핑(Wrapping)하는 과정이다.|
+ |과정|1. 힙에 값 타입을 저장할 수 있는 새로운 object 공간을 할당한다.<br>2. 스택에 있던 값 타입의 데이터를 힙의 새로운 공간으로 복사한다.<br>3. 스택에 남아있는 값 타입 변수가 힙에 새로 생성된 객체를 가리키는 참조를 가지게 된다.|
+
+### 언박싱
+---
+ [언박싱][2](Unboxing)은 박싱된 인스턴스를 원래의 값 타입으로 변환하는 프로세스다.
+
+ |구분|설명|
+ |:---:|:---:|
+ |정의|힙에 저장된 object 참조 타입에서 값 타입 데이터를 추출하여 스택으로 복사하는 과정이다.|
+ |과정|1. 힙의 object 인스턴스에서 값 타입의 데이터를 추출합니다.<br>2. 추출된 데이터를 스택에 있는 값 타입 변수로 복사합니다.|
+
+```csharp
+using System;
+
+namespace ch3n3
+{
+    public class BoxingUnboxing
+    {
+        public static void Main(string[] args)
+        {
+            int a = 123;
+            object b = (object)a; // a에 담긴 값을 박싱해서 힙에 저장한다.
+            int c = (int)b; // b에 담긴 값을 언박싱해서 스택에 저장한다.
+
+            Console.WriteLine(a);
+            Console.WriteLine(b);
+            Console.WriteLine(c);
+
+            double x = 3.1414213;
+            object y = x; // x에 담긴 값을 박싱해서 힙에 저장한다.
+            double z = (double)y; // y에 담긴 값을 언박싱해서 스택에 저장한다.
+
+            Console.WriteLine(x);
+            Console.WriteLine(y);
+            Console.WriteLine(z);
+        }
+    }
+}
+```
+
+### 성능 저하 문제
+---
+ 박싱과 언박싱은 메모리 할당 부하, 데이터 복사 부하 등의 성능 문제를 유발할 수 있어 주의해야 한다.
+
+ * 메모리 할당 부하: 박싱 시 힙에 새로운 메모리가 할당되고, 이 할당된 객체는 결국 가비지 컬렉터(GC)의 대상이 된다. 빈번한 GC 호출은 애플리케이션의 성능을 저하시킨다.
+ 
+ * 데이터 복사 부하: 데이터가 스택에서 힙으로, 그리고 다시 스택으로 복사되는 과정에서 CPU 오버헤드가 발생한다.
+
+ C# 2.0부터 도입된 [제네릭][3](Generics)은 박싱과 언박싱으로 인한 성능 저하를 방지하기 위해 사용된다.
+
+ * 원리: 제네릭은 타입 안정성을 유지하면서, 컴파일 시점에 구체적인 타입을 지정하게 하여 값 타입 데이터를 object 타입으로 변환할 필요가 없게 만든다.
+
+ * 효과: 데이터를 힙에 object 타입으로 래핑하지 않고 해당 값 타입 그대로 처리하므로, 메모리 할당과 복사 오버헤드를 제거하여 성능을 최적화한다.
+
+ [1]: https://en.wikipedia.org/wiki/Boxing_(computer_programming) "값 타입을 object 타입 또는 값 타입에서 구현된 임의의 인터페이스 타입으로 변환하는 프로세스이다."
+ [2]: https://en.wikipedia.org/wiki/Boxing_(computer_programming) "박싱된 인스턴스를 원래의 값 타입으로 변환하는 프로세스다."
+ [3]: https://en.wikipedia.org/wiki/Generic_programming "알고리즘을 나중에 지정할 데이터 타입으로 작성하고, 필요할 때 특정 타입에 대해 매개  변수로 구현하는 컴퓨터 프로그래밍 스타일이다."
