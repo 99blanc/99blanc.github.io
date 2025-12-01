@@ -1,0 +1,65 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 공용 타입 시스템"
+date: 2025-12-01 21:21:00 +09:00
+last_modified_at: 2025-12-01 21:21:00 +09:00
+categories: CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 공용 타입 시스템
+---
+ [공용 타입 시스템][1](Common Type System, CTS)은 C# 언어를 포함한 [.NET 프레임워크][2] 또는 [.NET 코어][2]를 기반으로 하는 모든 언어가 서로 호환되며 일관성 있게 동작할 수 있도록 정의된 표준이다. .NET 환경 내에서 데이터 타입, 동작 방식, 선언 규칙 등을 통합하고 표준화하는 역할을 수행한다.
+
+![C# .NET 구성](https://drive.google.com/thumbnail?id=1u9pKWNSli3M7cpXRhmv5_U_vpEh48FAH&sz=w1000)
+
+ 공용 타입 시스템의 주요 목표 및 역할에 대한 표는 다음과 같다.
+
+ |목표|설명|
+ |:---:|:---:|
+ |언어 상호 운영성(Interoperability)|서로 다른 .NET 언어로 작성된 코드나 라이브러리가 타입 정의를 공유하고 원활하게 통신할 수 있도록 한다.|
+ |타입 안정성(Type Safety)|모든 타입에 대해 엄격한 규칙을 적용하여 메모리 오류나 잘못된 타입 변환으로 인한 프로그램 오작동을 컴파일 및 런타임 단계에서 방지한다.|
+ |단일 기반 제공|모든 타입이 궁극적으로 System.Object 타입으로부터 상속받게 하여 모든 데이터의 통일된 처리 기반을 제공한다.|
+
+![C# 공용 타입 시스템](https://drive.google.com/thumbnail?id=1Kqx2g3GJeWPXQGHwJB_PwciC5TWQu5II&sz=w1000)
+
+### 공용 타입 시스템의 분류
+---
+ 공용 타입 시스템은 모든 타입을 두 가지 주요 카테고리로 엄격하게 분류하며, 이는 메모리 관리 방식의 핵심 기반이 된다.
+
+ * 값 타입(Call By Value): 데이터 자체가 스택 메모리에 저장된다. 변수에 할당될 때 실제 값이 복사된다.
+
+ * 참조 타입(Call By Reference): 데이터는 힙 메모리에 저장되고, 변수에는 해당 데이터가 있는 곳의 주소만 스택에 저장된다. 할당 시 주소가 복사된다.
+
+
+### 데이터 타입과 공용 타입 시스템의 관계
+---
+ C# 언어의 기본 데이터 타입과 C++, Visual Basic 언어의 예악어는 내부적으로 정의된 .NET 타입의 별칭이다.
+
+ |클래스 이름|C# 타입|C++ 타입|Visual Basic 타입|
+ |:---:|:---:|:---:|:---:|
+ |System.Byte|byte|unsigned char|Byte|
+ |System.SByte|sbyte|char|SByte|
+ |System.Int16|short|short|Short|
+ |System.Int32|int|int 또는 long|Integer|
+ |System.Int64|long|__int64|Long|
+ |System.UInt16|ushort|unsigned short|UShort|
+ |System.UInt32|uint|unsigned int 또는 unsigned long|UInteger|
+ |System.UInt64|ulong|unsigned __int64|ULong|
+ |System.Single|float|float|Single|
+ |System.Double|double|double|Double|
+ |System.Boolean|bool|bool|Boolean|
+ |System.Char|char|wchar_t|Char|
+ |System.Decimal|decimal|Decimal|Decimal|
+ |System.IntPtr|없음|없음|없음|
+ |System.UIntPtr|없음|없음|없음|
+ |System.Object|object|Object*|Object|
+ |System.String|string|String*|String|
+
+ 암시적/명시적 변환 규칙은 공용 타입 시스템에 의해 정해지며, 이는 모든 .NET 언어에서 일관되게 적용된다.
+
+ [1]: https://en.wikipedia.org/wiki/Common_Type_System "타입 정의와 타입의 특정 값이 컴퓨터 메모리에서 어떻게 표현되는지를 명시하는 표준이다."
+ [2]: https://en.wikipedia.org/wiki/.NET_Framework "마이크로소프트 윈도우에서 실행되는 독점 소프트웨어 프레임워크이다."
+ [3]: https://en.wikipedia.org/wiki/.NET "윈도우, 리눅스, mac 운영체제를 위한 무료 오픈 소스 관리형 소프트웨어 프레임워크이다."
