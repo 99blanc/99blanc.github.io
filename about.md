@@ -48,8 +48,8 @@ permalink: /about
 | Category | Detail |
 | :--- | :--- |
 | <img src="https://img.shields.io/badge/Mobile-6C757D?style=flat&logo=picsart&logoColor=white"> | `+82) 010-4505-7365` |
-| <img src="https://img.shields.io/badge/Naver-03C75A?style=flat&logo=naver&logoColor=white"> | `t990421@naver.com` |
 | <img src="https://img.shields.io/badge/Gmail-EA4335?style=flat&logo=gmail&logoColor=white"> | `tpgus990421@gmail.com` |
+| <img src="https://img.shields.io/badge/Naver-03C75A?style=flat&logo=naver&logoColor=white"> | `t990421@naver.com` |
 
 <br>
 
