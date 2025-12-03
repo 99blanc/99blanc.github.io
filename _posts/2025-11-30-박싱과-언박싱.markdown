@@ -3,7 +3,7 @@ layout: post
 title: "이것이 C#이다 개정 3판: 박싱과 언박싱"
 date: 2025-11-30 22:20:00 +09:00
 last_modified_at: 2025-11-30 22:20:00 +09:00
-categories: CSharp Study
+categories: Code CSharp Study
 sitemap:
   changefreq: daily
   priority: 0.5
