@@ -2,7 +2,7 @@
 layout: post
 title: "이것이 C#이다 개정 3판: 프로퍼티"
 date: 2025-12-05 17:47:00 +09:00
-last_modified_at: 2025-12-05 17:47:00 +09:00
+last_modified_at: 2025-12-06 23:10:00 +09:00
 categories: Code CSharp Study
 sitemap:
   changefreq: daily
