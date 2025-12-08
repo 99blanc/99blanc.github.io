@@ -1,0 +1,132 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 배열"
+date: 2025-12-06 23:10:00 +09:00
+last_modified_at: 2025-12-06 23:10:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 배열 기본 특징 및 선언
+---
+ C# 언어에서 배열(Array)은 동일한 타입의 요소들을 연속된 메모리 공간에 모아 놓은 자료 구조이며, 참조 타입에 해당한다.
+
+ |구분|설명|
+ |:---:|:---:|
+ |타입 분류|참조 타입(힙 메모리에 할당)|
+ |특징|고정된 길이, 0부터 시작하는 인덱스 접근|
+ |최종 상속|System.Array 클래스|
+
+ [단일차원][2] 배열 예제 코드는 다음과 같다.
+
+```csharp
+// 선언 및 크기 지정
+int[] scores = new int[5];
+
+// 값 할당
+scores[0] = 95;
+scores[1] = 88;
+// ...
+
+// 선언과 동시에 초기화
+string[] days = { "월", "화", "수", "목", "금", "토", "일" };
+
+// 배열 길이 (Length) 접근
+int count = days.Length; // 7
+```
+
+![C# 단일차원 배열의 내부 구현](https://drive.google.com/thumbnail?id=1Ukkd4M0V5kaXJZ4JqyTwWt9bhsbjWor5&sz=w1000)
+
+ * 설명: 선형 주소 지정 벡터의 경우, i 인덱스인 원소는 주소 B + c ·에 위치한다. 여기서 i 인덱스는 고정된 기본 주소이고 c 값은 고정된 상수로, 주소 증분 또는 스트라이드라고도 불린다.
+
+ [다차원][3] 배열 예제는 다음과 같다.
+
+```csharp
+// 2차원 배열 (3행 2열 행렬) 선언 및 생성
+int[,] matrix = new int[3, 2];
+
+// 값 할당 (1행 0열)
+matrix[1, 0] = 50;
+
+// 선언과 동시에 초기화
+int[,] multiplicationTable = 
+{
+    { 1, 2, 3 }, // 0행
+    { 2, 4, 6 }, // 1행
+    { 3, 6, 9 }  // 2행
+};
+
+// 요소 접근 및 출력
+Console.WriteLine(multiplicationTable[1, 2]); // 6 (1행 2열)
+```
+
+![C# 다차원 배열의 내부 구현](https://drive.google.com/thumbnail?id=18K-Zg2osjCPcGAwSSVaSt66ggDZA9Ked&sz=w1000)
+
+ * 설명: k 차원 배열에서 i1, i2, ..., ik 인덱스를 가진 원소는 B + c1· i1 + c2 · i2 + ... + ck 주소를 갖는다. 이 공식은 메모리에 들어갈 수 있는 배열에 대해 k번의 곱셈과 k번의 덧셈만 필요로 한다. 더불어, 어떤 계수가 2 거듭제곱이라면, 곱셈은 비트 시프트로 대체할 수 있다.
+
+### 가변 배열
+---
+ 배열을 요소로 가지며, 내부 배열(행)의 길이가 서로 다를 수 있는 것을 말한다.
+
+ 가변 배열의 예제 코드는 다음과 같다.
+
+```csharp
+// 가변 배열 선언 (3개의 배열을 가질 외부 배열 생성)
+int[][] jaggedArray = new int[3][]; 
+
+// 각 행(내부 배열)의 크기를 개별적으로 정의
+jaggedArray[0] = new int[4] { 1, 2, 3, 4 };
+jaggedArray[1] = new int[2] { 5, 6 };
+jaggedArray[2] = new int[5] { 7, 8, 9, 10, 11 };
+
+// 요소 접근 및 출력
+Console.WriteLine(jaggedArray[2][3]); // 10 (2번째 배열의 3번째 인덱스)
+```
+
+### 배열 내부 구현 코드
+---
+ C# 언어에서는 배열의 실제 구현 코드(System.Array 내부)를 볼 수 없지만, 배열이 메모리상에서 어떻게 동작하고 인덱싱이 이루어지는지 개념적 코드로 이해할 수 있다.
+
+ * 인덱싱 동작의 개념적 구현: 배열은 메모리 상에 연속적으로 저장되므로, numbers[`i`]로 접근할 때 주소를 계산하여 즉시 접근한다.
+
+ 내부 구현에 대한 예제 코드는 다음과 같다.
+
+```csharp
+/*
+ * CLR이 내부적으로 요소를 찾는 방식을 설명한다.
+ */
+public T GetElement<T>(T[] array, int index)
+{
+    // 배열의 시작 주소를 가져온다. (힙 메모리의 시작 위치)
+    IntPtr startAddress = GetArrayStartAddress(array); 
+
+    // 요소의 타입 크기를 가져온다. (예: int는 4바이트)
+    int typeSize = SizeOf<T>();
+
+    // 목표 요소의 주소를 계산한다. (빅오표기법, O(1) 접근)
+    // 주소 = 시작 주소 + (인덱스 * 타입 크기)
+    IntPtr targetAddress = startAddress + (index * typeSize);
+
+    // 해당 주소에서 값을 읽어 반환한다.
+    return ReadValueFromAddress<T>(targetAddress);
+}
+```
+
+### 배열 주요 속성 및 메소드
+---
+ 모든 배열이 상속받는 System.Array 클래스는 배열의 크기를 관리하고 배열 조작을 위한 기능을 제공한다.
+
+ |멤버|설명|
+ |:---:|:---:|
+ |Length|배열의 총 요소 수를 반환한다.|
+ |Rank|배열의 차원 수를 반환한다.|
+ |GetLength()|주어진 차원의 길이를 반환한다.|
+ |CopyTo()|현재 배열의 모든 요소를 다른 배열의 지정된 인덱스로부터 복사한다.|
+ |Clear()|배열의 요소 범위를 해당 타입의 기본값으로 설정한다.|
+ |Sort()|배열의 요소를 정렬한다.|
+
+ [1]: https://en.wikipedia.org/wiki/Array_(data_structure) "동일한 메모리 크기를 가진 요소들의 집합으로 이루어진 데이터 구조이다."
+ [2]: https://en.wikipedia.org/wiki/Array_(data_structure)#One-dimensional_arrays "선형 배열의 한 종류로 요소에 접근하려면 행 인덱스 또는 열 인덱스를 나타내는 단일 첨자로 이루어진다."
+ [3]: https://en.wikipedia.org/wiki/Array_(data_structure)#Multidimensional_arrays "콤마(,)를 사용하여 차원을 구분하며, 각 행의 길이가 고정된 직사각형 또는 정육면체 형태로 이루어진다."

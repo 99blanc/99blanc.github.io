@@ -1,0 +1,327 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 컬렉션"
+date: 2025-12-08 11:35:00 +09:00
+last_modified_at: 2025-12-08 11:35:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 컬렉션 의미
+---
+ C# 언어에서 [컬렉션][1](Collection)이란, 같은 타입의 데이터 모음으로 자료 구조(Data Structure)의 일종을 말한다. .NET에서 제공하는 다양한 컬렉션 자료구조가 존재한다.
+
+### 컬렉션 분류 및 성능 차이
+---
+ 컬렉션은 타입 안정성과 성능에 따라 제네릭과 비-제네릭으로 나뉜다.
+
+ |분류|특징|박싱/언박싱|타입 안정성|권장 사용|
+ |:---:|:---:|:---:|:---:|:---:|
+ |제네릭|특정 타입만 저장하여 효율적이다.|미발생|높음(컴파일 타임 오류 검출)|모든 새 코드|
+ |비-제네릭|object 타입으로 모두 저장한다.|발생(성능 저하 가능)|낮음(런타임 오류 발생 가능)|레거시 코드 호환|
+
+ * 제네릭 컬렉션(System.Collections.Generic) 종류: <br>List<`T`><br>Dictionary<`TKey, TValue`><br>Stack<`T`><br>Queue<`T`><br>HashSet<`T`><br>SortedList<`TKey, TValue`><br>SortedDictionary<`TKey, TValue`><br>LinkedList<`T`>
+
+ * 비-제네릭 컬렉션(System.Collection) 종류: <br>ArrayList<br>Hashtable<br>Stack<br>Queue<br>SortedList<br>BitArray
+
+### ArrayList 기능 및 사용 예제
+---
+ ArrayList 컬렉션은 List 컬렉션의 비-제네릭 버전으로 요소의 순서가 있으며, 모든 요소를 object 타입으로 저장한다.
+
+ |기능|설명|단점|
+ |:---:|:---:|:---:|
+ |Add(object)|모든 종류의 객체 추가 가능|값 타입 저장 시 박싱 발생|
+ |this[`int`]|인덱스 접근|값 타입 검색 시 명시적 캐스팅 필수|
+
+ ArrayList 컬렉션의 예제 코드는 다음과 같다.
+
+```csharp
+// ArrayList 사용 예제
+ArrayList mixedList = new ArrayList();
+mixedList.Add(10); // int(값 타입) 저장 -> 박싱 발생
+mixedList.Add("Hello"); // string(참조 타입) 저장
+
+// 언박싱 발생 및 타입 오류 위험(타입 안전성 낮음)
+int num = (int)mixedList[0]; 
+string text = (string)mixedList[1];
+// string badCast = (string)mixedList[0]; // 런타임 시 InvalidCastException 발생 가능
+```
+
+### List 기능 및 사용 예제
+---
+ [List 컬렉션][2]은 크기가 동적으로 변하는 배열과 같다. 요소의 순서가 있으며, 인덱스를 통해 접근이 가능하다.
+
+ |기능|설명|시간 복잡도|
+ |:---:|:---:|:---:|
+ |인덱스 접근|특정 위치의 요소를 읽고 쓰기|O(1)|
+ |Add()|리스트 끝에 요소 추가|O(1)(배열 확장 시에는 O(n))|
+ |RemoveAt()|특정 인덱스의 요소 삭제|O(n)(삭제 후 모든 요소 이동)|
+ |Insert()|특정 인덱스에 요소 삽입|O(n)(삽입 후 모든 요소 이동)|
+
+ List 컬렉션의 예제 코드는 다음과 같다.
+
+```csharp
+// List 사용 예제
+List<string> todoList = new List<string>();
+todoList.Add("C# 공부"); // O(1)
+todoList.Add("코드 작성");
+todoList.Insert(0, "계획 세우기"); // O(n)
+
+Console.WriteLine($"첫 번째 할 일: {todoList[0]}"); // O(1)
+todoList.RemoveAt(1); // "C# 공부" 삭제 (O(n))
+```
+
+ 직접 구현한 예제 코드는 다음과 같다.
+
+```csharp
+public class SimpleList<T>
+{
+    private T[] _items;
+    private int _count;
+
+    public int Count => _count;
+
+    public SimpleList(int capacity = 4)
+    {
+        _items = new T[capacity];
+    }
+
+    public T this[int index] // 인덱서 구현 (O(1))
+    {
+        get => _items[index];
+        set => _items[index] = value;
+    }
+
+    public void Add(T item) // O(1) 또는 O(n)
+    {
+        if (_count == _items.Length)
+        {
+            // 용량이 부족하면 배열을 두 배로 확장 (O(n) 작업)
+            Array.Resize(ref _items, _items.Length * 2);
+        }
+        _items[_count] = item;
+        _count++;
+    }
+
+    public void RemoveAt(int index) // O(n)
+    {
+        // 삭제 위치 이후의 모든 요소를 앞으로 한 칸씩 당긴다.
+        for (int i = index; i < _count - 1; i++)
+        {
+            _items[i] = _items[i + 1];
+        }
+        _count--;
+        // 마지막 요소 참조를 제거하여 GC 대상이 되도록 한다.
+        _items[_count] = default(T);
+    }
+}
+```
+
+### Dictionary 기능 및 사용 예제
+---
+ Dictionary 컬렉션은 키를 사용하여 값을 저장하고 검색한다. 내부적으로 [해시 테이블][3](Hash Table) 구조를 사용한다.
+
+ |기능|설명|시간 복잡도|
+ |:---:|:---:|:---:|
+ |검색|키를 이용한 값 검색|O(1)|
+ |Add()|키-값 쌍 추가|O(1)|
+ |ContainsKey()|특정 키의 존재 여부 확인|O(1)|
+
+ Dictionary 컬렉션의 예제 코드는 다음과 같다.
+
+```csharp
+// Dictionary 사용 예제
+Dictionary<string, int> ages = new Dictionary<string, int>();
+ages.Add("Alice", 30);
+ages["Bob"] = 25; // 추가
+
+if (ages.ContainsKey("Alice")) // O(1) 평균
+{
+    Console.WriteLine($"Alice의 나이: {ages["Alice"]}"); // O(1) 평균
+}
+```
+
+ 직접 구현한 예제 코드는 다음과 같다.
+
+```csharp
+public class SimpleDictionary<TKey, TValue>
+{
+    // Key와 Value를 묶은 구조체를 가정
+    private struct Entry { public TKey Key; public TValue Value; }
+    private Entry[] _entries = new Entry[100];
+    private int _count = 0;
+
+    // 키를 이용해 저장 위치(인덱스)를 찾는 방식의 개념화
+    private int GetIndex(TKey key)
+    {
+        // 실제 딕셔너리는 GetHashCode()를 사용해 인덱스를 얻는다.
+        // 임의로 key 문자열 해시를 사용한다고 가정한다.
+        return Math.Abs(key.GetHashCode() % _entries.Length); 
+    }
+
+    public void Add(TKey key, TValue value)
+    {
+        int index = GetIndex(key);
+        // 단순화하여 해당 인덱스에 바로 저장한다고 가정
+        _entries[index].Key = key;
+        _entries[index].Value = value;
+        _count++;
+    }
+
+    public TValue GetValue(TKey key) // O(1)
+    {
+        int index = GetIndex(key);
+        // 실제로는 키가 일치하는지 확인하는 로직이 필요하다.
+        return _entries[index].Value;
+    }
+}
+```
+
+### Stack 기능 및 사용 예제
+---
+ [Stack 컬렉션][4]은 FIFO(First-In, First-Out) 구조, 즉 후입선출 구조를 구현하는 컬렉션으로 마지막에 들어온 요소가 가장 먼저 나간다.
+
+ |기능|설명|시간 복잡도|
+ |:---:|:---:|:---:|
+ |Push()|스택의 꼭대기에 요소 추가|O(1)|
+ |Pop()|스택의 꼭대기 요소 제거 및 반환|O(1)|
+ |Peek()|스택의 꼭대기 요소 확인만 하고 제거하지 않는다.|O(1)|
+
+ Stack 컬렉션의 예제 코드는 다음과 같다.
+
+```csharp
+// Stack 사용 예제 (실행 취소/되돌리기)
+Stack<string> history = new Stack<string>();
+history.Push("문서 작성");
+history.Push("폰트 변경");
+history.Push("색상 추가");
+
+string lastAction = history.Pop(); // "색상 추가" 반환 (가장 최근 작업)
+Console.WriteLine($"되돌리기: {lastAction}");
+```
+
+ 직접 구현한 예제 코드는 다음과 같다.
+
+```csharp
+public class SimpleStack<T>
+{
+    private T[] _items = new T[10];
+    private int _top = -1; // 스택의 꼭대기 인덱스(-1은 비어있음을 의미)
+
+    public void Push(T item) // O(1)
+    {
+        // 실제 구현에서는 배열 크기 확장 로직이 필요하다.
+        _top++;
+        _items[_top] = item;
+    }
+
+    public T Pop() // O(1)
+    {
+        if (_top < 0)
+        {
+            throw new InvalidOperationException("스택이 비어 있습니다.");
+        }
+        T item = _items[_top];
+        _items[_top] = default(T); // 참조 해제(선택 사항)
+        _top--;
+        return item;
+    }
+
+    public T Peek() // O(1)
+    {
+        if (_top < 0)
+        {
+            throw new InvalidOperationException("스택이 비어 있습니다.");
+        }
+        return _items[_top];
+    }
+}
+```
+
+### Queue 기능 및 사용 예제
+---
+ [Queue 컬렉션][5]은 LIFO(Last-In, First-Out) 구조, 즉 선입선출 구조를 구현하는 컬렉션으로 먼저 들어온 요소가 가장 먼저 나간다.
+
+ |기능|설명|동작 위치|시간 복잡도|
+ |:---:|:---:|:---:|:---:|
+ |Enqueue()|큐의 후단(Tail) 요소 추가|뒤(Rear)|O(1)|
+ |Dequeue()|큐의 전단(Head) 요소 제거 후 반환|앞(Front)|O(1)|
+ |Peek()|큐의 전단 요소를 확인만 하고 제거하지 않는다.|앞(Front)|O(1)|
+ |Contains(T items)|큐에 특정 요소가 포함되어 있는지 확인한다.|전체|O(n)|
+
+ Queue 컬렉션의 예제 코드는 다음과 같다.
+
+```csharp
+// 문자열 타입의 작업 큐 생성
+Queue<string> printJobs = new Queue<string>();
+
+// Enqueue (작업 추가: 선입)
+printJobs.Enqueue("보고서.pdf"); // 첫 번째
+printJobs.Enqueue("계획서.docx"); // 두 번째
+printJobs.Enqueue("이미지.jpg"); // 세 번째
+
+Console.WriteLine($"대기 중인 작업 수: {printJobs.Count}"); // 3
+
+// Peek(가장 먼저 처리될 작업 확인)
+string nextJob = printJobs.Peek(); 
+Console.WriteLine($"다음 처리 작업: {nextJob}"); // 결과: 보고서.pdf
+
+// Dequeue(작업 처리: 선출)
+string processedJob = printJobs.Dequeue(); // "보고서.pdf" 제거 및 반환
+Console.WriteLine($"처리 완료: {processedJob}");
+
+// Dequeue
+processedJob = printJobs.Dequeue(); // "계획서.docx" 제거 및 반환
+Console.WriteLine($"처리 완료: {processedJob}");
+```
+
+ 직접 구현한 예제 코드는 다음과 같다.
+
+```csharp
+public class SimpleQueue<T>
+{
+    private T[] _items = new T[10];
+    private int _head = 0; // 큐의 앞(제거 위치)
+    private int _tail = 0; // 큐의 뒤(추가 위치)
+
+    public void Enqueue(T item) // O(1)
+    {
+        if (_tail == _items.Length)
+        {
+            // 실제 구현에서는 배열 확장 및 재배치 로직이 필요하다.
+            throw new InvalidOperationException("큐 용량 초과");
+        }
+        _items[_tail] = item;
+        _tail++;
+    }
+
+    public T Dequeue() // O(n)(배열 이동을 통한 단순 구현)
+    {
+        if (_head == _tail)
+        {
+            throw new InvalidOperationException("큐가 비어 있습니다.");
+        }
+        
+        T item = _items[_head];
+
+        // 성능 저하 지점: 모든 요소를 앞으로 당기는 작업 (O(n))
+        for (int i = _head; i < _tail - 1; i++)
+        {
+            _items[i] = _items[i + 1];
+        }
+        
+        _tail--;
+        return item;
+        
+        // 실제 .NET Queue<T>는 순환 버퍼를 사용하여 O(1)에 Dequeue를 처리한다.
+    }
+}
+```
+
+ [1]: https://en.wikipedia.org/wiki/Collection_(abstract_data_type) "다형성으로 사용할 수 있는 타입들의 집합인 추상적인 데이터 타입이다."
+ [2]: https://en.wikipedia.org/wiki/List_(abstract_data_type) "유한한 수와 특정 순서로 이루어진 항목들의 집합으로, 튜플 또는 유한 수열이라는 수학적 개념을 컴퓨터로 표현한 추상 데이터 타입이다."
+ [3]: https://en.wikipedia.org/wiki/Hash_table "연관 배열을 구현하는 데이터 구조로 키를 값으로 매핑하는 데이터 타입이다."
+ [4]: https://en.wikipedia.org/wiki/Stack_(abstract_data_type) "두 가지 주요 연산을 가진 요소들의 집합으로 기능하는 추상 데이터 타입이다."
+ [5]: https://en.wikipedia.org/wiki/Queue_(abstract_data_type) "순서화된 엔터티들의 집합 역할을 하는 추상적인 데이터 타입이다."

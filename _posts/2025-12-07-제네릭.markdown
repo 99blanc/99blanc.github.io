@@ -1,0 +1,104 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 제네릭"
+date: 2025-12-07 01:13:00 +09:00
+last_modified_at: 2025-12-07 01:13:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 제네릭 핵심 목표
+---
+ C# 언어에서 [일반화 프로그래밍][1](Generic Programming)은 데이터 타입을 타입 매개 변수(Type Parameter)로 일반화하여, 하나의 코드 구조를 다양한 데이터 타입에서 재사용할 수 있도록 하는 프로그래밍 기법으로, 제네릭(Generics)이라고 불린다.
+
+ * 주 목표: [타입 안정성][2](Type Safety)을 보장하고 박싱/언박싱 오버헤드를 제거하여 성능을 최적화하는 것이다.
+
+ |목표|설명|
+ |:---:|:---:|
+ |타입 안정성|컬렉션 등에 저장되는 타입을 컴파일 타임에 확인하여, 잘못된 타입의 객체가 저장되는 것을 방지(런타임 오류 -> 컴파일 오류 전환)한다.|
+ |성능 최적화|값 타입을 object 타입으로 변환하는 박싱 및 object 타입을 다시 값 타입으로 되돌리는 언박싱 과정이 사라져 성능 오버헤드가 제거된다.|
+ |코드 재사용성|하나의 알고리즘에 다양한 타입을 적용할 수 있어 코드 중복이 사라진다.|
+
+### 제네릭 클래스
+---
+ 클래스 정의 시 타입을 특정하지 않고, 타입 매개 변수를 사용하여 클래스 전체를 일반화한다.
+ 
+ * 선언: 클래스 이름 뒤에 <`T`> 또는 <`T1, T2, ...`>와 같이 꺾쇠 괄호 안에 타입 매개 변수를 넣는다.
+
+ * 용도: 컬렉션 클래스의 근간이다.
+
+```csharp
+// 일반화 클래스 예제: T 타입의 데이터를 저장하는 단순 컨테이너
+public class GenericBox<T>
+{
+    private T item;
+    
+    public GenericBox(T value)
+    {
+        item = value;
+    }
+
+    public T GetItem()
+    {
+        return item;
+    }
+}
+
+// 사용 예:
+GenericBox<int> intBox = new GenericBox<int>(123);
+GenericBox<string> stringBox = new GenericBox<string>("Hello");
+```
+
+### 제네릭 메소드
+---
+ 클래스 자체가 제네릭이 아니더라도, 특정 메소드만 타입을 일반화하여 사용할 수  있다.
+
+ * 선언: 메소드의 반환 타입 바로 앞에 타입 매개 변수를 선언한다.
+
+ * 용도: 배열 정렬이나 데이터 교환과 같이, 타입에 관계 없이 동일한 로직을 수행하는 메소드에 적합하다.
+
+```csharp
+// 일반화 메소드 예제: 두 변수의 값을 교환
+public static void Swap<T>(ref T a, ref T b)
+{
+    T temp = a;
+    a = b;
+    b = temp;
+}
+
+// 사용 예:
+int x = 5, y = 10;
+Swap<int>(ref x, ref y); // x는 10, y는 5
+```
+
+### 타입 매개 변수 제약
+---
+ `T` 타입 매개 변수가 아무 타입이 될 수 없도록 제한을 설정하는 기능으로, 제약 조건은 where 키워드를 사용하여 지정한다.
+
+ * 목적: 일반화 코드 내에서 T 타입 객체의 특정 멤버(메소드, 속성 등)를 사용해야 할 때, 해당 멤버가 T 매개 변수에 존재함을 컴파일러에게 보장하기 위함이다.
+
+ |제약 조건|설명|
+ |:---:|:---:|
+ |where T : struct|T는 값 타입(모든 기본 타입, struct, enum)이어야 한다.|
+ |where T : class|T는 참조 타입(모든 클래스, 인터페이스, 배열)이어야 한다.|
+ |where T : new()|T는 매개 변수 없는 공개 생성자를 가져야한다.|
+ |where T : IName|T는 특정 인터페이스를 구현해야 한다.|
+ |where T : BaseClass|T는 특정 클래스 또는 파생 클래스여야 한다.|
+
+ 제약 기능의 예제 코드는 다음과 같다.
+
+```csharp
+// 제약 조건 예제: T는 반드시 IComparable 인터페이스를 구현해야 한다.
+public T GetMax<T>(T a, T b) where T : IComparable
+{
+    // IComparable 제약 덕분에 CompareTo 메소드를 안전하게 호출 가능
+    if (a.CompareTo(b) > 0) 
+        return a;
+    return b;
+}
+```
+
+ [1]: https://en.wikipedia.org/wiki/Generic_programming "알고리즘을 나중에 지정할 데이터 타입으로 작성하고, 필요할 때 특정 타입에 대해 매개변수로 구현하는 컴퓨터 프로그래밍 스타일이다."
+ [2]: https://en.wikipedia.org/wiki/Type_safety "프로그래밍 언어가 타입 오류를 억제하거나 방지하는 정도를 의미한다."
