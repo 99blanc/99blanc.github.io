@@ -257,7 +257,7 @@ public class SimpleStack<T>
 // 문자열 타입의 작업 큐 생성
 Queue<string> printJobs = new Queue<string>();
 
-// Enqueue (작업 추가: 선입)
+// Enqueue(작업 추가: 선입)
 printJobs.Enqueue("보고서.pdf"); // 첫 번째
 printJobs.Enqueue("계획서.docx"); // 두 번째
 printJobs.Enqueue("이미지.jpg"); // 세 번째

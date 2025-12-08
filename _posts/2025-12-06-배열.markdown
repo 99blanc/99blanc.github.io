@@ -33,7 +33,7 @@ scores[1] = 88;
 // 선언과 동시에 초기화
 string[] days = { "월", "화", "수", "목", "금", "토", "일" };
 
-// 배열 길이 (Length) 접근
+// 배열 길이(Length) 접근
 int count = days.Length; // 7
 ```
 
@@ -44,10 +44,10 @@ int count = days.Length; // 7
  [다차원][3] 배열 예제는 다음과 같다.
 
 ```csharp
-// 2차원 배열 (3행 2열 행렬) 선언 및 생성
+// 2차원 배열(3행 2열 행렬) 선언 및 생성
 int[,] matrix = new int[3, 2];
 
-// 값 할당 (1행 0열)
+// 값 할당(1행 0열)
 matrix[1, 0] = 50;
 
 // 선언과 동시에 초기화
@@ -73,7 +73,7 @@ Console.WriteLine(multiplicationTable[1, 2]); // 6 (1행 2열)
  가변 배열의 예제 코드는 다음과 같다.
 
 ```csharp
-// 가변 배열 선언 (3개의 배열을 가질 외부 배열 생성)
+// 가변 배열 선언(3개의 배열을 가질 외부 배열 생성)
 int[][] jaggedArray = new int[3][]; 
 
 // 각 행(내부 배열)의 크기를 개별적으로 정의
@@ -82,7 +82,7 @@ jaggedArray[1] = new int[2] { 5, 6 };
 jaggedArray[2] = new int[5] { 7, 8, 9, 10, 11 };
 
 // 요소 접근 및 출력
-Console.WriteLine(jaggedArray[2][3]); // 10 (2번째 배열의 3번째 인덱스)
+Console.WriteLine(jaggedArray[2][3]); // 10(2번째 배열의 3번째 인덱스)
 ```
 
 ### 배열 내부 구현 코드
