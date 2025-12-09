@@ -1,0 +1,96 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 예외"
+date: 2025-12-09 13:05:00 +09:00
+last_modified_at: 2025-12-09 13:05:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 예외
+---
+ C# 언어에서 예외(Exception)는 프로그램 실행 중 발생하는 오류 상황을 객체화한 것이다. 예외 처리는 프로그램이 이러한 예상치 못한 상황에서도 비정상적으로 종료되는 것을 막고, 안정적으로 복구할 수 있도록 돕는 메커니즘이다.
+
+ * 정의: 프로그램의 정상적인 흐름을 방해하는 런타임 오류 상황을 나타내는 객체이다.
+
+ * 발생: .NET 런타임(CLR)이 오류 상황을 감지하면, 해당 오류 정보를 담은 예외 객체를 생성하고 던진다.
+
+### System.Exception 클래스
+---
+ 모든 C# 예외 클래스의 최상위 기본 클래스로, CLR이 정의하는 모든 내장 예외와 사용자 정의 예외는 모두 이 클래스로부터 상속받는다.
+
+ * 주요 속성: 예외를 설명하는 텍스트 문자열인 Message, 예외가 발생한 지점까지의 메소드 호출 경로인 StackTrace, 현재 예외를 유발한 원본 예외인 InnerException 등이 있다.
+
+### 예외 처리 구문 
+---
+ try-catch-finally 구문은 예외 처리의 기본 구조이며, 프로그램의 안정적인 실행을 보장한다.
+
+ * try 블록: 예외 발생 가능성이 있는 코드를 포함하며, 블록 내에서 예외가 발생하면 즉시 코드 실행을 중단하고 해당하는 catch 블록으로 이동한다.
+
+ * catch 블록: try  블록에서 던져진 예외를 잡아서 처리하며, 여러 개의 블록을 정의할 수 있으며, 발생한 예외 타입과 일치하는 블록이 실행된다. 이는 상속 관계에 따라 구체적인 예외부터 처리해야 한다.
+
+```csharp
+try
+{
+    int zero = 0;
+    int result = 100 / zero; // System.DivideByZeroException 발생
+}
+catch (DivideByZeroException ex) // 구체적인 예외 처리
+{
+    Console.WriteLine("0으로 나눌 수 없습니다: " + ex.Message);
+}
+catch (Exception ex) // 나머지 모든 예외 처리(System.Exception 최상위)
+{
+    Console.WriteLine("일반적인 오류가 발생했습니다: " + ex.Message);
+}
+```
+
+ * finally 블록: 예외 발생 여부와 관계 없이 항상 실행되어야 하는 코드를 포함한다. 파일 스트림 닫기, 네트워크 연결 해제, 데이터베이스 연결 반환 등 리소스 정리 작업에 필수적으로 사용된다.
+
+### 예외 필터
+---
+ C# 6.0부터 catch 블록에 추가 조건을 지정하여 특정 조건이 충족될 때만 해당 블록이 예외를 처리하도록 하는 기능이다.
+
+ 키워드 when을 사용한 예제 코드는 다음과 같다.
+
+```csharp
+try
+{
+  
+}
+// LogType이 Critical일 때만 이 catch 블록 실행
+catch (Exception ex) when (ex.Data.Contains("LogType") && ex.Data["LogType"].Equals("Critical"))
+{
+    // 심각한 오류 처리 로직
+    Console.WriteLine("치명적인 오류 필터링");
+}
+```
+
+ * 이점: 예외를 잡기 전에 조건을 확인하므로, 불필요한 스택 풀기 오버헤드를 줄이고 코드를 더 읽기 쉽게 만든다.
+
+### 사용자 정의 예외 클래스
+---
+ 프로그램의 비즈니스 로직과 관련된 특정 오류 상황을 명확하게 표현하기 위해 사용자가 직접 정의하는 예외 클래스이다.
+
+ * 규칙: 모든 사용자 정의 예외 클래스는 반드시 System.Exception 또는 이의 파생 클래스를 상속받아야 한다.
+
+ * 구현: 클래스 이름 끝에 Exception 접미사를 붙이는 것이 관례이다.
+
+```csharp
+// 사용자 정의 예외 클래스 정의
+public class InsufficientFundsException : Exception
+{
+    // 기본 생성자
+    public InsufficientFundsException() : base("잔액이 부족합니다.") { }
+
+    // 메시지를 받는 생성자
+    public InsufficientFundsException(string message) : base(message) { }
+
+    // InnerException 객체를 받는 생성자
+    public InsufficientFundsException(string message, Exception inner) : base(message, inner) { }
+}
+
+// throw new InsufficientFundsException("인출 금액이 현재 잔액보다 큽니다.");
+```
