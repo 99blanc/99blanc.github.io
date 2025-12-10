@@ -1,0 +1,151 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 대리자"
+date: 2025-12-10 15:03:00 +09:00
+last_modified_at: 2025-12-10 15:03:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 대리자
+---
+ [대리자][1](Delegate)는 특정 매개 변수 목록과 반환 타입을 가진 메소드를 가리키는 객체로, 함수 포인터와 유사하지만 C# 언어에서는 타입 안정성과 객체 지향적 특징을 가진다.
+
+ * 타입 분류: 참조 타입이다.
+
+ * 선언: delegate 키워드를 사용하여 선언하며, 메소드의 [시그니처][3](Signature)와 일치해야 한다.
+
+```csharp
+// 대리자 선언(반환 타입: int, 매개변수: int 두 개)
+public delegate int CalculationHandler(int x, int y); 
+public int Add(int a, int b) => a + b;
+
+// 메소드 참조
+CalculationHandler handler = Add; 
+int result = handler(5, 3); // 대리자를 통해 Add 메소드 호출(콜백)
+```
+
+### 콜백
+---
+ [콜백][2](Callback)은 어떤 메소드가 다른 메소드를 나중에 호출하도록 그 메소드의 참조를 전달하는 방식이다. 대리자는 이 콜백 기능을 안전하게 구현하는 역할을 하며, 호출자는 어떤 메소드가 실행될지 모르고 단지 대리자 시그니처만 맞으면 된다.
+
+### 일반화 대리자
+---
+ 일반화 대리자(Generic Delegate)란 일반화 프로그래밍(Generic Programming)을 적용하여, 타입에 관계 없이 메소드를 참조할 수 있도록 미리 정의된 내장 대리자를 말한다.
+
+ C# 언어에서 자주 사용되는 세 가지 내장 일반화 대리자는 다음과 같다.
+
+ |대리자|설명|반환 타입|매개 변수 타입|
+ |:---:|:---:|:---:|:---:|
+ |Action<`T`>|반환 값이 없는 메소드를 참조한다.|void|최대 16개까지의 입력 타입|
+ |Func<`T, TResult`>|반환 값이 있는 메소드를 참조한다.|TResult|마지막 타입이 반환 타입이고, 그 앞은 입력타입|
+ |Predicate<`T`>|입력 매개 변수 하나를 받고 bool 반환하는 메소드를 참조한다.|bool|단 하나의 입력 타입|
+
+ 일반화 대리자에 대한 예제 코드는 다음과 같다.
+
+```csharp
+// Action<T> 예제(반환 없음)
+Action<string> logger = Console.WriteLine;
+logger("로그 메시지"); 
+
+// Func<T, TResult> 예제(int 두 개를 받아 int를 반환)
+Func<int, int, int> multiply = (a, b) => a * b;
+int product = multiply(4, 5); // 20
+```
+
+### 대리자 체인
+---
+ 대리자는 하나 이상의 메소드 참조를 동시에 담을 수 있으며, 이를 대리자 체인(Delegate Chain or Multicast Delegate)이라고 한다. 대리자 인스턴스는 내부적으로 Invocation List를 관리하며, 여기에 등록된 모든 메소드를 순서대로 호출한다.
+
+ * 결합: + 연산자 또는 Delegate.Combine() 메소드를 사용하여 메소드를 체인에 추가한다.
+
+ * 제거: - 연산자 또는 Delegate.Remove() 메소드를 사용하여 메소드를 체인에서 제거한다.
+
+ 대리자 체인에 대한 예제 코드는 다음과 같다.
+
+```csharp
+public void MethodA() { Console.WriteLine("A 실행"); }
+public void MethodB() { Console.WriteLine("B 실행"); }
+
+Action handler = MethodA; 
+handler += MethodB; // B 메소드를 체인에 추가
+
+handler(); // A 실행, B 실행 순서로 모두 호출한다.
+
+handler -= MethodA; // A 메소드 제거
+handler(); // B 실행만 호출한다.
+```
+
+ * 반환 값: 대리자 체인이 호출될 경우, 마지막으로 실행된 메소드의 반환 값만 최종 결과로 반환된다. 이때 중간 결과는 무시된다.
+
+### 익명 메소드
+---
+ 메소드의 이름을 명시적으로 선언하지 않고, 대리자 타입의 변수에 직접 코드 블록을 정의하여 할당하는 방식이다.
+
+ * 키워드: delegate
+
+ * 활용: 간단한 로직을 즉석에서 구현하고 다른 메소드로 전달할 때 유용하다. (C# 3.0 이후)람다 표현식에 의해 대체되었다.
+
+ 익명 메소드 예제 코드는 다음과 같다.
+
+```csharp
+// 익명 메소드 예제
+CalculationHandler calc = delegate(int x, int y) 
+{
+    return x - y;
+};
+int diff = calc(10, 3); // 7
+```
+
+ 람다 표현식을 적용한 예제 코드는 다음과 같다.
+
+```csharp
+// 람다 표현식 예제 (위의 익명 메소드와 동일 기능)
+CalculationHandler lambdaCalc = (x, y) => x - y;
+```
+
+### 대리자와 이벤트
+---
+ 이벤트는 대리자를 기반으로 하여 클래스 간의 알림 메커니즘을 안전하게 구현하기 위한 기능이다. 객체의 상태 변화(즉, 이벤트)가 발생했을 때, 해당 변화에 관심 있는 모든 구독자에게 알리는데 사용한다.
+
+ * 선언: event 키워드를 사용하여 대리자 타입의 변수를 선언한다.
+
+ event 키워드를 사용하면, 외부 클래스에서 이벤트 인스턴스에 접근하여 체인을 직접 초기화(=)하거나 강제로 호출하는 것을 막아 캡슐화를 유지한다.
+
+ |작업|대리자 변수(일반)|이벤트(event 키워드)|
+ |:---:|:---:|:---:|
+ |외부 호출|가능|불가능(오직 선언된 클래스 내에서만 호출 가능)|
+ |추가/제거|+, -, = 모두 가능|+, - 만 가능(구독 혹은 구독 해제 시에만 허용)|
+
+### 표준 이벤트 패턴
+---
+ .NET에서는 이벤트를 다룰 때 표준 이벤트를 사용한다.
+
+ * 대리자: EventHandler 또는 EventHandler<TEventArgs> 일반화 대리자를 사용한다.
+
+ * 인수: 이벤트 인수는 System.EventArgs 클래스를 상속받아 정의한다.
+
+ 이벤트 패턴의 예제 코드는 다음과 같다.
+
+```csharp
+// 이벤트 데이터 정의
+public class StatusChangedEventArgs : EventArgs
+{
+    public string NewStatus { get; set; }
+}
+
+// 이벤트 선언(EventHandler<T> 사용)
+public event EventHandler<StatusChangedEventArgs> StatusChanged;
+
+// 이벤트 발생 메소드
+protected virtual void OnStatusChanged(string newStatus)
+{
+    StatusChanged?.Invoke(this, new StatusChangedEventArgs { NewStatus = newStatus });
+}
+```
+
+ [1]: https://en.wikipedia.org/wiki/Delegate_(CLI) "타입 안전 메소드 포인터의 한 형태로, 호출할 메소드와 선택적으로 메소드를 호출할 객체를 지정하여 콜백과 이벤트 리스너를 구현하는 데 사용한다."
+ [2]: https://en.wikipedia.org/wiki/Callback_(computer_programming) "함수 참조가 한 컨텍스트에서 다른 컨텍스트로 전달되어 제공자가 해당 함수를 호출할 수 있도록 하는 프로그래밍 패턴이다."
+ [3]: https://en.wikipedia.org/wiki/Type_signature "함수, 서브루틴 또는 메소드의 입력과 출력을 정의하는 것이다."
