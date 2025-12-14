@@ -1,0 +1,153 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 리플렉션"
+date: 2025-12-13 20:35:00 +09:00
+last_modified_at: 2025-12-13 20:35:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 리플렉션 정의 및 타입
+---
+ 리플렉션(Reflection)은 C# 언어 프로그램 실행 시점에 자신의 타입 정보(메타 데이터)를 검사하고, 이를 사용하여 동적으로 객체를 생성하거나 메소드를 호출하는 프로그래밍 기법이다.
+
+ |구분|설명|
+ |:---:|:---:|
+ |정의|런타임에 [어셈블리][1]가 담고 있는 타입(클래스, 인터페이스 등), 멤버(필드, 메소드, 속성), 애트리뷰트 등의 메타 데이터를 검사하고 조작하는 기능이다.|
+ |핵심 클래스|System.Type 클래스, System.Reflection 네임 스페이스의 클래스들이 주로 사용된다.|
+ |주요 용도|플러그인 구현, 런타임 코드 생성, 직렬화/역직렬화, 단위 테스트 도구, 프레임워크 개발 등에 사용된다.|
+
+ * 타입 정보 얻기: 리플렉션의 모든 작업은 메모리에 로드된 타입 정보를 나타내는 System.Type 객체를 얻는 것에서 시작한다.
+
+    * Object.GetType() 메소드: 이미 생성된 객체의 정확한 런타임 타입을 얻는 방법이다.
+
+    * typeof 연산자: 컴파일 타임에 객체의 정확한 타입을 알고 있을 때 사용하는 방법이다.
+
+ 타입 정보를 얻는 예제 코드는 다음과 같다.
+
+```csharp
+string s = "Hello";
+Type type1 = s.GetType(); // System.String 타입 정보를 담는 Type 객체 반환
+Type type3 = Type.GetType("System.Double");
+```
+
+ * 타입 내보내기: 리플렉션 기능을 사용하여 어셈블리 내부에 정의된 모든 타입을 찾을 수 있다.
+
+    * Assembly 클래스: 리플렉션의 시작 점으로 .NET 모듈을 나타낸다.
+
+    * Assembly.GetExecutingAssembly(): 현재 실행 중인 어셈블리를 가져온다.
+
+    * Assembly.GetTypes(): 해당 어셈블리에 정의된 모든 public 및 private 타입을 배열로 반환한다.
+
+ 타입을 내보내는 예제 코드는 다음과 같다.
+
+```csharp
+using System.Reflection;
+
+Assembly assembly = Assembly.GetExecutingAssembly();
+Type[] types = assembly.GetTypes();
+
+foreach (Type t in types)
+{
+    Console.WriteLine($"찾은 타입: {t.FullName}");
+}
+```
+
+### 리플렉션 객체 생성 및 메소드 호출
+---
+ Type 객체를 이용하면 동적으로 객체를 생성하고 멤버에 접근할 수 있다.
+
+ 리플렉션을 사용한 객체 생성 예제 코드는 다음과 같다.
+
+```csharp
+// Activator.CreateInstance를 사용한 기본 생성자 호출
+Type stringType = typeof(string);
+object newString = Activator.CreateInstance(stringType, "Dynamic"); 
+Console.WriteLine(newString); // 결과: Dynamic
+
+// 매개변수가 있는 생성자 호출(Type.GetConstructor, ConstructorInfo.Invoke 등을 사용)
+```
+
+ 리플렉션을 사용한 메소드 호출 예제 코드는 다음과 같다.
+
+```csharp
+Type calculatorType = typeof(Calculator); // Calculator 클래스 가정
+object instance = Activator.CreateInstance(calculatorType);
+
+MethodInfo method = calculatorType.GetMethod("Add");
+
+// Invoke(인스턴스, 매개변수 배열) 호출
+object result = method.Invoke(instance, new object[] { 10, 20 });
+Console.WriteLine($"동적 호출 결과: {result}"); // 30
+```
+
+### 애트리뷰트
+---
+ [애트리뷰트][2](Attribute)는 코드의 동작에는 영향을 주지 않지만, 컴파일러나 런타임 혹은 다른 도구에 메타 데이터를 제공하기 위해 사용되는 선언적 태그이다.
+
+ * 선언: 대괄호 안에 선언하며, 클래스, 메소드, 필드 등 다양한 대상에 붙일 수 있다.
+
+ * 사용: 리플렉션을 통해 런타임에 애트리뷰트를 읽어와 해당 코드 요소에 대한 추가 정보를 얻거나 로직을 다르게 실행할 수 있다.
+
+ * 접근: Type.GetCustomAttributes() 또는 MemberInfo.GetCustomAttributes() 메소드를 사용한다.
+
+### 호출자 정보 애트리뷰트
+---
+ C# 5.0 이후 도입된 기능으로, 호출자 정보 애트리뷰트(Caller Info Attribute)는 메소드 호출 시 호출자(Caller)에 대한 정보를 자동으로 채워주는 특별한 애트리뷰트이다. 주로 로깅 및 디버깅에 사용된다.
+
+ |애트리뷰트|설명|
+ |:---:|:---:|
+ |CallerMemberName|호출하는 멤버의 이름을 문자열로 자동 삽입한다.|
+ |CallerFilePath|호출이 발생한 소스 파일의 전체 경로를 자동 삽입한다.|
+ |CallerLineNumber|호출이 발생한 소스 파일의 줄 번호를 정수로 자동 삽입한다.|
+ 
+ 호출자 정보 애트리뷰트의 예제 코드는 다음과 같다.
+
+```csharp
+public static void Log(string message, 
+                       [CallerMemberName] string memberName = "",
+                       [CallerFilePath] string filePath = "",
+                       [CallerLineNumber] int lineNumber = 0)
+{
+    Console.WriteLine($"[{filePath}:{lineNumber}, {memberName}] {message}");
+}
+
+// 호출 시: 매개변수 전달 없이 호출해도 정보가 자동으로 채워짐
+// Log("오류 발생");
+```
+
+### 사용자 정의 애트리뷰트
+---
+ 사용자 정의 애트리뷰트(Custom Attribute)는 개발자가 직접 정의하여 특정 클래스나 멤버에 고유한 메타 데이터를 부여하는 애트리뷰트이다. 생성 규칙은 다음과 같다.
+
+ * 상속: System.Attribute 클래스를 상속받아야 한다.
+
+ * 관례: 클래스 이름 끝에 Attribute 접미사를 붙이는 것이 관례이다.
+
+ * 사용: 클래스 위에 `[AttributeUsage]` 애트리뷰트를 붙여 적용될 대상(클래스, 메소드, 필드 등)을 지정할 수 있다.
+
+ 사용자 정의 애트리뷰트의 예제 코드는 다음과 같다.
+
+```csharp
+// 사용자 정의 애트리뷰트 정의
+[AttributeUsage(AttributeTargets.Class)]
+public class AuthorAttribute : Attribute
+{
+    public string Name { get; private set; }
+    public AuthorAttribute(string name)
+    {
+        Name = name;
+    }
+}
+
+// 클래스에 적용
+[Author("김개발")]
+public class MyDataProcessor { }
+
+// 리플렉션을 통해 런타임에 애트리뷰트 정보 읽기 가능
+```
+
+ [1]: https://en.wikipedia.org/wiki/Assembly_(CLI) "공통 언어 인프라에서 배포, 버전 관리 및 보안을 위해 사용되는 컴파일된 코드 라이브러리이다."
+ [2]: https://en.wikipedia.org/wiki/Attribute_(programming)#C# "C# 언어에서 어셈블리, 멤버, 타입과 같은 필드나 코드 블록에 부착된 메타 데이터로 자바 주석과 동등하다."
