@@ -1,0 +1,139 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 파일 시스템 (2)"
+date: 2025-12-15 20:17:00 +09:00
+last_modified_at: 2025-12-15 20:17:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 직렬화 및 역직렬화
+---
+ [직렬화][1]는 메모리 상의 객체 상태를 네트워크 전송이나 파일 저장이 가능한 바이트 스트림 형태로 변환하는 과정이며, 역직렬화는 저장된 [바이트 스트림][2](파일 및 네트워크 수신 데이터)을 다시 메모리 상의 원래 객체 형태로 복원하는 과정이다.
+
+ * 직렬화 목적: 객체의 상태를 영속적으로 저장하거나, 프로세스 및 네트워크를 통해 전송하기 위함이다.
+
+    * BinaryFormatter: 이진 타입으로 직렬화한다.
+
+    * DataContractSerializer/XmlSerializer: [XML][3] 타입으로 직렬화한다. 
+
+    * System.Text.Json: [JSON][4] 타입으로 직렬화한다.
+
+ JSON 직렬화 및 역직렬화 예제 코드는 다음과 같다.
+
+```csharp
+using System.Text.Json;
+
+public class UserProfile
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+// 객체 직렬화(Object -> JSON String)
+UserProfile user = new UserProfile { Name = "Alice", Age = 25 };
+string jsonString = JsonSerializer.Serialize(user); 
+// {"Name":"Alice","Age":25}
+Console.WriteLine(jsonString);
+
+// 객체 역직렬화(JSON String -> Object)
+UserProfile restoredUser = JsonSerializer.Deserialize<UserProfile>(jsonString);
+Console.WriteLine($"복원된 이름: {restoredUser.Name}, 나이: {restoredUser.Age}");
+```
+
+### 리소스 관리 및 using 구문
+---
+ 파일, 스트림, 리더/라이터 객체는 모두 운영 체제 리소스를 사용한다. 이 리소스들은 사용 후 반드시 명시적으로 해제되어야 한다.
+
+ * IDisposable 인터페이스: 리소스를 사용하는 모든 .NET 객체(스트림, 리더, 라이터 등)는 이 인터페이스를 구현하며, 리소스 해제 용 Dispose() 메소드를 가진다.
+
+ * Close(), Dispose() 메소드: 대부분의 입출력 클래스에서 Close() 메소드를 호출하면 내부적으로 Dispose() 메소드를 호출한다.
+
+ * using 구문: C# 언어에서 리소스 관리를 위한 방법으로 IDisposable 객체를 using 블록 내에서 생성하면, 블록을 벗어나는 순간 컴파일러가 자동으로 Dispose() 메소드를 호출하는 코드를 생성한다.
+
+ 리소스 해제에 관한 예제 코드는 다음과 같다.
+
+```csharp
+// using 구문을 사용한 안전한 리소스 해제
+using (StreamReader sr = new StreamReader("safe_read.txt")) 
+{
+    // 파일 읽기 작업
+    string content = sr.ReadToEnd();
+} // 블록을 벗어나는 순간 sr.Dispose()가 자동 호출된다. 이는 finally 블록과 유사하다.
+```
+
+### 문자 인코딩
+---
+ [문자 인코딩][3]은 텍스트 파일을 다룰 때, 문자를 바이트로 변환하거나 바이트를 문자로 변환하는 규칙을 말한다.
+
+ * System.Text.Encoding 클래스: C# 언어에서 다양한 인코딩 방식을 지원하는 네임 스페이스이다.
+
+    * Encoding.UTF8: 웹과 대부분의 시스템에서 표준으로 사용되는 유니코드 인코딩 방식이다.
+
+    * Encoding.Unicode: UTF-16 인코딩을 나타낸다.
+
+    * Encoding.ASCII: 7비트 ASCII 인코딩을 나타낸다.
+
+ * StreamReader/StreamWriter 사용: 이 클래스들을 생성할 때 인코딩을 명시적으로 지정하지 않으면, 시스템 기본 인코딩이 사용되어 파일 호환성 문제가 발생할 수 있으므로 항상 Encoding.UTF8을 명시하는 것이 좋다.
+
+### 비동기 I/O
+---
+ [비동기 I/O][6](Asynchronous I/O)는 GUI 애플리케이션이나 서버 환경(예시 ASP.NET)에서 I/O 작업은 디스크나 네트워크의 응답을 기다리는 동안 스레드를 블록(Block)할 수 있는 방법을 말한다.
+
+ * async/await: C# 언어에서 비동기 프로그래밍을 쉽게 구현하는 키워드이다.
+
+ * 메소드: 대부분의 I/O 클래스는 비동기 버전을 제공한다.
+
+        * StreamReader.ReadToEnd() -> StreamReader.ReadToEndAsync()
+
+        * StreamWriter.Write() -> StreamWriter.WriteAsync()
+
+ 이는 I/O 작업이 진행되는 동안 메인 스레드(UI 스레드 등)가 다른 작업을 처리할 수 있게 되어, 애플리케이션의 반응성과 확장성을 향상시킨다.
+
+ 비동기 I/O 예제 코드는 다음과 같다.
+
+```csharp
+// 비동기 I/O 예제
+public async Task ReadFileAsync(string filePath)
+{
+    using (StreamReader sr = new StreamReader(filePath))
+    {
+        // await를 사용하여 I/O 작업이 완료될 때까지 비동기적으로 대기
+        string content = await sr.ReadToEndAsync(); 
+        Console.WriteLine("파일 읽기 완료.");
+    }
+}
+```
+
+### 파일 시스템 감시
+---
+ System.IO.FileSystemWatcher 클래스로 특정 디렉터리나 파일에 변화가 생겼을 때 실시간으로 이벤트를 수신할 수 있는 클래스로 로그 파일 모니터링, 자동 파일 동기화 시스템, 설정 파일 변경 감지 등에 사용된다.
+
+ * Created 이벤트: 파일이나 디렉터리가 생성될 때 감지한다.
+
+ * Delete 이벤트: 파일이나 디렉터리가 삭제될 때 감지한다.
+
+ * Changed 이벤트: 파일 내용이나 속성이 변경될 때 감지한다.
+
+ * Renamed 이벤트: 파일이나 디렉터리 이름이 변경될 때 감지한다.
+
+ 파일 시스템 감시에 대한 예제 코드는 다음과 같다.
+
+```csharp
+// FileSystemWatcher 예제(설정 폴더 감시)
+FileSystemWatcher watcher = new FileSystemWatcher(@"C:\Config");
+watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite; // 감시할 속성 지정
+
+// 이벤트 핸들러 등록
+watcher.Changed += (sender, e) => Console.WriteLine($"파일 변경 감지: {e.FullPath}");
+watcher.EnableRaisingEvents = true; // 감시 시작
+```
+
+ [1]: https://en.wikipedia.org/wiki/Serialization "데이터 구조나 객체 상태를 저장이나 전송이  가능한 형식으로 변환하는 과정이다."
+ [2]: https://en.wikipedia.org/wiki/Bitstream "바이트의 시퀀스이다."
+ [3]: https://en.wikipedia.org/wiki/XML "데이터를 저장, 전송 및 재구성하기 위한 마크업 언어이자 파일 형식이다."
+ [4]: https://en.wikipedia.org/wiki/JSON "사람이 읽을 수 있는 텍스트를 사용하여 데이터 객체를 저장하고 전송하는 개방형 표준 파일 형식 및 데이터 교환 형식이다."
+ [5]: https://en.wikipedia.org/wiki/Character_encoding "각기 문자의 각 문자를 나타내기 위해 숫자 값을 사용하는 관례이다."
+ [6]: https://en.wikipedia.org/wiki/Asynchronous_I/O "입출력 처리의 한 형태로 I/O 작업이 완료되기 전에 다른 처리가 계속될 수 있도록 허용하는 방법을 말한다."
