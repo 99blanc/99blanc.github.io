@@ -1,0 +1,126 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 파일 시스템 (1)"
+date: 2025-12-15 17:04:00 +09:00
+last_modified_at: 2025-12-15 17:04:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 파일 시스템 정의
+---
+ C# 언어에서 파일과 디렉터리 작업을 수행하는 것은 System.IO 네임 스페이스를 통해 이루어진다. 이는 [파일 시스템][1] 정보 조회, 파일 내용 읽기 및 쓰기, 데이터 직렬화 등 모든 입출력 관련 기능을 제공한다.
+
+ |클래스|설명|
+ |:---:|:---:|
+ |Directory|디렉터리를 생성, 삭제, 이동하거나 존재하는지 확인한다.|
+ |DirectoryInfo|디렉터리의 속성 정보(생성 시간, 이름, 경로 등)를 객체 지향적으로 다룬다.|
+ |File|파일을 복사, 이동, 삭제하거나 존재하는지 확인한다. 파일 내용을 한 번에 읽거나 쓰는 정적 메소드도 제공한다.|
+ |FileInfo|파일의 속성 정보(크기, 마지막 수정 시간 등)를 객체 지향적으로 다룬다.|
+ |Path|파일 시스템 경로 문자열을 안전하게 처리하고 결합한다.|
+
+ 예제 코드는 다음과 같다.
+
+```csharp
+// 파일 및 디렉터리 정보 다루기 예제
+string dirPath = @"C:\Temp";
+string filePath = Path.Combine(dirPath, "data.txt");
+
+// 디렉터리 생성 및 확인
+if (!Directory.Exists(dirPath))
+{
+    Directory.CreateDirectory(dirPath);
+}
+
+// 파일 정보 조회
+FileInfo fileInfo = new FileInfo(filePath);
+if (fileInfo.Exists)
+{
+    Console.WriteLine($"파일 크기: {fileInfo.Length} 바이트");
+}
+```
+
+### 파일 시스템 핵심 구조
+---
+ 파일 입출력 작업을 수행하기 위해서는 기본적으로 [스트림][2], 리더 및 라이터 핵심 개념을 이해해야 한다.
+
+![C 스트림 과정](https://drive.google.com/thumbnail?id=1DFt4f-b47LzvRpYb3fbte4Gy8o0FFUsJ&sz=w1000)
+
+ * 스트림(Stream): 데이터 소스(파일, 네트워크 등)와 프로그램 간에 데이터를 전송하는 추상적인 통로이다. 모든 입출력 작업은 스트림을 통해 이루어지며, 데이터를 순차적으로 읽거나 쓴다.
+
+    * IDisposable: 스트림 객체는 사용 후 반드시 닫혀야 시스템 리소스가 해제된다. 이를 위해 using 구문을 사용한다.
+
+ * 스트림 리더/라이터(Stream Reader/Writer): 기본 스트림 위에 놓여, 데이터를 특정 형식(텍스트, 이진)으로 처리할 수 있도록 돕는 [어뎁터][3]이다.
+
+    * StreamReader/StreamWriter: 텍스트 데이터를 처리하며, 문자 인코딩(UTF-8, ASCII 등)을 지정할 수 있다.
+
+    * BinaryReader/BinaryWriter: 이진 데이터를 처리하며, 기본 데이터 타입(int, double 등)을 읽고 쓸 수 있는 메소드를 제공한다.
+
+### 텍스트 파일 처리
+---
+ 텍스트 데이터(문자열)을 파일에 기록하거나 읽을 때 사용하며, 인코딩 처리가 중요하다.
+
+ |작업|클래스|주요 메소드|설명|
+ |:---:|:---:|:---:|:---:|
+ |쓰기|StreamWriter|WriteLine(), Write()|지정된 인코딩으로 문자열을 파일에 쓴다.|
+ |읽기|StreamReader|ReadLine(), ReadToEnd()|지정된 인코딩으로 파일에서 문자열을 읽는다.|
+ |간편 접근|File|WriteAllText(), ReadAllText()|작은 파일의 경우, 스트림 없이 한 번에 읽고 쓰는 데 유용하다.|
+
+ 텍스트 파일에 대한 예제 코드는 다음과 같다.
+
+```csharp
+// 텍스트 파일 쓰기 예제 using으로 자동 리소스 해제)
+using (StreamWriter sw = new StreamWriter("log.txt", true, System.Text.Encoding.UTF8))
+{
+    sw.WriteLine($"[{DateTime.Now}] 애플리케이션 시작.");
+}
+
+// 텍스트 파일 읽기 예제
+using (StreamReader sr = new StreamReader("log.txt"))
+{
+    string line;
+    while ((line = sr.ReadLine()) != null)
+    {
+        Console.WriteLine(line);
+    }
+}
+```
+
+### 이진 데이터 처리
+---
+ 구조화된 기본 데이터 타입(정수, 실수 등)을 정확한 바이트 형식으로 파일에 기록하거나 읽을 때 사용하며, 텍스트 인코딩의 영향을 받지 않는다.
+
+ |클래스|주요 메소드|설명|
+ |:---:|:---:|:---:|
+ |BinaryWriter|Write(int), Write(double) 등|int, float, bool 등 기본 데이터 타입을 이진 형식으로 기록한다.|
+ |BinaryReader|ReadInt32(), ReadDouble() 등|파일에서 기본 데이터 타입을 정확히 읽어낸다.|
+
+ 이진 파일에 대한 예제 코드는 다음과 같다.
+
+```csharp
+// 이진 데이터 쓰기 예제
+using (FileStream fs = new FileStream("data.bin", FileMode.Create))
+using (BinaryWriter bw = new BinaryWriter(fs))
+{
+    bw.Write(123); // 4바이트 정수 쓰기
+    bw.Write(3.14159f); // 4바이트 실수(float) 쓰기
+    bw.Write("Binary Test"); // 문자열 쓰기 (길이 정보 포함)
+}
+
+// 이진 데이터 읽기 예제
+using (FileStream fs = new FileStream("data.bin", FileMode.Open))
+using (BinaryReader br = new BinaryReader(fs))
+{
+    int num = br.ReadInt32();
+    float pi = br.ReadSingle();
+    string text = br.ReadString();
+    
+    Console.WriteLine($"이진 데이터: {num}, {pi}, {text}");
+}
+```
+
+ [1]: https://en.wikipedia.org/wiki/File_system "파일 조작과 접근을 관장한다. 동일한 컴퓨터에서 실행되는 애플리케이션을 서비스하는 운영체제의 기능으로, 다양한 종류의 저장 장치를 위해 개발되어 왔다."
+ [2]: https://en.wikipedia.org/wiki/Stream_(computing) "시간에 따라 잠재적으로 무한한 데이터 요소들의 연속을 말한다. 대량으로 처리하는 것이 아닌 컨베이어 벨트 위에 한 번에 처리되는 품목으로 생각할 수 있다."
+ [3]: https://en.wikipedia.org/wiki/Adapter_pattern "기존 클래스의 인터페이스를 또 다른 인터페이스로 사용할 수 있게 하는 설계 패턴이다."
