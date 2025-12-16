@@ -1,0 +1,142 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 프로세스"
+date: 2025-12-16 20:55:00 +09:00
+last_modified_at: 2025-12-16 20:55:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 프로세스
+---
+ [프로세스][1](Process)는 실행 중인 프로그램의 인스턴스를 말하며, 운영체제로 부터 독립된 메모리 영역을 할당받아 실행된다. C# 언어에서는 System.Diagnostics 네임 스페이스에 포함된 Process 클래스를 통해 시스템 내의 프로세스를 제어하고 관리할 수  있다.
+
+![C# 프로세스](https://drive.google.com/thumbnail?id=1FHsIzLnKKRAc-F4Bb-v3iylPGDlbyHKQ&sz=w1000)
+
+### Process 클래스 주요 역할
+---
+ Process 클래스는 로컬 및 원격 프로세스에 접근하고, 프로세스를 시작하거나 중단하는 기능을 제공한다.
+
+ * 프로세스 정보 조회: 현재 실행 중인 프로세스의 ID, 이름, 메모리 사용량, CPU 시간 등을 확인한다.
+
+ * 외부 프로그램 실행: 다른 응용 프로그램을 실행하거나 특정 파일을 연결된 프로그램으로 연다.
+
+ * 프로세스 제어: 실행 중인 프로세스를 강제로 종료하거나, 프로세스가 종료될 때까지 대기한다.
+
+### 외부 프로세스 실행 및 시작
+---
+ Process.Start() 메소드를 사용하여 새로운 프로세스를 시작할 수 있다.
+
+ 단순 실행에 대한 예제 코드는 다음과 같다.
+
+```csharp
+using System.Diagnostics;
+
+// 메모장 실행
+Process.Start("notepad.exe");
+
+// 특정 웹사이트를 기본 브라우저로 열기
+Process.Start(new ProcessStartInfo("https://www.google.com") { UseShellExecute = true });
+```
+
+ ProcessStartInfo 클래스를 사용한 예제 코드는 다음과 같다.
+
+```csharp
+ProcessStartInfo startInfo = new ProcessStartInfo();
+startInfo.FileName = "example.exe";
+startInfo.Arguments = "-arg1 -arg2"; // 명령줄 인수
+startInfo.WindowStyle = ProcessWindowStyle.Maximized; // 창 최대화 상태로 시작
+
+Process.Start(startInfo);
+```
+
+### 프로세스 정보 조회 및 관리
+---
+ 시스템에서 실행 중인 프로세스 목록을 가져오거나 특정 프로세스의 상태를 모니터링할 수 있다.
+
+ |메소드/속성|설명|
+ |:---:|:---:|
+ |GetCurrentProcess()|현재 내 프로그램의 프로세스 정보를 가져온다.|
+ |GetProcesses()|로컬 컴퓨터에서 실행 중인 모든 프로세스 목록을 가져온다.|
+ |GetProcessById()|특정 ID를 가진 프로세스를 찾는다.|
+ |Id|프로세스의 고유 식별 번호(PID)를 반환한다.|
+ |ProcessName|프로세스의 이름을 반환한다.|
+ |WorkingSet64|프로세스가 사용 중인 실제 메모리 양을 바이트 단위로 반환한다.|
+
+ 실행 중인 모든 프로세스를 출력하는 예제 코드는 다음과 같다.
+
+```csharp
+// 모든 실행 중인 프로세스 출력
+Process[] processes = Process.GetProcesses();
+foreach (var p in processes)
+{
+    Console.WriteLine($"Name: {p.ProcessName}, ID: {p.Id}");
+}
+```
+
+### 프로세스 제어 및 동기화
+---
+ 실행 중인 프로세스를 종료하거나, 해당 프로세스의 작업이 끝날 때까지 내 프로그램의 흐름을 제어할 수 있다.
+
+ * Kill() 메소드: 프로세스를 즉시 강제 종료한다.
+
+ * CloseMainWindow() 메소드: 프로세스의 메인 창에 닫기 메시지를 보낸다.
+
+ * WaitForExit() 메소드: 실행한 외부 프로세스가 종료될 때까지 현재 스레드를 대기시킨다.
+
+ * HasExied 속성: 프로세스가 이미 종료되었는지 여부를 확인한다.
+
+ 프로세스 제어에 관한 예제 코드는 다음과 같다.
+
+```csharp
+Process myProc = Process.Start("notepad.exe");
+
+// 프로세스가 종료될 때까지 최대 5초 대기
+if (myProc.WaitForExit(5000)) 
+{
+    Console.WriteLine("메모장이 정상 종료되었습니다.");
+} 
+else 
+{
+    Console.WriteLine("메모장이 아직 실행 중입니다. 강제 종료합니다.");
+    myProc.Kill();
+}
+```
+
+### 표준 입출력 리다이렉션
+---
+ [리다이렉션][2](Redirection)은 콘솔 응용 프로그램을 실행할 때, 해당 프로그램의 출력(stdout)이나 오류(stderr)를 내 프로그램에서 직접 읽어오거나, 입력을 넣어줄 수 있다.
+
+ 리다이렉션 예제 코드는 다음과 같다.
+
+```csharp
+ProcessStartInfo psi = new ProcessStartInfo();
+psi.FileName = "cmd.exe";
+psi.Arguments = "/c dir"; // 디렉터리 목록 출력 명령
+psi.RedirectStandardOutput = true; // 출력을 리다이렉트
+psi.UseShellExecute = false; // 리다이렉트를 위해 false 설정
+psi.CreateNoWindow = true; // 검은 창을 띄우지 않는다.
+
+using (Process p = Process.Start(psi))
+{
+    // 외부 프로세스의 출력 내용을 읽어온다.
+    string output = p.StandardOutput.ReadToEnd();
+    p.WaitForExit();
+    Console.WriteLine(output);
+}
+```
+
+### 프로세스 사용 시 주의사항
+---
+ 프로세스 사용시 주의사항으로는 다음과 같다.
+
+ * 리소스 해제: Process 클래스는 IDisposable 인터페이스를 구현한다. 사용이 끝나면 using 구문을 사용하거나 Dispose() 메소드를 호출하여 핸들을 명시적으로 해제하는 것이 좋다.
+
+ * 권한 문제: 다른 사용자의 프로세스 정보를 조외하거나 종료하려면 관리자 권한이 필요할 수 있다.
+
+ * 비동기 처리: WaitForExit() 메소드는 스레드를 차단하므로, UI 애플리케이션에서는 Exited 이벤트를 사용하여 비동기적으로 종료를 감지하는 것이 좋다.
+
+ [1]: https://en.wikipedia.org/wiki/Process_(computing) "하나 또는 여러 스레드에 의해 실행되는 컴퓨터 프로그램의 인스턴스를 의미한다."
+ [2]: https://en.wikipedia.org/wiki/Redirection_(computing) "프로세스 간 통신의 한 형태로, 표준 스트림을 사용자가 지정한 위치로 리디렉션할 수 있는 대부분의 명령줄 인터프리터에서 공통적으로 사용되는 기능이다."
