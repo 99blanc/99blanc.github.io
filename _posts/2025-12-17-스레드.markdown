@@ -1,0 +1,87 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 스레드"
+date: 2025-12-17 21:29:00 +09:00
+last_modified_at: 2025-12-17 21:29:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 스레드 생명 주기
+---
+ 스레드(Thread)는 프로세스 내에서 실행되는 최소 단위의 작업 흐름이다. C# 언어에서는 System.Threading.Thread 클래스를 통해 제어하며 ThreadState 열거형을 통해 여러 상태 변화를 확인할 수 있다.
+
+![C# 스레드 생명 주기](https://drive.google.com/thumbnail?id=1IYz6qH3zqypmJcXBixzMbaE8F6xH4gSr&sz=w1000)
+
+ * Unstarted: 스레드 객체는 생성되었으나 아직 Start() 메소드가 호출되지 않은 상태이다.
+
+ * Running: 스레드가 CPU를 점유하여 코드를 실행 중인 상태이다.
+
+ * WaitSleepJoin: Sleep(), Join(), Monitor.Wait() 메소드 등에 의해 일시 중단된 상태이다.
+
+ * Suspended/Stopped: 스레드 실행이 중단되거나 완료되어 종료된 상태이다.
+
+### 인터럽트 및 중단
+---
+ [인터럽트][2](Interrupt)는 실행 중인 스레드를 안전하게 멈추거나 깨우는 방법이다.
+
+ * Thread.Interrupt() 메소드: 스레드가 WaitSleepJoin 상태일 때 호출하면 예외를 발생시켜 스레드를 즉시 깨우며, 작업을 중단하고 자원을 정리하는 용도로 사용된다.
+
+ * CancellationToken() 메소드: 현대적인 .NET에서 권장되는 방식으로, 객체를 통해 협력적으로 작업을 취소한다. 스레드를 강제로 죽이는 것보다 훨씬 안전하다.
+
+ * Abort() 메소드: 스레드를 강제 종료시키지만, 메모리 누수나 [데드락][3] 위험이 커서 현재는 권장되지 않는다.
+
+### TPL 및 Task
+---
+ 스레드는 생성 비용이 크고 다루기 복잡하다. 이를 추상화하여 더욱 효율적으로 관리하는 것이 [TPL][4](Task Parallel Library)의 Task 속성이며, 스레드 풀(Thread Pool)을 활용하여 스레드를 재사용하므로 리소스 소모가 적다는 특징이 있다.
+
+ * Task.Run() 메소드: 백그라운드 스레드에서 작업을 실행한다.
+
+ * Task.WaitAll()/Task.WhenAny() 메소드: 여러 작업의 완료를 제어한다.
+
+ 요약 비교 표는 다음과 같다.
+
+ |구분|Thread|Task|
+ |:---:|:---:|:---:|
+ |리소스|매번 생성(무거움)|스레드 풀 활용(가벼움)|
+ |반환 값|없음(공유 변수 필요)|Task<`TResult`> 객체를 통해 결과 반환|
+ |복잡도|직접 제어|async/await 키워드로 간결하다.|
+ |사용 권장|특수 케이스|대부분의 비동기 작업에 권장된다.|
+
+### `async/await` 비동기 프로그래밍
+---
+ C# 5.0 이후부터 도입된 비동기 프로그래밍 모델로, 비동기 코드를 마치 동기 코드처럼 직관적으로 작성하게 해준다.
+
+ * async 키워드: 해당 메소드가 비동기 작업을 포함하고 있음을 나타내며, Task 객체를 반환한다.
+
+ * await 키워드: 비동기 적입이 끝날 때까지 기다리되, 기다리는 동안 호출 스레드를 점유하지 않고 반환하여  시스템의 반응성을 높인다. 작업이 완료되면 다음 코드를 이어서 실행한다.
+
+```csharp
+public async Task<string> DownloadDataAsync()
+{
+    // 외부 데이터 다운로드(비동기)
+    using (HttpClient client = new HttpClient())
+    {
+        // await 접촉 시 제어권을 호출자에게 반환한다.
+        string result = await client.GetStringAsync("https://example.com");
+        return result; // 작업 완료 후 다시 돌아와 실행한다.
+    }
+}
+```
+
+### 스레드 동기화
+---
+ 멀티스레드 환경에서 여러 스레드가 동시에 같은 자원에 접근할 때 발생하는 데이터 손상을 막기 위한 기법이다.
+
+ * lock 키워드: 가장 많이 사용되며, 특정 코드 블록을 한 번에 한 스레드만 실행하도록 보장한다.
+
+ * Monitor: lock 키워드의 내부 구현체로, 더 세밀한 제어가 가능하다.
+
+ * Mutex/Semaphore: 프로세스 간 동기화가 필요하거나, 동시에 접근 가능한 스레드 수를 제한할 때 사용한다.
+
+ [1]: https://en.wikipedia.org/wiki/Thread_(computing) "운영체제의 일부인 스케줄러가 독립적으로 관리할 수 있는 가장 작은 프로그래밍된 명령어 순서이다."
+ [2]: https://en.wikipedia.org/wiki/Interrupt "현재 실행 중인 코드를 가로채어 이벤트가 신속하게 처리될 수 있도록 요청하는 것이다. 요청이 수락되면 프로세서는 현재 활동을 일시 중지하고 상태를 저장한 뒤, 이벤트를 처리한다."
+ [3]: https://en.wikipedia.org/wiki/Deadlock_(computer_science) "데드락 혹은 교착 상태란 각 엔터티 그룹의 어떤 구성원도 메시지를 보내거나 락을 해제하는 등 다른 구성원, 즉 자신을 포함해 행동을 기다리면서 다음 작업을 진행할 수 없는 모든 상황을 말한다."
+ [4]: https://en.wikipedia.org/wiki/Parallel_Extensions#Task_Parallel_Library ".NET의 병렬 확장 중 작업 병렬성 구성 요소로, 모든 CLI 언어에서 사용할 수 있는 구조 라이브러리이다."
