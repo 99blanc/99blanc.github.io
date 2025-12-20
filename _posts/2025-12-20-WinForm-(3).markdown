@@ -1,0 +1,110 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: WinForm (3)"
+date: 2025-12-20 17:19:00 +09:00
+last_modified_at: 2025-12-20 17:19:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 이벤트 모델
+---
+ WinForm 이벤트는 프로그램과 사용자 사이의 대화 수단이다.
+
+ * 키보드 이벤트: 키보드를 누르면 다음 순서대로 이벤트가 발생한다. Form에 KeyPreview 속성을 조정하면, 어떤 컨트롤에 포커스가 있든 상관 없이 Form이 먼저 키보드 이벤트를 가로챌 수 있으며, KeyPress 이벤트에서 숫자만 입력받고 싶다면 e.Handled 속성을 조정하여 윈도우가 해당 키 입력을 무시하게 만들 수 있다.
+
+      * KeyDown: 키가 눌리는 순간 발생한다.
+
+      * KeyPress: 문자가 입력될 때 발생한다.
+
+      * KeyUp: 키에서 손을 떼는 순간 발생한다.
+
+ * 마우스 이벤트: 마우스를 조작하면 이벤트가 발생한다.
+
+      * MouseClick, MouseDown: MouseDown 이벤트는 마우스 단추를 누르는 즉시 발생하며, 마우스의 어느 버튼을 눌렀는지 상세 정보를 제공한다.
+
+      * e.Location: 컨트롤 내부의 상대 좌표이다.
+
+      * Control.MousePosition: 화면 전체 기준의 절대 좌표이다.
+
+      * PointToClient()/PointToScreen() 메소드: 좌표 좌표 기준을 상호 변환할 수 있다.
+
+### 표준 대화 상자
+---
+ Windows 운영체제에서 기본으로 제공하는 창들을 활용하여 UI를 즉시 제공할 수 있다.
+
+ |대화 상자 클래스|용도|
+ |:---:|:---:|
+ |OpenFileDialog|파일 불러오기|
+ |SaveFileDialog|파일 저장하기|
+ |FolderBrowserDialog|폴더 선택하기|
+ |ColorDialog|색상 선택하기|
+ |FontDialog|글꼴 설정하기|
+
+ * DialogResult: 모든 대화 상자는 사용자가 확인을 눌렀는지 취소를 눌렀는지 반환한다.
+
+ 예제 코드는 다음과 같다.
+
+```csharp
+if (openFileDialog1.ShowDialog() == DialogResult.OK) { 
+    // 파일 처리 로직 
+}
+```
+
+### 사용자 정의 대화 상자
+---
+ 기본 제공 창으로 부족할 때, 개발자가 직접 만든 Form을 대화 상자로 활용할 수 있으며, 창을 띄우는 방식은 다음과 같다.
+
+ * Modal: 새 창이 닫히기 전까지는 부모 창을 클릭하거나 조작할 수 없으며, 코드 실행이 ShowDialog() 메소드에서 멈췄다가 창이 닫히면 다음 줄로 넘어간다. 이는 중요한 설정이나 확인이 필요한 경우 사용한다.
+
+ * Modeless: 새 창을 띄워놓고도 부모 창을 자유롭게 조작할 수 있으며, 코드는 창을 띄운 즉시 다음 줄을 실행한다. 이는 찾기/바꾸기 창이나 도구 모음 창에 적합하다.
+
+### 데이터 전달 기법
+---
+ Form 간의 데이터 전달 기법으로는 다음과 같은 기법이 있다.
+
+ * 생성자(Constructor)를 통한 전달: 데이터를 아예 매개 변수로 넘겨주는 방식이다.
+
+ 예제 코드는 다음과 같다.
+
+```csharp
+public Form(string data) {
+    InitializeComponent();
+    label1.Text = data;
+}
+```
+
+ * 공개 속성(Property) 활용: B창에서 속성을 선언하고, A창에서 B창 객체를 만든 후 값을 직접 넣어주거나 거져온다.
+
+ 예제 코드는 다음과 같다.
+
+```csharp
+// A창에서 B창 띄우기 전
+FormB frm = new FormB();
+frm.UserEmail = "test@test.com"; // 데이터 전달
+if (frm.ShowDialog() == DialogResult.OK) {
+    string result = frm.ReturnValue; // 닫힌 후 데이터 가져오기
+}
+```
+
+ * 이벤트(Event)를 통한 역방향 전달: 자식 창에서 일어난 일을 부모 창에 알릴 때 사용한다. 이는 대리자(Delegate)를 활용한다.
+
+### 이벤트 핸들러 공유 및 동적 연결
+---
+ 여러 개의 버튼이 있을 때, 각각 이벤트를 만들지 않고  하나의 핸들러에 모두 연결할 수 있다. 이때 `object sender`를 Button으로 타입 변환하여 어떤 버튼을 눌렀는지 구분할 수 있다.
+
+ * 동적 연결: 실행 중에 코드로 이벤트를 추가 및 제거할 수 있다.
+
+      * 연결: btn.Click += MyHandler;
+
+      * 해제: btn.Click -= MyHandler; 메모리 누수 방지를 위해 해제한다.
+
+### 유효성 검사 이벤트
+---
+ 사용자가 텍스트 박스에서 포커스를 옮길 때, 입력값이 올바른지 체크하는 이벤트이다.
+
+ * Validating: 포커스를 잃기 직전에 발생하며, e.Cancel 속성을 조작하면 사용자는 올바른 값을 입력할 때까지 해당 컨트롤을 벗어날 수 없다.
+
+ * Validated: 검사가 성공적으로 끝났을 때 발생한다.
