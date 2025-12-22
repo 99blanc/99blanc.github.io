@@ -1,0 +1,97 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: WinForm (5)"
+date: 2025-12-22 20:50:00 +09:00
+last_modified_at: 2025-12-22 20:50:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 단일 스레드 모델
+---
+ WinForm 컨트롤은 [단일 스레드 아파트먼트][1](Single Thread Apartment, STA) 모델을 따르며, 이는 컨트롤을 생성한 스레드만이 해당 컨트롤을 조작할 수 있다는 철칙이다.
+
+ * 크로스 스레드 예외(Cross-Thread Operation Not Valid): 메인 스레드가 멈추는 것을 막기 위해 별도의 스레드를 만들어 작업을 수행한 뒤, 그 안에서 직접 코드를 삽입하면 다른 스레드가 UI 스레드의 소유물을 건드렸기 때문에 이 예외가 발생한다.
+
+### Invoke, BeginInvoke 메커니즘을 이용한 UI 업데이트
+---
+ 비동기 작업 중 UI를 안전하게 수정하기 위해서는 반드시 Invoke 메커니즘을 거처야 한다. 이는 이 작업을 UI 스레드에게 전달해서 대신 실행해달라고 요청하는 것과 같다.
+
+ * InvokeRequired 속성: 컨트롤이 가진 이 속성은 컨트롤을 건드려도 안전하지에 대해 알려준다.
+
+     * True 값일 경우: 현재 스레드가 UI 스레드가 아니므로 Invoke가 필요하다.
+
+     * False 값일 경우: 현재 스레드가 UI 스레드가 아니므로 바로 수정 가능하다.
+
+ 패턴에 대한 예제 코드는 다음과 같다.
+
+```csharp
+private void UpdateStatus(string message)
+{
+    if (label1.InvokeRequired) // 다른 스레드인 경우
+    {
+        // 대리자를 통해 UI 스레드에 작업을 위임한다.
+        label1.Invoke(new Action(() => label1.Text = message));
+    }
+    else // UI 스레드인 경우
+    {
+        label1.Text = message;
+    }
+}
+```
+
+ * Invoke 메커니즘: 스레드의 상태에 따라 Invoke와 BeginInvoke로 나뉜다.
+
+     * Invoke 메커니즘: UI 스레드가 작업을 마칠 때까지 현재 스레드가 기다린다. 이는 동기식으로 성능 상 불리하다.
+
+     * BeginInvoke 메커니즘: 작업을 던져만 놓고 현재 스레드는 자신의 일을 계속한다. 이는 비동기식으로 성능 상 유리하다.
+
+### 현대적 비동기 패턴
+---
+ C# 5.0 이후 도입된 async/await 패턴은 WinForm에서 Invoke의 복잡성을 획기적으로 줄였다.
+
+ * 비동기 이벤트 핸들러: await 키워드를 사용하면 비동기 작업이 끝날 때까지 기다리는 동안 UI 스레드를 해제한다. 작업이 완료되면 자동으로 원래의 UI 구문으로 돌아오기 때문에 별도의 Invoke 없이도 UI 컨트롤에 접근할 수 있다.
+
+ 예제 코드는 다음과 같다.
+
+```csharp
+private async void btnDownload_Click(object sender, EventArgs e)
+{
+    btnDownload.Enabled = false; // 버튼 비활성화
+    label1.Text = "다운로드 중...";
+
+    // UI 스레드를 멈추지 않고 비동기 작업을 수행한다.
+    string data = await Task.Run(() => LongRunningTask()); 
+
+    // await 이후에는 자동으로 UI 스레드로 돌아온다.
+    label1.Text = "다운로드 완료!";
+    btnDownload.Enabled = true;
+}
+```
+
+ * 교착 상태(Deadlock): 비동기 메소드를 호출할 때 .Result 속성이나 .Wait() 메소드를 사용하면 UI 스레드와 비동기 작업이 서로를 기다리는 교착 상태에 빠져 프로그램이 멈출 수 있다.
+ 
+![C# UI 스레드 교착 상태](https://drive.google.com/thumbnail?id=17g033r_Qzp1H51YYShLOodheq4lelRb8&sz=w1000)
+
+### 커스텀 컨트롤
+---
+ 프로그램이 커지면 반복되는 UI 요소를 컴포넌트화 하는 것이 재사용성에 용이하며, 이는 커스텀 컨트롤로 해결할 수 있다.
+
+ * 사용자 정의 컨트롤(User Control): 기존의 버튼, 텍스트 박스 등을 조합하여 하나의 덩어리로 만든다. 이는 비주얼 스튜디오 디자이너를 그대로 사용할 수 있어 구현이 간편하다.
+
+ * 커스텀 컨트롤(Custom Control): Control 클래스를 상속받아 OnPoint 메소드를 오버라이딩하여 처음부터 끝까지 직접 그린다. 이는 독특한 모양의 버튼이나 특수한 차트를 만들 때 사용한다.
+
+### 애플리케이션 배포 전략
+---
+ 애플리케이션 배포는 개발이 끝난 프로그램을 사용자에게 전달하는 단계 중 하나이다.
+
+ * ClickOnce 배포: 웹사이트나 공유 폴더 링크 하나로 설치가 가능하며, 프로그램 실행 시마다 자동 업데이트 여부를 확인하여 항상 최신 버전을 유지한다. 이는 .application 확장자를 가진 파일을 통해 설치된다.
+
+ * 설치 프로젝트(.msi, .exe 등): 전통적인 인스톨러 방식으로 제어판의 프로그램 추가 및 제거에 등록되며, 바탕화면 아이콘, 시작 메뉴 등록 등을 설정할 수 있다.
+
+ * 단일 파일 게시: .NET Core/5+ 이상의 WinForm에서는 실행에 필요한 모든 .dll 파일을 하나의 .exe 파일 안에 묶어 배포할 수 있다. 사용자가 별도의 런타임을 설치하지 않아도 되도록 설정할 수 있다.
+
+ [1]: https://learn.microsoft.com/ko-kr/windows/win32/com/single-threaded-apartments?redirectedfrom=MSDN "동시에 실행되는 여러 객체를 처리하기 위한 메시지 기반 페러다임이다. 이를 통해 스레드를 위한 보다 효율적인 코드를 작성할 수 있으며, 시간이 많이 걸리는 작업이 완료될 때까지 대기하여 다른 스레드를 실행할 수 있다."
+ [2]: https://en.wikipedia.org/wiki/Deadlock_(computer_science) "현재 작업을 포함해 다른 모든 작업이 현재 작업의 진행상황을 기다리기 위해 무한정 대기하는 상황을 말한다."
