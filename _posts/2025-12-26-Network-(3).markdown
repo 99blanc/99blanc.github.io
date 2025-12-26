@@ -1,0 +1,97 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: Network (3)"
+date: 2025-12-26 22:06:00 +09:00
+last_modified_at: 2025-12-26 22:06:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 비동기 프로그래밍
+---
+ C# 언어 네트워크 프로그래밍에는 비동기를 위한 async/await 키워드가 있다.
+
+ * [APM][1](Asynchronous Programming Model): BeginAccept, EndAccept 방식, 콜백 지옥에 빠지기 쉬우며, 자원 관리가 어렵다.
+
+ * EAP(Event-Based Asynchronous Pattern): Completed 이벤트를 사용하는 방식으로 UI 프로그래밍에 적합하지만 서버의 복잡한 흐름을 제어하기에 한계가 있다.
+
+ * [TAP][2](Task-Based Asynchronous Pattern): async/await 키워드를 사용하는 현대적 표준으로 가독성과 성능에 도움이 된다.
+
+### IOCP
+---
+ Windows 운영체제에서 C# 비동기 네트워크 메소드를 호출하면, 내부적으로는 [IOCP][3](Input-Output Completion Port)라는 운영체제 커널 기술을 사용한다.
+
+ * 원리: 데이터가 들어오기를 기다리며 스레드를 무작동 상태로 두는 것이 아니라, 커널이 데이터를 다 받았을 때만 스레드 풀의 스레드를 깨워 작업을 처리한다.
+
+ * 이점: 스레드 개수를 최소화하면서도 수만 개의 연결을 처리할 수 있다. 이는 [컨텍스트 스위칭][4](Content Switching) 비용을 획기적으로 줄여준다.
+
+### 비동기 서버 아키텍처 설계
+---
+ 비동기 서버(Scalable Server) 아키텍처 상용 서버를 설계할 때는 다음과 같은 구조적 고민이 필요하다.
+
+ * 수락 루프와 작업 루프 분리: 메인 루프는 오직 AcceptTCPClientAsync() 메소드만 담당하며, 연결된 클라이언트는 즉시 별도의 Task로 분리하여 처리해야 한다.
+
+ * 비동기 무한 루프 패턴: 클라이언트가 연결을 끊을 때까지 비동기로 데이터를 읽고 처리하는 표준 패턴이다.
+
+ 예제 코드는 다음과 같다.
+
+```csharp
+async Task HandleClientAsync(TcpClient client)
+{
+    using (client)
+    using (var stream = client.GetStream())
+    {
+        byte[] buffer = new byte[8192]; // 8KB 버퍼
+        while (true)
+        {
+            // 데이터 수신을 기다리는 동안 스레드는 해제된다.
+            int read = await stream.ReadAsync(buffer, 0, buffer.Length);
+
+            if (read == 0) 
+            {
+              break; // 상대방 연결 종료
+            }
+
+            // 데이터 처리 로직(패킷 조립 등)
+            await ProcessPacketAsync(buffer, read);
+        }
+    }
+}
+```
+
+### 네트워크 보안
+---
+ 인터넷 망을 통해 데이터를 보낼 때 평문(Plain Text)으로 보내는 것을 위험하다. C# 언어에서는 SslStream 클래스를 사용하여 기존 소켓 통신을 암호화할 수 있다.
+
+ * 인증서(Certificate): 서버는 자신이 신뢰할 수 있는 기관임을 증명하는 인증서가 필요하다.
+
+ * 핸드쉐이크(Handshake): TCP 연결 직후, 클라이언트와 서버는 사용할 암호화 알고리즘과 키를 교환하는 복잡한 과정을 거친다.
+
+ * 구현 방법: NetworkStream을 SslStream으로 감싸고 AuthenticateAsServerAsync() 메소드를 호출하면, 이후의 모든 Read/Write는 자동으로 암호화된다.
+
+### UDP 멀티캐스트와 브로드캐스트
+---
+ TCP는 일대일 통신이지만, UDP를 활용하면 일대다 통신이 가능하다.
+
+ * [브로드캐스트][5](Broadcast): 동일 로컬 네트워크(LAN) 상의 모든 컴퓨터에게 패킷을 던진다.
+
+ * [멀티캐스트][6](Multicast): 특정 그룹에 가입한 컴퓨터들에게만 패킷을 전달한다. 이는 UdpClient.JoinMulticastGroup() 메소드를 통해 구현한다.
+
+### 성능 모니터링
+---
+ 서버의 건강 상태를 확인하기 위해 다음과 같은 지표를 관리해야 한다.
+
+ * Concurrent Connections: 현재 몇 명이나 붙어 있는가?
+
+ * Throughput: 초당 몇 바이트나 처리하고 있는가?
+
+ * Error Rate: 패킷 해석 실패나 타임아웃이 얼마나 발생하는가?
+
+ [1]: https://learn.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm ".NET 4 이전 비동기 및 병렬 프로그래밍을 위한 모델로 IAsyncResult 설계 패턴을 사용하는 비동기 연산은 Operation Name을 시작하고 종료하는 두 메소드로 구현한다."
+ [2]: https://learn.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/task-based-asynchronous-pattern-tap ".NET 4 이후 작업 기반 비동기식 패턴으로 System.Threading.Tasks 네임 스페이스의 Task와 Task<TResult> 타입을 기반으로 하여, 비동기 작업을 표현하는데 사용한다."
+ [3]: https://en.wikipedia.org/wiki/Input/output_completion_port "Windows NT 3.5 이후 여러 개의 동시 비동기 입출력 작업을 수행할 수 있는 API이다."
+ [4]: https://en.wikipedia.org/wiki/Context_switch "프로세스나 스레드의 상태를 저장하여 복원하고 나중에 실행을 재개할 수 있도록 하고, 이전에 저장된 다른 상태를 복원하는 과정이다."
+ [5]: https://en.wikipedia.org/wiki/Broadcasting_(networking) "모든 수신자에게 동시에 메시지를 전송하는 방법이다."
+ [6]: https://en.wikipedia.org/wiki/IP_multicast "IP 데이터그램을 한 번의 전송으로 관심있는 수신자 그룹에 전송하는 방법이다."
