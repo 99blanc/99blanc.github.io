@@ -2,8 +2,8 @@
 layout: post
 title: "이것이 C#이다 개정 3판: WinForm (1)"
 date: 2025-12-18 20:13:00 +09:00
-last_modified_at: 2025-12-18 20:13:00 +09:00
-categories: Code CSharp Study
+last_modified_at: 2025-12-27 19:59:00 +09:00
+categories: CSharp Study
 sitemap:
   changefreq: daily
   priority: 0.5
