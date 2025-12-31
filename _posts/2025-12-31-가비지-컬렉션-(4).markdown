@@ -1,0 +1,98 @@
+---
+layout: post
+title: "이것이 C#이다 개정 3판: 가비지 컬렉션 (4)"
+date: 2025-12-31 23:47:00 +09:00
+last_modified_at: 2025-12-31 23:41:00 +09:00
+categories: Code CSharp Study
+sitemap:
+  changefreq: daily
+  priority: 0.5
+---
+
+### 관리되는 리소스와 비관리 리소스
+---
+ 가비지 컬렉션은 비관리 리소스가 얼마나 무거운지 모른다. 따라서 메모리 누수와 리소스 부족의 원인을 판별할 줄 알아야 한다.
+
+ * 관리되는 리소스(Managed Resources): .NET의 new 키워드로 생성된 객체들로 가비지 컬렉션이 100% 책임지고 메모리를 회수한다.
+
+ * 비관리 리소스(Unmanaged Resources): .NET 프레임워크 밖의 자원들이다. 예시로는 파일 핸들, 데이터베이스 연결, 네트워크 소켓, Windows API를 통해 할당받은 메모리 등이 있다.
+
+### 소멸자
+---
+ C# 언어에서 클래스 이름 앞에 ~ 기호를 붙여 만드는 메소드이다.
+
+ * 역할: 개발자가 실수로 리소스 해제 코드를 호출하지 않았을 때를 대비한 보조 장치이다.
+
+ * 특징: 개발자가 직접 호출할 수 없으며, 언제 실행될지 아무도 모른다. 소멸자가 있는 객체는 가비지 컬렉션 과정이 훨씬 복잡해진다.
+ 
+ 소멸자가 있는 객체는 생성될 때부터 일반 객체와 다르게 관리된다.
+
+ * 할당 단계: 소멸자가 있는 객체가 생성되면, 가비지 컬렉션은 Finalization Queue라는 목록에 이 객체의 참조를 등록한다.
+
+ * 수집 단계: 가비지 컬렉션이 가비지 객체를 찾았는데 소멸자가 있다면, 즉시 메모리를 해제하지 못한다. 대신 객체를 F-Reachable Queue로 옮긴다.
+
+ * 전용 스레드 실행: 별도의 소멸자 전용 스레드가 F-Reachable Queue를 돌며 객체의 소멸자를 실행한다.
+
+ * 최종 해제: 소멸자가 실행된 후에야 다음번 가비지 컬렉션 사이클에서 비로소 메모리가 완전히 회수된다.
+
+### IDisposable 인터페이스와 Dispose() 메소드
+---
+ 소멸자와 비결정성 성능 문제를 해결하기 위해 도입된 표준 인터페이스이다.
+
+ * 핵심 철학: 리소스 사용이 끝났으면, 가비지 컬렉션을 기다리지 말고 즉시 명시적으로 해제하라.
+
+ * Dispose(): 개발자가 직접 호출하는 메소드이다. 이 안에서 파일 핸들을 닫거나 데이터베이스 연결을 끊는 코드를 작성한다.
+
+### 표준 Dispose  패턴
+---
+ 상용 라이브러리나 규모가 있는 프로젝트에서 사용하는 구현 방식으로 상속 관계까지 고려한 정성 코드이다. 예제는 다음과 같다.
+
+```csharp
+public class ResourceHolder : IDisposable
+{
+    private bool disposed = false; // 중복 호출 방지 플래그
+
+    // IDisposable.Dispose 구현
+    public void Dispose()
+    {
+        Dispose(true); // 관리/비관리 리소스 모두 정리
+        GC.SuppressFinalize(this); // 종료자 실행을 건너뛰라고 GC에 명령(성능 최적화)
+    }
+
+    // 실제 리소스 정리를 담당하는 가상 메소드
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposed) return;
+
+        if (disposing)
+        {
+            // 관리 리소스 정리
+        }
+
+        // 비관리 리소스 정리
+
+        disposed = true;
+    }
+
+    // 소멸자(실수로 Dispose를 호출 안 했을 때를 대비)
+    ~ResourceHolder()
+    {
+        Dispose(false); // 비관리 리소스만 정리
+    }
+}
+```
+
+ * GC.SupressFinalize(this): Dispose() 메소드를 통해 이미 리소스를 정리했다면, 앞서 설명한 복잡하고 느린 소멸자 프로세스를 거칠 필요가 없다. 이 메소드를 호출하면 객체를 바로 메모리에서 수집할 수 있게 되어 성능이 비약적으로 향상된다.
+
+### using 구문
+---
+ IDisposable을 안전하게 사용하기 위한 문법이다.
+
+```csharp
+using (var stream = new FileStream("test.txt", FileMode.Open))
+{
+    // 작업 수행
+} // 여기서 자동으로 stream.Dispose() 메소드가 호출된다. 예외가 발생해도 호출을 보장한다.
+```
+
+ 내부적으로는 try-finally 블록으로 컴파일된다. finally 안에서 Dispose() 메소드가 호출되므로, 개발자가 리소스를 누수시키는 실수를 봉쇄한다.
