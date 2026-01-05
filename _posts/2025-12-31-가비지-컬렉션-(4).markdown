@@ -2,7 +2,7 @@
 layout: post
 title: "이것이 C#이다 개정 3판: 가비지 컬렉션 (4)"
 date: 2025-12-31 23:47:00 +09:00
-last_modified_at: 2025-12-31 23:41:00 +09:00
+last_modified_at: 2026-01-05 22:29:00 +09:00
 categories: Code CSharp Study
 sitemap:
   changefreq: daily
@@ -95,4 +95,4 @@ using (var stream = new FileStream("test.txt", FileMode.Open))
 } // 여기서 자동으로 stream.Dispose() 메소드가 호출된다. 예외가 발생해도 호출을 보장한다.
 ```
 
- 내부적으로는 try-finally 블록으로 컴파일된다. finally 안에서 Dispose() 메소드가 호출되므로, 개발자가 리소스를 누수시키는 실수를 봉쇄한다.
+ 내부적으로는 try-finally 블록으로 컴파일된다. finally 블록 안에서 Dispose() 메소드가 호출되므로, 개발자가 리소스를 누수시키는 실수를 봉쇄한다.
