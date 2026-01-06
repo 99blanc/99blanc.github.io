@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "이것이 C#이다 개정 3판: 상속과 추상화 깊이"
+title: "이것이 C#이다 개정 3판: 이벤트 및 익명 함수"
 date: 2026-01-06 19:38:00 +09:00
-last_modified_at: 2026-01-06 19:38:00 +09:00
-categories: Code CSharp Study
+last_modified_at: 2026-01-06 19:41:00 +09:00
+categories: CSharp Study
 sitemap:
   changefreq: daily
   priority: 0.5
