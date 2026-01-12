@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "이것이 C#이다 개정 3판: 공용 타입 시스템과 메모리 모델"
+title: "C# 심층 분석: 공용 타입 시스템과 메모리 모델"
 date: 2026-01-12 19:20:00 +09:00
 last_modified_at: 2026-01-12 19:20:00 +09:00
 categories: CSharp Study
