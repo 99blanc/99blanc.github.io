@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "C# 심층 분석: 공용 타입 시스템과 메모리 모델"
+title: "C# 심층 분석: 연산자와 현대적 제어문"
 date: 2026-01-14 16:59:00 +09:00
 last_modified_at: 2026-01-14 16:59:00 +09:00
 categories: Code CSharp Study
