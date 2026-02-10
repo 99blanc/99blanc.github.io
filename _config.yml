@@ -76,8 +76,6 @@ theme: plainwhite
 
 plugins:
   - github-pages
-  - jekyll-sitemap
-  - jekyll-feed
 
 permalink: "/:year:month:day:hour:minute"
 
