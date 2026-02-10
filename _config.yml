@@ -51,7 +51,7 @@ plainwhite:
     # - username: jekyll2
     #   instance: example.com
 
-    rss: 'feed.xml'
+    #rss: 'feed.xml'
 
   navigation:
     - title: Home
