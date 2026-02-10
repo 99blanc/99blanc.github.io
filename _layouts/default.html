@@ -209,6 +209,7 @@
       {{ footer }}
     </footer>
   </main>
+{% unless page.url contains '.xml' %}
   {% if site.plainwhite.dark_mode %}
   <script type="text/javascript" src="{{ "/assets/js/darkmode.js" | relative_url }}"></script>
   {% endif %}
@@ -225,8 +226,10 @@
   <script src="{{ "/assets/js/simple-jekyll-search.min.js" | relative_url }}"></script>
   <script src="{{ "/assets/js/search.js" | relative_url }}"></script>
   {% endif %}
+{% endunless %}
 </body>
 </html>
+{% unless page.url contains '.xml' %}
 <script>
 window.addEventListener('blur', hideAllSocialTooltips);
 window.addEventListener('focus', hideAllSocialTooltips);
@@ -273,3 +276,4 @@ function hideAllSocialTooltips() {
     });
 }
 </script>
+{% endunless %}

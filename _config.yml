@@ -17,7 +17,6 @@ plainwhite:
     Java & Unity, C#
     Developer
   date_format: "%b %-d, %Y"
-  sitemap: false # set to true to generate sitemap.xml content
   search: true # set to true to enable searchbar
   dark_mode: true # set to true to add dark mode toggle
   portfolio_image: "assets/portfolio.png" # the path from the base directory of the site to the image to display (no / at the start)
@@ -51,7 +50,7 @@ plainwhite:
     # - username: jekyll2
     #   instance: example.com
 
-    #rss: 'feed.xml'
+    rss: 'feed.xml'
 
   navigation:
     - title: Home
@@ -77,6 +76,8 @@ theme: plainwhite
 
 plugins:
   - github-pages
+  - jekyll-sitemap
+  - jekyll-feed
 
 permalink: "/:year:month:day:hour:minute"
 
